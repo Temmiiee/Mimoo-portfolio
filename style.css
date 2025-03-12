@@ -16,6 +16,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -27,6 +28,8 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
 }
 
 /* Navigation */
@@ -717,12 +720,21 @@ footer {
     }
 }
 
+.floating-creature {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    font-size: 32px; /* Plus grand */
+    will-change: transform;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)); /* Ombre pour meilleure visibilité */
+}
+
 #canvas-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: -1;
-    pointer-events: none;
+    overflow: hidden;
 }

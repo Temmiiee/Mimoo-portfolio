@@ -209,37 +209,76 @@ sections.forEach(section => {
     sectionObserver.observe(section);
 });
 
-// Création des créatures animées
-function createCreature() {
-    const creatures = [
-        { type: 'butterfly', emoji: '🦋', speed: 2 },
-        { type: 'bee', emoji: '🐝', speed: 3 },
-        { type: 'ladybug', emoji: '🐞', speed: 1.5 },
-        { type: 'leaf', emoji: '🍃', speed: 1 }
-    ];
+// Gestion des créatures animées
+const creatures = [];
+const creatureTypes = ['🦋', '🍃', '🌸', '✨'];
 
-    const randomCreature = creatures[Math.floor(Math.random() * creatures.length)];
+function createCreature() {
     const creature = document.createElement('div');
-    creature.textContent = randomCreature.emoji;
-    creature.style.position = 'fixed';
-    creature.style.fontSize = '24px';
-    creature.style.left = '-50px';
-    creature.style.top = Math.random() * window.innerHeight + 'px';
-    creature.style.zIndex = '1';
-    creature.style.pointerEvents = 'none';
+    creature.className = 'floating-creature';
+    creature.textContent = creatureTypes[Math.floor(Math.random() * creatureTypes.length)];
     document.body.appendChild(creature);
 
-    gsap.to(creature, {
-        x: window.innerWidth + 100,
-        y: `+=${Math.random() * 200 - 100}`,
-        rotation: Math.random() * 360,
-        duration: randomCreature.speed * 5,
-        ease: "power1.inOut",
-        onComplete: () => creature.remove()
-    });
+    const randomCreature = {
+        element: creature,
+        speed: Math.random() * 1.5 + 0.5, // Vitesse réduite
+    };
+
+    creatures.push(randomCreature);
+
+    gsap.fromTo(creature,
+        {
+            x: -50,
+            y: Math.random() * window.innerHeight,
+            opacity: 0,
+            rotation: 0
+        },
+        {
+            x: window.innerWidth + 50,
+            y: `+=${Math.random() * 300 - 150}`, // Plus d'amplitude verticale
+            rotation: Math.random() * 720 - 360, // Rotation plus naturelle
+            opacity: 1,
+            duration: randomCreature.speed * 15, // Duration augmentée
+            ease: "power1.inOut",
+            onComplete: () => {
+                if (creature.parentNode) {
+                    creature.parentNode.removeChild(creature);
+                }
+                const index = creatures.indexOf(randomCreature);
+                if (index > -1) {
+                    creatures.splice(index, 1);
+                }
+            }
+        }
+    );
 }
 
-setInterval(createCreature, 2000);
+// Augmenter le nombre maximum de créatures
+const MAX_CREATURES = 15; // Plus de créatures simultanées
+
+// Réduire l'intervalle entre les créations
+setInterval(() => {
+    if (creatures.length < MAX_CREATURES) {
+        createCreature();
+    }
+}, 1500); // Création plus fréquente
+
+// Nettoyer les créatures qui sont hors écran
+function cleanupCreatures() {
+    for (let i = creatures.length - 1; i >= 0; i--) {
+        const creature = creatures[i];
+        const rect = creature.element.getBoundingClientRect();
+        if (rect.left > window.innerWidth + 100 || rect.right < -100) {
+            if (creature.element.parentNode) {
+                creature.element.parentNode.removeChild(creature.element);
+            }
+            creatures.splice(i, 1);
+        }
+    }
+}
+
+// Nettoyage moins fréquent
+setInterval(cleanupCreatures, 10000);
 
 // Three.js background animation
 const scene = new THREE.Scene();
