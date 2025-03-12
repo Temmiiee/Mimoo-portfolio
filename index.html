@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio de NAME - Artiste digital spécialisé en illustration et character design">
+    <meta name="keywords" content="art digital, illustration, character design, artiste, portfolio">
+    <meta name="author" content="NAME">
+    <meta property="og:title" content="NAME - Digital Artist">
+    <meta property="og:description" content="Portfolio de NAME - Artiste digital spécialisé en illustration et character design">
+    <meta property="og:image" content="images/og-image.jpg">
+    <meta property="og:url" content="https://votresite.com">
+    
+    <title>NAME - Digital Artist</title>
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Ajouter le curseur personnalisé -->
+    <div id="cursor"></div>
+
+    <nav>
+        <div class="logo">NAME</div>
+        <button class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#apropos">À propos</a></li>
+            <li><a href="#galerie">Galerie</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="accueil" class="hero">
+        <div class="hero-background">
+            <div class="overlay"></div>
+            <div class="background-image">
+                <!-- Image de fond nature/art -->
+                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b" alt="Beautiful Nature Background">
+            </div>
+        </div>
+        
+        <div class="hero-content-wrapper">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>Digital Art & Illustration</h1>
+                <p>Bienvenue dans mon univers créatif</p>
+                <a href="#galerie" class="cta-button">Voir mes créations</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="apropos" class="about">
+        <div class="container" data-aos="fade-right">
+            <h2>À propos de moi</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <!-- Image de profil artistique -->
+                    <img src="https://images.unsplash.com/photo-1536924940846-227afb31e2a5" alt="Mimoo" class="profile-img">
+                </div>
+                <div class="about-text">
+                    <p>Digital artist passionnée par la création d'illustrations uniques et expressives. Mon style se caractérise par des créations colorées et dynamiques qui reflètent ma vision artistique personnelle.</p>
+                    <div class="techniques">
+                        <div class="technique">
+                            <i class="fas fa-desktop"></i>
+                            <h3>Art Digital</h3>
+                            <p>Création d'œuvres numériques uniques</p>
+                        </div>
+                        <div class="technique">
+                            <i class="fas fa-paint-brush"></i>
+                            <h3>Illustration</h3>
+                            <p>Illustrations personnalisées et créatives</p>
+                        </div>
+                        <div class="technique">
+                            <i class="fas fa-pencil-alt"></i>
+                            <h3>Character Design</h3>
+                            <p>Conception de personnages originaux</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="galerie" class="gallery">
+        <div class="container" data-aos="fade-up">
+            <h2>Galerie</h2>
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="digital">Art Digital</button>
+                <button class="filter-btn" data-filter="illustration">Illustration</button>
+                <button class="filter-btn" data-filter="character">Character Design</button>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="digital">
+                    <img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968" alt="Digital Art 1">
+                    <div class="overlay">
+                        <h3>Création Digitale</h3>
+                        <p>Art digital, 2025</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="illustration">
+                    <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5" alt="Illustration 1">
+                    <div class="overlay">
+                        <h3>Illustration Nature</h3>
+                        <p>Illustration digitale, 2025</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="character">
+                    <img src="https://images.unsplash.com/photo-1580927752452-89d86da3fa0a" alt="Character 2">
+                    <div class="overlay">
+                        <h3>Personnage Fantastique</h3>
+                        <p>Character Design, 2025</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="digital">
+                    <img src="https://images.unsplash.com/photo-1563089145-599997674d42" alt="Digital Art 2">
+                    <div class="overlay">
+                        <h3>Paysage Futuriste</h3>
+                        <p>Art digital, 2025</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="illustration">
+                    <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb" alt="Illustration 2">
+                    <div class="overlay">
+                        <h3>Illustration Urbaine</h3>
+                        <p>Illustration digitale, 2025</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="character">
+                    <img src="https://images.unsplash.com/photo-1608889825205-eebdb9fc5806" alt="Character 3">
+                    <div class="overlay">
+                        <h3>Héros de BD</h3>
+                        <p>Character Design, 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container" data-aos="fade-up">
+            <h2>Contactez-moi</h2>
+            <div class="contact-content">
+                <form id="contact-form" action="https://formspree.io/f/votre_id_formspree" method="POST">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Votre email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" placeholder="Votre message" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">Envoyer</button>
+                </form>
+                <div class="contact-info">
+                    <div class="social-links">
+                        <a href="https://instagram.com/" target="_blank" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="https://twitter.com/" target="_blank" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="https://vgen.co/" target="_blank" class="social-link">
+                            <i class="fas fa-palette"></i>
+                            <span>VGen</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Temmiie. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Ajouter le container pour les animations Three.js -->
+    <div id="canvas-container"></div>
+
+    <!-- Déplacer la lightbox ici, juste avant les scripts -->
+    <div class="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close">&times;</button>
+            <img src="" alt="Image en plein écran">
+            <div class="lightbox-navigation">
+                <button class="lightbox-prev">&lt; Précédent</button>
+                <button class="lightbox-next">Suivant &gt;</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
