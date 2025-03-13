@@ -31,16 +31,20 @@
 
     <nav>
         <div class="logo">Mimoo</div>
+        <div class="language-selector">
+            <button class="lang-btn" data-lang="fr">FR</button>
+            <button class="lang-btn" data-lang="en">EN</button>
+        </div>
         <button class="hamburger">
             <span></span>
             <span></span>
             <span></span>
         </button>
         <ul class="nav-links">
-            <li><a href="#accueil">Accueil</a></li>
-            <li><a href="#apropos">À propos</a></li>
-            <li><a href="#galerie">Galerie</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#accueil" data-translate="nav.home">Accueil</a></li>
+            <li><a href="#apropos" data-translate="nav.about">À propos</a></li>
+            <li><a href="#galerie" data-translate="nav.gallery">Galerie</a></li>
+            <li><a href="#contact" data-translate="nav.contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -55,37 +59,37 @@
         
         <div class="hero-content-wrapper">
             <div class="hero-content" data-aos="fade-up">
-                <h1>Art Infographique & Illustration</h1>
-                <p>Bienvenue dans mon univers créatif</p>
-                <a href="#galerie" class="cta-button">Voir mes créations</a>
+                <h1 data-translate="hero.title">Art Digital & Illustration</h1>
+                <p data-translate="hero.subtitle">Bienvenue dans mon univers créatif</p>
+                <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
             </div>
         </div>
     </section>
 
     <section id="apropos" class="about">
         <div class="container" data-aos="fade-right">
-            <h2>À propos de moi</h2>
+            <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image">
                     <img src="images/mimoo.jpg" alt="Mimoo" class="profile-img">
                 </div>
                 <div class="about-text">
-                    <p>Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
+                    <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
                     <div class="techniques">
                         <div class="technique">
                             <i class="fas fa-desktop"></i>
-                            <h3>Art Infographique</h3>
-                            <p>Création d'œuvres uniques sur ordinateur et tablette</p>
+                            <h3 data-translate="about.techniques.digital.title">Art Digital</h3>
+                            <p data-translate="about.techniques.digital.description">Création d'œuvres uniques sur ordinateur et tablette</p>
                         </div>
                         <div class="technique">
                             <i class="fas fa-paint-brush"></i>
-                            <h3>Illustration</h3>
-                            <p>Illustrations personnalisées et créatives</p>
+                            <h3 data-translate="about.techniques.illustration.title">Illustration</h3>
+                            <p data-translate="about.techniques.illustration.description">Illustrations personnalisées et créatives</p>
                         </div>
                         <div class="technique">
                             <i class="fas fa-pencil-alt"></i>
-                            <h3>Character Design</h3>
-                            <p>Conception de personnages originaux</p>
+                            <h3 data-translate="about.techniques.character.title">Character Design</h3>
+                            <p data-translate="about.techniques.character.description">Conception de personnages originaux</p>
                         </div>
                     </div>
                 </div>
@@ -95,74 +99,74 @@
 
     <section id="galerie" class="gallery">
         <div class="container" data-aos="fade-up">
-            <h2>Galerie</h2>
+            <h2 data-translate="gallery.title">Galerie</h2>
             <div class="gallery-filters">
-                <button class="filter-btn active" data-filter="all">Tout</button>
-                <button class="filter-btn" data-filter="illustration">Illustration</button>
-                <button class="filter-btn" data-filter="character">Character Design</button>
+                <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all">Tout</button>
+                <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration">Illustration</button>
+                <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character">Character Design</button>
             </div>
             <div class="gallery-grid">
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/Illustatrion1.jpg" alt="Illustration 1">
                     <div class="overlay">
-                        <h3>Dragon arc-en-ciel</h3>
-                        <p>Illustration numérique</p>
+                        <h3 data-translate="gallery.items.illustration1.title">Dragon arc-en-ciel</h3>
+                        <p data-translate="gallery.items.illustration1.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
                     <img src="images/gallery/character1.webp" alt="Character Design 1">
                     <div class="overlay">
-                        <h3>Harley</h3>
-                        <p>Character design</p>
+                        <h3 data-translate="gallery.items.character1.title">Harley</h3>
+                        <p data-translate="gallery.items.character1.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/Illustatrion2.jpg" alt="Illustration 2">
                     <div class="overlay">
-                        <h3>Dragon arc-en-ciel</h3>
-                        <p>Illustration numérique</p>
+                        <h3 data-translate="gallery.items.illustration2.title">Dragon arc-en-ciel</h3>
+                        <p data-translate="gallery.items.illustration2.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
                     <img src="images/gallery/character2.webp" alt="Character Design 2">
                     <div class="overlay">
-                        <h3>Chibi</h3>
-                        <p>Character design</p>
+                        <h3 data-translate="gallery.items.character2.title">Chibi</h3>
+                        <p data-translate="gallery.items.character2.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/Illustatrion3.jpg" alt="Illustration 3">
                     <div class="overlay">
-                        <h3>Ange et dragon</h3>
-                        <p>Illustration numérique</p>
+                        <h3 data-translate="gallery.items.illustration3.title">Ange et dragon</h3>
+                        <p data-translate="gallery.items.illustration3.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
                     <img src="images/gallery/character3.webp" alt="Character Design 3">
                     <div class="overlay">
-                        <h3>Dragon Céleste</h3>
-                        <p>Character design</p>
+                        <h3 data-translate="gallery.items.character3.title">Dragon Céleste</h3>
+                        <p data-translate="gallery.items.character3.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/Illustatrion4.jpg" alt="Illustration 4">
                     <div class="overlay">
-                        <h3>Endroit mystérieux</h3>
-                        <p>Illustration numérique</p>
+                        <h3 data-translate="gallery.items.illustration4.title">Endroit mystérieux</h3>
+                        <p data-translate="gallery.items.illustration4.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
                     <img src="images/gallery/character4.webp" alt="Character Design 4">
                     <div class="overlay">
-                        <h3>Personnage</h3>
-                        <p>Character design</p>
+                        <h3 data-translate="gallery.items.character4.title">Personnage</h3>
+                        <p data-translate="gallery.items.character4.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
                     <img src="images/gallery/character5.webp" alt="Character Design 5">
                     <div class="overlay">
-                        <h3>Spider Wolf</h3>
-                        <p>Character design</p>
+                        <h3 data-translate="gallery.items.character5.title">Spider Wolf</h3>
+                        <p data-translate="gallery.items.character5.description">Character design</p>
                     </div>
                 </div>
             </div>
@@ -171,19 +175,19 @@
 
     <section id="contact" class="contact">
         <div class="container" data-aos="fade-up">
-            <h2>Contactez-moi</h2>
+            <h2 data-translate="contact.title">Contactez-moi</h2>
             <div class="contact-content">
-                <form id="contact-form" action="https://formspree.io/f/votre_id_formspree" method="POST">
+                <form id="contact-form" action="https://formspree.io/f/mvgkonpd" method="POST">
                     <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                        <input type="text" id="name" name="name" data-translate-placeholder="contact.form.name" placeholder="Votre nom" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Votre email" required>
+                        <input type="email" id="email" name="email" data-translate-placeholder="contact.form.email" placeholder="Votre email" required>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" name="message" placeholder="Votre message" required></textarea>
+                        <textarea id="message" name="message" data-translate-placeholder="contact.form.message" placeholder="Votre message" required></textarea>
                     </div>
-                    <button type="submit" class="cta-button">Envoyer</button>
+                    <button type="submit" class="cta-button" data-translate="contact.form.send">Envoyer</button>
                 </form>
                 <div class="contact-info">
                     <div class="social-links">
@@ -207,7 +211,7 @@
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2025 Mimoo. Tous droits réservés.</p>
+            <p>&copy; 2025 Temmiie. <span data-translate="footer.rights">Tous droits réservés.</span></p>
         </div>
     </footer>
 
@@ -227,6 +231,8 @@
     </div>
 
     <!-- Scripts -->
+    <script src="js/translations.js"></script>
+    <script src="js/language.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
