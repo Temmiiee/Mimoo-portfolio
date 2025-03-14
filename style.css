@@ -1106,38 +1106,36 @@ footer {
     top: 63px;
     left: 20px;
     font-size: 24px;
-    z-index: 9999; /* Augmenté pour être sûr qu'il soit au-dessus de tout */
+    z-index: 9999;
     cursor: pointer;
-    animation: crawl 45s linear infinite;
+    animation: crawlRight 22.5s linear infinite;
     user-select: none;
     pointer-events: auto;
-    display: block; /* Assurons-nous qu'il est visible */
-    opacity: 1; /* Assurons-nous qu'il est opaque */
+    display: block;
+    opacity: 1;
 }
 
-@keyframes crawl {
-    0% {
+@keyframes crawlRight {
+    0%, 100% {
         left: 0;
         transform: scaleX(1);
     }
-    45% {
+    49.99% {
+        left: calc(100% - 40px);
         transform: scaleX(1);
     }
     50% {
         left: calc(100% - 40px);
         transform: scaleX(-1);
     }
-    95% {
-        transform: scaleX(-1);
-    }
-    100% {
+    99.99% {
         left: 0;
-        transform: scaleX(1);
+        transform: scaleX(-1);
     }
 }
 
 .snail.jumping {
-    animation: crawl 45s linear infinite, jump 0.5s ease;
+    animation: crawlRight 22.5s linear infinite, jump 0.5s ease;
 }
 
 @keyframes jump {

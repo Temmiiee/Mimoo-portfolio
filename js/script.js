@@ -201,53 +201,78 @@ function createFloatingCreatures() {
     const creatures = ['🦋', '🍃', '🌸'];
     const container = document.body;
     
+    function getRandomBetween(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    
     function createCreature() {
         const creature = document.createElement('div');
         creature.className = 'floating-creature';
         creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
         
-        creature.style.left = '-50px';
-        creature.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+        // Taille aléatoire entre 16px et 32px
+        const randomSize = getRandomBetween(16, 32);
+        creature.style.fontSize = `${randomSize}px`;
+        
+        // Opacité maximale aléatoire entre 0.4 et 0.9
+        const maxOpacity = getRandomBetween(0.4, 0.9);
+        
+        // Position initiale
+        creature.style.left = '-30px';
+        creature.style.top = Math.random() * (window.innerHeight - 150) + 50 + 'px';
         creature.style.opacity = '0';
         
         container.appendChild(creature);
 
+        // Création d'une timeline GSAP plus fluide
         const timeline = gsap.timeline({
             onComplete: () => {
                 container.removeChild(creature);
-                setTimeout(createCreature, Math.random() * 5000 + 8000);
+                setTimeout(createCreature, Math.random() * 2000 + 3000);
             }
         });
 
+        // Animation principale
         timeline
             .to(creature, {
-                opacity: 0.4,
-                duration: 2,
-                ease: "power2.in"
+                opacity: maxOpacity,
+                duration: 0.8,
+                ease: "power1.in"
             })
             .to(creature, {
-                left: window.innerWidth + 50 + 'px',
-                top: '+=' + (Math.random() * 100 - 50) + 'px',
-                rotation: Math.random() * 180,
-                duration: 25 + Math.random() * 10,
-                ease: "none"
-            }, "-=0.5")
+                left: window.innerWidth + 30 + 'px',
+                top: '+=' + (Math.random() * 60 - 30) + 'px',
+                rotation: Math.random() * 360,
+                duration: getRandomBetween(8, 15), // Vitesse aléatoire
+                ease: "power1.inOut"
+            }, "-=0.8")
             .to(creature, {
                 opacity: 0,
-                duration: 2,
-                ease: "power2.out"
-            }, "-=3");
+                duration: 0.8,
+                ease: "power1.out"
+            }, "-=2");
 
+        // Animation de flottement avec amplitude aléatoire
         gsap.to(creature, {
-            scale: 1.2,
-            duration: 3,
+            y: `+=${getRandomBetween(10, 20)}`,
+            duration: getRandomBetween(1, 2),
             yoyo: true,
             repeat: -1,
             ease: "sine.inOut"
         });
+
+        // Animation de rotation avec vitesse aléatoire
+        gsap.to(creature, {
+            rotation: "+=45",
+            duration: getRandomBetween(2, 4),
+            yoyo: true,
+            repeat: -1,
+            ease: "none"
+        });
     }
 
-    for (let i = 0; i < 3; i++) {
-        setTimeout(createCreature, i * 4000);
+    // Créer plusieurs émojis initialement avec un délai aléatoire
+    for (let i = 0; i < 5; i++) {
+        setTimeout(createCreature, getRandomBetween(0, 3000));
     }
 }
