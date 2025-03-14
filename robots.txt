@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+
+Sitemap: https://temmiiee.github.io/Art-Portfolio-Template/sitemap.xml

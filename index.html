@@ -3,31 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mimoo - Digital Artist & Illustrator</title>
     <meta name="description" content="Portfolio de Mimoo, artiste créant des œuvres sur ordinateur et tablette, passionnée par la nature et diplômée en arts.">
-    <meta name="keywords" content="art sur ordinateur, illustration, character design, artiste, portfolio, Mimoo">
-    <meta name="author" content="Mimoo">
-    <meta property="og:title" content="Portfolio de Mimoo">
+    <meta name="keywords" content="art digital, illustration, character design, artiste, portfolio, Mimoo">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#557153">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mimoo - Digital Artist & Illustrator">
     <meta property="og:description" content="Portfolio de Mimoo, artiste créant des œuvres sur ordinateur et tablette">
-    <meta property="og:image" content="images/og-image.jpg">
+    <meta property="og:image" content="https://temmiiee.github.io/Art-Portfolio-Template/images/og-image.jpg">
     <meta property="og:url" content="https://temmiiee.github.io/Art-Portfolio-Template/">
+    <meta property="og:site_name" content="Mimoo Art">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:locale:alternate" content="en_GB">
     
-    <title>Mimoo - Artiste Infographiste</title>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@mimoo_art">
+    <meta name="twitter:title" content="Portfolio de Mimoo">
+    <meta name="twitter:description" content="Portfolio de Mimoo, artiste créant des œuvres sur ordinateur et tablette">
+    <meta name="twitter:image" content="https://temmiiee.github.io/Art-Portfolio-Template/images/og-image.jpg">
     
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/mimoo.jpg">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/mimoo.jpg">
-    <link rel="manifest" href="site.webmanifest">
-    
-    <!-- Styles -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="images/mimoo.jpg" as="image">
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
+    <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script defer src="js/translations.js"></script>
+    <script defer src="js/language.js"></script>
+    <script defer src="js/script.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 <body>
-    <!-- Ajouter le curseur personnalisé -->
     <div id="cursor"></div>
+    <div class="snail">🐌</div>
 
     <nav>
         <div class="logo">
@@ -58,7 +76,6 @@
         <div class="hero-background">
             <div class="overlay"></div>
             <div class="background-image">
-                <!-- Image de fond nature/art -->
                 <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b" alt="Beautiful Nature Background">
             </div>
         </div>
@@ -183,19 +200,27 @@
         <div class="container" data-aos="fade-up">
             <h2 data-translate="contact.title">Contactez-moi</h2>
             <div class="contact-content">
-                <form id="contact-form" action="https://formspree.io/f/mvgkonpd" method="POST">
-                    <div class="form-group">
-                        <input type="text" id="name" name="name" data-translate-placeholder="contact.form.name" placeholder="Votre nom" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" data-translate-placeholder="contact.form.email" placeholder="Votre email" required>
-                    </div>
-                    <div class="form-group">
-                        <textarea id="message" name="message" data-translate-placeholder="contact.form.message" placeholder="Votre message" required></textarea>
-                    </div>
-                    <button type="submit" class="cta-button" data-translate="contact.form.send">Envoyer</button>
-                </form>
+                <div class="contact-form-wrapper">
+                    <form id="contact-form" action="https://formspree.io/f/mvgkonpd" method="POST">
+                        <div class="form-group">
+                            <label for="name" data-translate="contact.form.name">Votre nom</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" data-translate="contact.form.email">Votre email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" data-translate="contact.form.message">Votre message</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="cta-button" data-translate="contact.form.send">
+                            <i class="fas fa-paper-plane"></i> Envoyer
+                        </button>
+                    </form>
+                </div>
                 <div class="contact-info">
+                    <h3 data-translate="contact.social.title">Retrouvez-moi sur</h3>
                     <div class="social-links">
                         <a href="https://instagram.com/_mimoou" target="_blank" class="social-link">
                             <i class="fab fa-instagram"></i>
@@ -227,21 +252,21 @@
     <!-- Lightbox pour l'affichage en plein écran -->
     <div class="lightbox">
         <div class="lightbox-content">
-            <button class="lightbox-close">&times;</button>
+            <button class="lightbox-close">×</button>
             <img src="" alt="Image en plein écran">
             <div class="lightbox-navigation">
-                <button class="lightbox-prev">&lt; Précédent</button>
-                <button class="lightbox-next">Suivant &gt;</button>
+                <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/translations.js"></script>
-    <script src="js/language.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
 </body>
 </html>

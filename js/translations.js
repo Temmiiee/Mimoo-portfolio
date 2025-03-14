@@ -1,4 +1,4 @@
-const translations = {
+window.translations = {
     fr: {
         nav: {
             home: "Accueil",
@@ -13,7 +13,7 @@ const translations = {
         },
         about: {
             title: "À propos de moi",
-            description: "Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.",
+            description: "Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques.",
             techniques: {
                 digital: {
                     title: "Art Digital",
@@ -41,29 +41,29 @@ const translations = {
                     title: "Dragon arc-en-ciel",
                     description: "Art digital"
                 },
-                character1: {
-                    title: "Harley",
-                    description: "Character design"
-                },
                 illustration2: {
                     title: "Dragon arc-en-ciel",
                     description: "Art digital"
-                },
-                character2: {
-                    title: "Chibi",
-                    description: "Character design"
                 },
                 illustration3: {
                     title: "Ange et dragon",
                     description: "Art digital"
                 },
-                character3: {
-                    title: "Dragon Céleste",
-                    description: "Character design"
-                },
                 illustration4: {
                     title: "Endroit mystérieux",
                     description: "Art digital"
+                },
+                character1: {
+                    title: "Harley",
+                    description: "Character design"
+                },
+                character2: {
+                    title: "Chibi",
+                    description: "Character design"
+                },
+                character3: {
+                    title: "Dragon Céleste",
+                    description: "Character design"
                 },
                 character4: {
                     title: "Personnage",
@@ -82,6 +82,9 @@ const translations = {
                 email: "Votre email",
                 message: "Votre message",
                 send: "Envoyer"
+            },
+            social: {
+                title: "Retrouvez-moi sur"
             }
         },
         footer: {
@@ -102,7 +105,7 @@ const translations = {
         },
         about: {
             title: "About me",
-            description: "I'm Mimoo, a 21-year-old artist who loves nature and animals. With a degree in 2D/3D animation, I explore various techniques to create unique artworks. My journey has allowed me to develop diverse skills, ranging from traditional drawing to computer and tablet creation, including character animation.",
+            description: "I'm Mimoo, a 21-year-old artist who loves nature and animals. With a degree in 2D/3D animation, I explore various techniques to create unique artworks.",
             techniques: {
                 digital: {
                     title: "Digital Art",
@@ -130,29 +133,29 @@ const translations = {
                     title: "Rainbow Dragon",
                     description: "Digital art"
                 },
-                character1: {
-                    title: "Harley",
-                    description: "Character design"
-                },
                 illustration2: {
                     title: "Rainbow Dragon",
                     description: "Digital art"
-                },
-                character2: {
-                    title: "Chibi",
-                    description: "Character design"
                 },
                 illustration3: {
                     title: "Angel and Dragon",
                     description: "Digital art"
                 },
-                character3: {
-                    title: "Celestial Dragon",
-                    description: "Character design"
-                },
                 illustration4: {
                     title: "Mysterious Place",
                     description: "Digital art"
+                },
+                character1: {
+                    title: "Harley",
+                    description: "Character design"
+                },
+                character2: {
+                    title: "Chibi",
+                    description: "Character design"
+                },
+                character3: {
+                    title: "Celestial Dragon",
+                    description: "Character design"
                 },
                 character4: {
                     title: "Character",
@@ -165,12 +168,15 @@ const translations = {
             }
         },
         contact: {
-            title: "Contact me",
+            title: "Contact Me",
             form: {
                 name: "Your name",
                 email: "Your email",
                 message: "Your message",
                 send: "Send"
+            },
+            social: {
+                title: "Find me on"
             }
         },
         footer: {

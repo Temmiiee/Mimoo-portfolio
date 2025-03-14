@@ -1,19 +1,26 @@
 {
-    "name": "NAME - Digital Artist",
-    "short_name": "NAME Art",
+    "name": "Mimoo - Digital Artist",
+    "short_name": "Mimoo Art",
+    "description": "Portfolio artistique de Mimoo - Art digital, illustrations et character design",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#FEFAE0",
+    "theme_color": "#557153",
     "icons": [
         {
-            "src": "images/favicon/android-chrome-192x192.png",
+            "src": "images/favicon/mimoo.jpg",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         },
         {
-            "src": "images/favicon/android-chrome-512x512.png",
+            "src": "images/favicon/mimoo.jpg",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ],
-    "theme_color": "#557153",
-    "background_color": "#FEFAE0",
-    "display": "standalone"
+    "orientation": "portrait",
+    "lang": "fr",
+    "categories": ["art", "portfolio", "design"]
 }

@@ -1,5 +1,10 @@
 class LanguageManager {
     constructor() {
+        // S'assurer que les traductions sont chargées
+        if (typeof window.translations === 'undefined') {
+            console.error('Translations not loaded');
+            return;
+        }
         this.currentLang = localStorage.getItem('preferred-language') || 'fr';
         this.init();
     }
@@ -20,19 +25,14 @@ class LanguageManager {
         document.querySelectorAll('[data-translate]').forEach(element => {
             const key = element.dataset.translate;
             const translation = this.getTranslation(key);
-            if (translation) element.textContent = translation;
-        });
-
-        // Mettre à jour les attributs spéciaux
-        document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
-            const key = element.dataset.translatePlaceholder;
-            const translation = this.getTranslation(key);
-            if (translation) element.placeholder = translation;
+            if (translation) {
+                element.textContent = translation;
+            }
         });
     }
 
     getTranslation(key) {
-        return key.split('.').reduce((obj, i) => obj ? obj[i] : null, translations[this.currentLang]);
+        return key.split('.').reduce((obj, i) => obj ? obj[i] : null, window.translations[this.currentLang]);
     }
 
     setupEventListeners() {
@@ -47,7 +47,11 @@ class LanguageManager {
     }
 }
 
-// Initialiser le gestionnaire de langue quand le DOM est chargé
+// Attendre que le DOM soit chargé ET que les traductions soient disponibles
 document.addEventListener('DOMContentLoaded', () => {
-    window.languageManager = new LanguageManager();
-});
+    if (typeof window.translations !== 'undefined') {
+        window.languageManager = new LanguageManager();
+    } else {
+        console.error('Translations not loaded');
+    }
+});  // Ajout de la parenthèse fermante manquante ici
