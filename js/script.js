@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Initializing application...");
     initializeNavigation();
-    initializeGallery();
+    initializeGalleryFilters();
     initializeLightbox();
     initializeAOS();
     initializeSnail();
@@ -101,13 +100,15 @@ function initializeHoverEffects() {
     });
 }
 
-function initializeGallery() {
+function initializeGalleryFilters() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-item');
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            // Retirer la classe active de tous les boutons
             filterBtns.forEach(b => b.classList.remove('active'));
+            // Ajouter la classe active au bouton cliqué
             btn.classList.add('active');
             
             const filter = btn.getAttribute('data-filter');
@@ -115,7 +116,7 @@ function initializeGallery() {
             galleryItems.forEach(item => {
                 const category = item.getAttribute('data-category');
                 if (filter === 'all' || category === filter) {
-                    item.style.display = 'block';
+                    item.style.display = '';
                     setTimeout(() => {
                         item.style.opacity = '1';
                         item.style.transform = 'scale(1)';
@@ -134,40 +135,54 @@ function initializeGallery() {
 
 function initializeLightbox() {
     const lightbox = document.querySelector('.lightbox');
-    const lightboxImg = lightbox.querySelector('img');
-    const closeBtn = lightbox.querySelector('.lightbox-close');
-    const prevBtn = lightbox.querySelector('.lightbox-prev');
-    const nextBtn = lightbox.querySelector('.lightbox-next');
-    const galleryItems = Array.from(document.querySelectorAll('.gallery-item img'));
+    const lightboxImg = document.querySelector('.lightbox img');
+    const lightboxTitle = document.querySelector('.lightbox-title');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
     let currentIndex = 0;
 
-    function showImage(index) {
+    function showLightbox(index) {
         currentIndex = index;
-        const imgSrc = galleryItems[index].src;
-        lightboxImg.src = imgSrc;
+        const item = galleryItems[index];
+        const img = item.querySelector('img');
+        const overlay = item.querySelector('.overlay');
+        const title = overlay.querySelector('h3').textContent;
+
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxTitle.textContent = title;
         lightbox.classList.add('active');
         
-        prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
-        nextBtn.style.visibility = index === galleryItems.length - 1 ? 'hidden' : 'visible';
+        // Gestion de la visibilité des boutons de navigation
+        lightboxPrev.style.visibility = index === 0 ? 'hidden' : 'visible';
+        lightboxNext.style.visibility = index === galleryItems.length - 1 ? 'hidden' : 'visible';
     }
 
+    // Ouvrir la lightbox au clic sur une image
     galleryItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            showImage(index);
+            showLightbox(index);
         });
     });
 
-    closeBtn.addEventListener('click', () => lightbox.classList.remove('active'));
-
-    prevBtn?.addEventListener('click', () => {
-        if (currentIndex > 0) showImage(currentIndex - 1);
+    // Fermer la lightbox
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
     });
 
-    nextBtn?.addEventListener('click', () => {
-        if (currentIndex < galleryItems.length - 1) showImage(currentIndex + 1);
+    // Navigation précédent/suivant
+    lightboxPrev.addEventListener('click', () => {
+        if (currentIndex > 0) showLightbox(currentIndex - 1);
     });
 
+    lightboxNext.addEventListener('click', () => {
+        if (currentIndex < galleryItems.length - 1) showLightbox(currentIndex + 1);
+    });
+
+    // Navigation au clavier
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
         
@@ -176,14 +191,15 @@ function initializeLightbox() {
                 lightbox.classList.remove('active');
                 break;
             case 'ArrowLeft':
-                if (currentIndex > 0) showImage(currentIndex - 1);
+                if (currentIndex > 0) showLightbox(currentIndex - 1);
                 break;
             case 'ArrowRight':
-                if (currentIndex < galleryItems.length - 1) showImage(currentIndex + 1);
+                if (currentIndex < galleryItems.length - 1) showLightbox(currentIndex + 1);
                 break;
         }
     });
 
+    // Fermer en cliquant en dehors de l'image
     lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) lightbox.classList.remove('active');
     });
