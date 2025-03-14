@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Initializing application...");
     initializeNavigation();
     initializeGallery();
     initializeLightbox();
     initializeAOS();
     initializeSnail();
+    initializeHoverEffects();
     createFloatingCreatures();
 });
 
@@ -60,14 +62,15 @@ function initializeNavigation() {
 
 function initializeSnail() {
     const snail = document.querySelector('.snail');
-    
+    if (!snail) {
+        console.error("Snail element not found!");
+        return;
+    }
+
     snail.addEventListener('click', () => {
         if (!snail.classList.contains('jumping')) {
             snail.classList.add('jumping');
-            
-            setTimeout(() => {
-                snail.classList.remove('jumping');
-            }, 500);
+            setTimeout(() => snail.classList.remove('jumping'), 500);
         }
     });
 }
@@ -86,7 +89,6 @@ function initializeHoverEffects() {
         });
     });
 
-    // Pour les éléments de la galerie
     const galleryItems = document.querySelectorAll('.gallery-item');
     galleryItems.forEach(item => {
         item.addEventListener('mouseenter', () => {
@@ -102,17 +104,9 @@ function initializeHoverEffects() {
 function initializeGallery() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-item');
-    const lightbox = document.querySelector('.lightbox');
-    const lightboxImg = lightbox.querySelector('img');
-    const closeBtn = lightbox.querySelector('.lightbox-close');
-    const prevBtn = lightbox.querySelector('.lightbox-prev');
-    const nextBtn = lightbox.querySelector('.lightbox-next');
-    let currentIndex = 0;
 
-    // Gestion des filtres
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Mise à jour des boutons de filtre
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
@@ -136,81 +130,6 @@ function initializeGallery() {
             });
         });
     });
-
-    // Fonction pour afficher une image dans la lightbox
-    function showImage(index) {
-        const visibleItems = Array.from(galleryItems).filter(item => 
-            item.style.display !== 'none'
-        );
-        currentIndex = index;
-        const imgSrc = visibleItems[index].querySelector('img').src;
-        lightboxImg.src = imgSrc;
-        lightbox.classList.add('active');
-
-        // Mise à jour des boutons de navigation
-        prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
-        nextBtn.style.visibility = index === visibleItems.length - 1 ? 'hidden' : 'visible';
-    }
-
-    // Gestion de la lightbox
-    galleryItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            const visibleItems = Array.from(galleryItems).filter(item => 
-                item.style.display !== 'none'
-            );
-            const visibleIndex = visibleItems.indexOf(item);
-            showImage(visibleIndex);
-        });
-    });
-
-    // Fermeture de la lightbox
-    closeBtn.addEventListener('click', () => {
-        lightbox.classList.remove('active');
-    });
-
-    // Navigation dans la lightbox
-    prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            showImage(currentIndex - 1);
-        }
-    });
-
-    nextBtn.addEventListener('click', () => {
-        const visibleItems = Array.from(galleryItems).filter(item => 
-            item.style.display !== 'none'
-        );
-        if (currentIndex < visibleItems.length - 1) {
-            showImage(currentIndex + 1);
-        }
-    });
-
-    // Fermeture avec la touche Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-            lightbox.classList.remove('active');
-        }
-        // Navigation avec les flèches
-        if (lightbox.classList.contains('active')) {
-            if (e.key === 'ArrowLeft' && currentIndex > 0) {
-                showImage(currentIndex - 1);
-            }
-            if (e.key === 'ArrowRight') {
-                const visibleItems = Array.from(galleryItems).filter(item => 
-                    item.style.display !== 'none'
-                );
-                if (currentIndex < visibleItems.length - 1) {
-                    showImage(currentIndex + 1);
-                }
-            }
-        }
-    });
-
-    // Fermeture en cliquant en dehors de l'image
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            lightbox.classList.remove('active');
-        }
-    });
 }
 
 function initializeLightbox() {
@@ -228,7 +147,6 @@ function initializeLightbox() {
         lightboxImg.src = imgSrc;
         lightbox.classList.add('active');
         
-        // Mettre à jour la visibilité des boutons de navigation
         prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
         nextBtn.style.visibility = index === galleryItems.length - 1 ? 'hidden' : 'visible';
     }
@@ -240,34 +158,34 @@ function initializeLightbox() {
         });
     });
 
-    closeBtn.addEventListener('click', () => {
-        lightbox.classList.remove('active');
-    });
+    closeBtn.addEventListener('click', () => lightbox.classList.remove('active'));
 
     prevBtn?.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            showImage(currentIndex - 1);
-        }
+        if (currentIndex > 0) showImage(currentIndex - 1);
     });
 
     nextBtn?.addEventListener('click', () => {
-        if (currentIndex < galleryItems.length - 1) {
-            showImage(currentIndex + 1);
-        }
+        if (currentIndex < galleryItems.length - 1) showImage(currentIndex + 1);
     });
 
-    // Fermer avec la touche Escape
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-            lightbox.classList.remove('active');
+        if (!lightbox.classList.contains('active')) return;
+        
+        switch(e.key) {
+            case 'Escape':
+                lightbox.classList.remove('active');
+                break;
+            case 'ArrowLeft':
+                if (currentIndex > 0) showImage(currentIndex - 1);
+                break;
+            case 'ArrowRight':
+                if (currentIndex < galleryItems.length - 1) showImage(currentIndex + 1);
+                break;
         }
     });
 
-    // Fermer en cliquant en dehors de l'image
     lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            lightbox.classList.remove('active');
-        }
+        if (e.target === lightbox) lightbox.classList.remove('active');
     });
 }
 
@@ -279,7 +197,6 @@ function initializeAOS() {
     });
 }
 
-// Fonction pour créer les émojis flottants
 function createFloatingCreatures() {
     const creatures = ['🦋', '🍃', '🌸'];
     const container = document.body;
@@ -289,7 +206,6 @@ function createFloatingCreatures() {
         creature.className = 'floating-creature';
         creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
         
-        // Position initiale
         creature.style.left = '-50px';
         creature.style.top = Math.random() * (window.innerHeight - 100) + 'px';
         creature.style.opacity = '0';
@@ -299,7 +215,7 @@ function createFloatingCreatures() {
         const timeline = gsap.timeline({
             onComplete: () => {
                 container.removeChild(creature);
-                setTimeout(createCreature, Math.random() * 5000 + 8000); // Délai entre 8 et 13 secondes
+                setTimeout(createCreature, Math.random() * 5000 + 8000);
             }
         });
 
@@ -331,14 +247,7 @@ function createFloatingCreatures() {
         });
     }
 
-    // Démarrage initial avec 3 créatures espacées
     for (let i = 0; i < 3; i++) {
         setTimeout(createCreature, i * 4000);
     }
 }
-
-// Initialisation au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
-    createFloatingCreatures();
-});
-

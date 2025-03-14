@@ -1100,3 +1100,54 @@ footer {
         transform: translateY(0) rotate(0deg);
     }
 }
+
+.snail {
+    position: fixed;
+    top: 63px;
+    left: 20px;
+    font-size: 24px;
+    z-index: 9999; /* Augmenté pour être sûr qu'il soit au-dessus de tout */
+    cursor: pointer;
+    animation: crawl 45s linear infinite;
+    user-select: none;
+    pointer-events: auto;
+    display: block; /* Assurons-nous qu'il est visible */
+    opacity: 1; /* Assurons-nous qu'il est opaque */
+}
+
+@keyframes crawl {
+    0% {
+        left: 0;
+        transform: scaleX(1);
+    }
+    45% {
+        transform: scaleX(1);
+    }
+    50% {
+        left: calc(100% - 40px);
+        transform: scaleX(-1);
+    }
+    95% {
+        transform: scaleX(-1);
+    }
+    100% {
+        left: 0;
+        transform: scaleX(1);
+    }
+}
+
+.snail.jumping {
+    animation: crawl 45s linear infinite, jump 0.5s ease;
+}
+
+@keyframes jump {
+    0% {
+        top: 63px;
+    }
+    50% {
+        top: 43px;
+    }
+    100% {
+        top: 63px;
+    }
+}
