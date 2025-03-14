@@ -3,7 +3,7 @@ Allow: /
 Disallow: /private/
 
 # Sitemap
-Sitemap: https://temmiiee.github.io/Art-Portfolio-Template/sitemap.xml
+Sitemap: https://temmiiee.github.io/Mimoo-portfolio/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 10
