@@ -587,9 +587,11 @@ nav a:hover {
 }
 
 .lightbox-info {
+    position: relative;
     text-align: center;
-    padding: 15px 0;
-    color: #333;
+    color: white;
+    padding: 1rem;
+    width: 100%;
 }
 
 .lightbox-title {
@@ -1200,3 +1202,47 @@ footer {
         top: 63px;
     }
 }
+
+/* Supprimer tout ce bloc de code */
+.share-buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .share-buttons {
+    opacity: 1;
+}
+
+.share-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-btn:hover {
+    transform: scale(1.1);
+    background: var(--accent-color);
+}
+
+.share-btn i {
+    font-size: 1.2rem;
+}
+
+.share-btn.facebook { background: #3b5998; }
+.share-btn.twitter { background: #1da1f2; }
+.share-btn.pinterest { background: #bd081c; }

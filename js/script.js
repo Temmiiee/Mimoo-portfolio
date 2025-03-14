@@ -292,3 +292,4 @@ function createFloatingCreatures() {
         setTimeout(createCreature, getRandomBetween(0, 3000));
     }
 }
+
