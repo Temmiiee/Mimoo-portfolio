@@ -154,6 +154,7 @@ function initializeLightbox() {
         lightboxImg.alt = img.alt;
         lightboxTitle.textContent = title;
         lightbox.classList.add('active');
+        document.body.classList.add('lightbox-active');
         
         // Gestion de la visibilité des boutons de navigation
         lightboxPrev.style.visibility = index === 0 ? 'hidden' : 'visible';
@@ -171,6 +172,7 @@ function initializeLightbox() {
     // Fermer la lightbox
     lightboxClose.addEventListener('click', () => {
         lightbox.classList.remove('active');
+        document.body.classList.remove('lightbox-active');
     });
 
     // Navigation précédent/suivant
@@ -189,6 +191,7 @@ function initializeLightbox() {
         switch(e.key) {
             case 'Escape':
                 lightbox.classList.remove('active');
+                document.body.classList.remove('lightbox-active');
                 break;
             case 'ArrowLeft':
                 if (currentIndex > 0) showLightbox(currentIndex - 1);
@@ -201,7 +204,10 @@ function initializeLightbox() {
 
     // Fermer en cliquant en dehors de l'image
     lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) lightbox.classList.remove('active');
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+            document.body.classList.remove('lightbox-active');
+        }
     });
 }
 

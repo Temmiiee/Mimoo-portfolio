@@ -1161,11 +1161,25 @@ footer {
     font-size: 24px;
     z-index: 9999;
     cursor: pointer;
-    animation: crawlRight 22.5s linear infinite;
+    /* La vitesse par défaut (desktop) est plus lente : 90s au lieu de 50s */
+    animation: crawlRight 90s linear infinite;
     user-select: none;
     pointer-events: auto;
     display: block;
     opacity: 1;
+}
+
+/* Sur mobile, on garde la vitesse actuelle */
+@media (max-width: 768px) {
+    .snail {
+        animation: crawlRight 50s linear infinite;
+    }
+}
+
+/* Quand la lightbox est active, on cache les animations */
+body.lightbox-active .floating-creature,
+body.lightbox-active .snail {
+    display: none !important;
 }
 
 @keyframes crawlRight {
@@ -1188,7 +1202,14 @@ footer {
 }
 
 .snail.jumping {
-    animation: crawlRight 22.5s linear infinite, jump 0.5s ease;
+    /* La durée de l'animation crawlRight doit correspondre à celle définie ci-dessus */
+    animation: crawlRight 90s linear infinite, jump 0.5s ease;
+}
+
+@media (max-width: 768px) {
+    .snail.jumping {
+        animation: crawlRight 50s linear infinite, jump 0.5s ease;
+    }
 }
 
 @keyframes jump {
