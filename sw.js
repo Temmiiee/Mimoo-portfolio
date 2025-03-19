@@ -40,9 +40,10 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     // Permettre aux robots d'accéder directement au contenu
     if (event.request.headers.get('User-Agent')?.includes('Googlebot')) {
+        event.respondWith(fetch(event.request));
         return;
     }
-
+    
     event.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request).then(fetchResponse => {
