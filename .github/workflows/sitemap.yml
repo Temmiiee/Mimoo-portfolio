@@ -1,0 +1,23 @@
+name: Generate Sitemap
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Generate Sitemap
+      uses: cicirello/generate-sitemap@v1.10.1
+      with:
+        base-url-path: https://temmiiee.github.io/Mimoo-portfolio/
+        path-to-root: .
+        include-html: true
+        additional-extensions: js,css,jpg,jpeg,png,webp
+        exclude-paths: /private/,/js/,/fonts/
