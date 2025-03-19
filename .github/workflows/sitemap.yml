@@ -9,11 +9,14 @@ on:
 jobs:
   sitemap:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Generate Sitemap
+      id: sitemap
       uses: cicirello/generate-sitemap@v1.10.1
       with:
         base-url-path: https://temmiiee.github.io/Mimoo-portfolio/
@@ -21,3 +24,17 @@ jobs:
         include-html: true
         additional-extensions: js,css,jpg,jpeg,png,webp
         exclude-paths: /private/,/js/,/fonts/
+
+    - name: Output stats
+      run: |
+        echo "sitemap-path = ${{ steps.sitemap.outputs.sitemap-path }}"
+        echo "url-count = ${{ steps.sitemap.outputs.url-count }}"
+        echo "excluded-count = ${{ steps.sitemap.outputs.excluded-count }}"
+
+    - name: Commit and push sitemap
+      run: |
+        git config --global user.name 'GitHub Action'
+        git config --global user.email 'action@github.com'
+        git add sitemap.xml
+        git commit -m "Automated sitemap update" || echo "No changes to commit"
+        git push
