@@ -1,5 +1,4 @@
 /**
- * Visualisateur 3D amélioré pour le portfolio
  * Fonctionnalités :
  * - Chargement de modèles OBJ
  * - Contrôles de caméra avancés
@@ -32,12 +31,12 @@ class EnhancedModelViewer {
             autoRotate: false,
             showGrid: true,
             showAxes: true,
-            backgroundColor: 0x333333, // Fond gris foncé pour mieux voir les modèles
+            backgroundColor: 0x333333,
             wireframe: false,
-            cameraPosition: { x: 3, y: 5, z: 5 }, // Caméra plus haute pour voir le modèle d'en haut
+            cameraPosition: { x: 3, y: 5, z: 5 },
             lightIntensity: 1.0,
             ambientIntensity: 0.5,
-            rotationSpeed: 0.0 // Désactivé par défaut
+            rotationSpeed: 0.0
         };
 
         // Bind des méthodes
@@ -143,9 +142,8 @@ class EnhancedModelViewer {
      * Configure les aides visuelles (grille, axes)
      */
     setupHelpers() {
-        // Grille - positionnée en dessous du modèle (y = -1)
         this.grid = new THREE.GridHelper(20, 20, 0xaaaaaa, 0x666666);
-        this.grid.position.y = -1; // Positionner la grille en dessous du modèle
+        this.grid.position.y = -1;
         this.grid.material.opacity = 0.6;
         this.grid.material.transparent = true;
         this.grid.visible = this.settings.showGrid;
@@ -170,7 +168,6 @@ class EnhancedModelViewer {
         // Bouton de rotation automatique
         const rotateBtn = this.createButton('Rotation Auto', () => {
             this.settings.autoRotate = !this.settings.autoRotate;
-            // Ne pas utiliser this.controls.autoRotate qui fait tourner la caméra
             rotateBtn.classList.toggle('active', this.settings.autoRotate);
         });
         rotateBtn.classList.toggle('active', this.settings.autoRotate);
@@ -287,9 +284,11 @@ class EnhancedModelViewer {
     }
 
     /**
-     * Charge un modèle OBJ
+     * Charge un modèle OBJ (chemin local ou URL)
      */
     loadModel(modelPath, materialPath = null) {
+        // Vérifier si le chemin est une URL externe
+        const isExternalUrl = modelPath.startsWith('http://') || modelPath.startsWith('https://');
         // Si un modèle est déjà chargé, le supprimer
         if (this.model) {
             this.scene.remove(this.model);
@@ -332,6 +331,17 @@ class EnhancedModelViewer {
             // Fonction pour charger le modèle OBJ
             const loadOBJ = () => {
                 const loader = new THREE.OBJLoader();
+
+                // Afficher un message spécial pour les URL externes
+                if (isExternalUrl) {
+                    loadingElement.innerHTML = '<div class="spinner"></div><span>Téléchargement depuis une source externe...</span>';
+                    console.log('Chargement du modèle depuis URL externe:', modelPath);
+
+                    // Vérifier si c'est une URL GitHub Releases
+                    if (modelPath.includes('github.com') && modelPath.includes('/releases/download/')) {
+                        loadingElement.innerHTML += '<p class="note">Chargement depuis GitHub Releases. Si le modèle ne s\'affiche pas, vérifiez que la release est publique.</p>';
+                    }
+                }
 
                 loader.load(
                     modelPath,
@@ -396,13 +406,50 @@ class EnhancedModelViewer {
                         }
                     },
                     (error) => {
+                        // Erreur de chargement
                         console.error('Erreur lors du chargement du modèle:', error);
-                        loadingElement.innerHTML = '<span class="error">Erreur de chargement - Affichage du cube par défaut</span>';
+
+                        // Message d'erreur plus détaillé
+                        let errorMsg = 'Erreur de chargement - Affichage du cube par défaut';
+
+                        // Ajouter des détails spécifiques pour les URL externes
+                        if (isExternalUrl) {
+                            // Message spécifique pour GitHub Releases
+                            if (modelPath.includes('github.com') && modelPath.includes('/releases/download/')) {
+                                errorMsg += '<br><small>Erreur CORS avec GitHub Releases. Essayez ces solutions :</small>';
+                                errorMsg += '<br><small>1. Vérifiez que la release est publique</small>';
+                                errorMsg += '<br><small>2. Utilisez jsDelivr: https://cdn.jsdelivr.net/gh/username/repo@tag/file</small>';
+                                errorMsg += '<br><small>3. Hébergez le fichier sur un service compatible CORS</small>';
+
+                                // Suggérer une URL jsDelivr
+                                const repoMatch = modelPath.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+                                const tagMatch = modelPath.match(/download\/([^\/]+)/);
+                                const fileMatch = modelPath.match(/[^\/]+\.obj$/);
+
+                                if (repoMatch && tagMatch && fileMatch) {
+                                    const username = repoMatch[1];
+                                    const repo = repoMatch[2];
+                                    const tag = tagMatch[1];
+                                    const file = fileMatch[0];
+
+                                    const jsdelivrUrl = `https://cdn.jsdelivr.net/gh/${username}/${repo}@${tag}/${file}`;
+                                    console.warn('Essayez cette URL jsDelivr:', jsdelivrUrl);
+                                }
+                            } else {
+                                errorMsg += '<br><small>Erreur CORS possible. Vérifiez la console pour plus de détails.</small>';
+                            }
+
+                            console.warn('Si vous voyez une erreur CORS, essayez d\'héberger le fichier sur un service compatible CORS.');
+                            console.warn('URL actuelle:', modelPath);
+                        }
+
+                        loadingElement.innerHTML = `<span class="error">${errorMsg}</span>`;
+
                         setTimeout(() => {
                             if (this.container.contains(loadingElement)) {
                                 this.container.removeChild(loadingElement);
                             }
-                        }, 2000);
+                        }, 4000); // Temps plus long pour lire le message
                     }
                 );
             };

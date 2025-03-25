@@ -75,8 +75,8 @@ window.translations = {
                     description: "Character design"
                 },
                 "3d1": {
-                    title: "Cube 3D",
-                    description: "Modèle 3D interactif d'un cube"
+                    title: "Théière 3D",
+                    description: "Modèle 3D interactif d'une théière"
                 },
                 "3d2": {
                     title: "Armoire 3D",

@@ -152,7 +152,8 @@ function initializeLightbox() {
         const overlay = item.querySelector('.overlay');
         const title = overlay.querySelector('h3').textContent;
         const is3DModel = item.getAttribute('data-type') === '3d';
-        const modelPath = item.getAttribute('data-model-path');
+        // Vérifier si le modèle est spécifié par un chemin local ou une URL externe
+        const modelPath = item.getAttribute('data-model-url') || item.getAttribute('data-model-path');
 
         // Gestion de l'affichage de l'image ou du modèle 3D
         if (is3DModel && modelPath) {
