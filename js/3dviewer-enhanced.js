@@ -205,17 +205,59 @@ class EnhancedModelViewer {
             this.captureImage();
         });
 
-        // Bouton pour changer la couleur de fond
+        // Créer un menu de couleurs de fond
+        const bgColorContainer = document.createElement('div');
+        bgColorContainer.className = 'model-viewer-color-menu';
+        this.uiContainer.appendChild(bgColorContainer);
+
+        // Bouton principal pour ouvrir le menu de couleurs
         const bgColorBtn = this.createButton('Fond', () => {
-            // Alterner entre différentes couleurs de fond
-            if (this.settings.backgroundColor === 0x333333) {
-                this.settings.backgroundColor = 0xf8f9fa; // Blanc
-            } else if (this.settings.backgroundColor === 0xf8f9fa) {
-                this.settings.backgroundColor = 0x557153; // Vert
-            } else {
-                this.settings.backgroundColor = 0x333333; // Gris foncé
+            bgColorContainer.classList.toggle('active');
+        });
+        bgColorBtn.className = 'model-viewer-btn color-btn';
+        bgColorContainer.appendChild(bgColorBtn);
+
+        // Palette de couleurs (teintes douces, non agressives pour les yeux)
+        const colors = [
+            { name: 'Gris foncé', value: 0x333333 },
+            { name: 'Gris moyen', value: 0x5d5d5d },
+            { name: 'Gris clair', value: 0xaaaaaa },
+            { name: 'Blanc cassé', value: 0xf5f5f5 },
+            { name: 'Bleu nuit', value: 0x1e3a5f },
+            { name: 'Bleu ardoise', value: 0x34495e },
+            { name: 'Bleu pastel', value: 0x7ba7cc },
+            { name: 'Vert forêt', value: 0x2d4a22 },
+            { name: 'Vert olive', value: 0x5d7052 },
+            { name: 'Vert sauge', value: 0x87a878 },
+            { name: 'Brun', value: 0x5e4b3b },
+            { name: 'Beige', value: 0xe8e0d5 }
+        ];
+
+        // Créer le menu déroulant de couleurs
+        const colorPalette = document.createElement('div');
+        colorPalette.className = 'color-palette';
+        bgColorContainer.appendChild(colorPalette);
+
+        // Ajouter chaque couleur à la palette
+        colors.forEach(color => {
+            const colorSwatch = document.createElement('div');
+            colorSwatch.className = 'color-swatch';
+            colorSwatch.title = color.name;
+            colorSwatch.style.backgroundColor = '#' + color.value.toString(16).padStart(6, '0');
+            colorSwatch.addEventListener('click', () => {
+                this.settings.backgroundColor = color.value;
+                this.updateBackgroundColor();
+                bgColorContainer.classList.remove('active');
+
+                // Mettre à jour le bouton principal avec la couleur sélectionnée
+                bgColorBtn.style.borderBottom = `3px solid #${color.value.toString(16).padStart(6, '0')}`;
+            });
+            colorPalette.appendChild(colorSwatch);
+
+            // Si c'est la couleur actuelle, marquer le bouton
+            if (color.value === this.settings.backgroundColor) {
+                bgColorBtn.style.borderBottom = `3px solid #${color.value.toString(16).padStart(6, '0')}`;
             }
-            this.updateBackgroundColor();
         });
     }
 
@@ -304,10 +346,10 @@ class EnhancedModelViewer {
         // Créer un cube par défaut pour tester le rendu
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshStandardMaterial({
-            color: 0xA9AF7E, // Couleur plus claire pour mieux voir sur fond sombre
+            color: 0xA9AF7E,
             metalness: 0.5,
             roughness: 0.3,
-            emissive: 0x222222, // Légère émission de lumière
+            emissive: 0x222222,
             emissiveIntensity: 0.2
         });
         const cube = new THREE.Mesh(geometry, material);
@@ -336,11 +378,6 @@ class EnhancedModelViewer {
                 if (isExternalUrl) {
                     loadingElement.innerHTML = '<div class="spinner"></div><span>Téléchargement depuis une source externe...</span>';
                     console.log('Chargement du modèle depuis URL externe:', modelPath);
-
-                    // Vérifier si c'est une URL GitHub Releases
-                    if (modelPath.includes('github.com') && modelPath.includes('/releases/download/')) {
-                        loadingElement.innerHTML += '<p class="note">Chargement depuis GitHub Releases. Si le modèle ne s\'affiche pas, vérifiez que la release est publique.</p>';
-                    }
                 }
 
                 loader.load(
@@ -414,32 +451,7 @@ class EnhancedModelViewer {
 
                         // Ajouter des détails spécifiques pour les URL externes
                         if (isExternalUrl) {
-                            // Message spécifique pour GitHub Releases
-                            if (modelPath.includes('github.com') && modelPath.includes('/releases/download/')) {
-                                errorMsg += '<br><small>Erreur CORS avec GitHub Releases. Essayez ces solutions :</small>';
-                                errorMsg += '<br><small>1. Vérifiez que la release est publique</small>';
-                                errorMsg += '<br><small>2. Utilisez jsDelivr: https://cdn.jsdelivr.net/gh/username/repo@tag/file</small>';
-                                errorMsg += '<br><small>3. Hébergez le fichier sur un service compatible CORS</small>';
-
-                                // Suggérer une URL jsDelivr
-                                const repoMatch = modelPath.match(/github\.com\/([^\/]+)\/([^\/]+)/);
-                                const tagMatch = modelPath.match(/download\/([^\/]+)/);
-                                const fileMatch = modelPath.match(/[^\/]+\.obj$/);
-
-                                if (repoMatch && tagMatch && fileMatch) {
-                                    const username = repoMatch[1];
-                                    const repo = repoMatch[2];
-                                    const tag = tagMatch[1];
-                                    const file = fileMatch[0];
-
-                                    const jsdelivrUrl = `https://cdn.jsdelivr.net/gh/${username}/${repo}@${tag}/${file}`;
-                                    console.warn('Essayez cette URL jsDelivr:', jsdelivrUrl);
-                                }
-                            } else {
-                                errorMsg += '<br><small>Erreur CORS possible. Vérifiez la console pour plus de détails.</small>';
-                            }
-
-                            console.warn('Si vous voyez une erreur CORS, essayez d\'héberger le fichier sur un service compatible CORS.');
+                            errorMsg += '<br><small>Erreur lors du chargement du modèle depuis l\'URL externe.</small>';
                             console.warn('URL actuelle:', modelPath);
                         }
 
