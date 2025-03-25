@@ -34,7 +34,8 @@ window.translations = {
             filters: {
                 all: "Tout",
                 illustration: "Illustration",
-                character: "Character Design"
+                character: "Character Design",
+                "3d": "Modèles 3D"
             },
             items: {
                 illustration1: {
@@ -72,6 +73,14 @@ window.translations = {
                 character5: {
                     title: "Spider Wolf",
                     description: "Character design"
+                },
+                "3d1": {
+                    title: "Cube 3D",
+                    description: "Modèle 3D interactif d'un cube"
+                },
+                "3d2": {
+                    title: "Armoire 3D",
+                    description: "Modèle 3D interactif d'une armoire"
                 }
             }
         },
@@ -126,7 +135,8 @@ window.translations = {
             filters: {
                 all: "All",
                 illustration: "Illustration",
-                character: "Character Design"
+                character: "Character Design",
+                "3d": "3D Models"
             },
             items: {
                 illustration1: {
@@ -164,6 +174,14 @@ window.translations = {
                 character5: {
                     title: "Spider Wolf",
                     description: "Character design"
+                },
+                "3d1": {
+                    title: "Tea-Pot 3D",
+                    description: "Interactive 3D tea-pot model"
+                },
+                "3d2": {
+                    title: "3D Cabinet",
+                    description: "Interactive 3D cabinet model"
                 }
             }
         },

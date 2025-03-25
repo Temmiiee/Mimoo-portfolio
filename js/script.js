@@ -32,7 +32,7 @@ function initializeNavigation() {
                     top: offsetPosition,
                     behavior: 'smooth'
                 });
-                
+
                 navLinks.classList.remove('active');
                 hamburger.classList.remove('active');
             }
@@ -47,7 +47,7 @@ function initializeNavigation() {
             nav.classList.remove('scroll-up');
             return;
         }
-        
+
         if (currentScroll > lastScroll && !nav.classList.contains('scroll-down')) {
             nav.classList.remove('scroll-up');
             nav.classList.add('scroll-down');
@@ -81,7 +81,7 @@ function initializeHoverEffects() {
             button.style.transform = 'translateY(-2px)';
             button.style.boxShadow = '0 5px 15px rgba(85, 113, 83, 0.3)';
         });
-        
+
         button.addEventListener('mouseleave', () => {
             button.style.transform = 'translateY(0)';
             button.style.boxShadow = 'none';
@@ -93,7 +93,7 @@ function initializeHoverEffects() {
         item.addEventListener('mouseenter', () => {
             item.style.transform = 'translateY(-5px)';
         });
-        
+
         item.addEventListener('mouseleave', () => {
             item.style.transform = 'translateY(0)';
         });
@@ -110,9 +110,9 @@ function initializeGalleryFilters() {
             filterBtns.forEach(b => b.classList.remove('active'));
             // Ajouter la classe active au bouton cliqué
             btn.classList.add('active');
-            
+
             const filter = btn.getAttribute('data-filter');
-            
+
             galleryItems.forEach(item => {
                 const category = item.getAttribute('data-category');
                 if (filter === 'all' || category === filter) {
@@ -140,8 +140,10 @@ function initializeLightbox() {
     const lightboxClose = document.querySelector('.lightbox-close');
     const lightboxPrev = document.querySelector('.lightbox-prev');
     const lightboxNext = document.querySelector('.lightbox-next');
+    const modelContainer = document.getElementById('model-container');
     const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
     let currentIndex = 0;
+    let modelViewer = null;
 
     function showLightbox(index) {
         currentIndex = index;
@@ -149,13 +151,51 @@ function initializeLightbox() {
         const img = item.querySelector('img');
         const overlay = item.querySelector('.overlay');
         const title = overlay.querySelector('h3').textContent;
+        const is3DModel = item.getAttribute('data-type') === '3d';
+        const modelPath = item.getAttribute('data-model-path');
 
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
+        // Gestion de l'affichage de l'image ou du modèle 3D
+        if (is3DModel && modelPath) {
+            // Afficher le modèle 3D
+            lightboxImg.style.display = 'none';
+            modelContainer.classList.add('active');
+            document.querySelector('.lightbox-content').classList.add('model-view');
+
+            // Initialiser le visualisateur 3D amélioré si nécessaire
+            if (!modelViewer) {
+                modelViewer = new EnhancedModelViewer(modelContainer);
+            }
+
+            // Initialiser la scène et charger le modèle
+            setTimeout(() => {
+                // Délai pour s'assurer que le conteneur est visible et a les bonnes dimensions
+                modelViewer.init();
+                modelViewer.loadModel(modelPath);
+
+                // Forcer un redimensionnement après l'initialisation
+                setTimeout(() => {
+                    if (modelViewer) modelViewer.onWindowResize();
+                }, 100);
+            }, 50);
+        } else {
+            // Afficher l'image normale
+            lightboxImg.style.display = 'block';
+            modelContainer.classList.remove('active');
+            document.querySelector('.lightbox-content').classList.remove('model-view');
+
+            // Nettoyer le visualisateur 3D s'il existe
+            if (modelViewer) {
+                modelViewer.dispose();
+            }
+
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+        }
+
         lightboxTitle.textContent = title;
         lightbox.classList.add('active');
         document.body.classList.add('lightbox-active');
-        
+
         // Gestion de la visibilité des boutons de navigation
         lightboxPrev.style.visibility = index === 0 ? 'hidden' : 'visible';
         lightboxNext.style.visibility = index === galleryItems.length - 1 ? 'hidden' : 'visible';
@@ -173,6 +213,16 @@ function initializeLightbox() {
     lightboxClose.addEventListener('click', () => {
         lightbox.classList.remove('active');
         document.body.classList.remove('lightbox-active');
+
+        // Nettoyer le visualisateur 3D si nécessaire
+        if (modelViewer) {
+            modelViewer.dispose();
+            modelViewer = null;
+        }
+
+        // Réinitialiser l'affichage
+        modelContainer.classList.remove('active');
+        document.querySelector('.lightbox-content').classList.remove('model-view');
     });
 
     // Navigation précédent/suivant
@@ -187,11 +237,21 @@ function initializeLightbox() {
     // Navigation au clavier
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
-        
+
         switch(e.key) {
             case 'Escape':
                 lightbox.classList.remove('active');
                 document.body.classList.remove('lightbox-active');
+
+                // Nettoyer le visualisateur 3D si nécessaire
+                if (modelViewer) {
+                    modelViewer.dispose();
+                    modelViewer = null;
+                }
+
+                // Réinitialiser l'affichage
+                modelContainer.classList.remove('active');
+                document.querySelector('.lightbox-content').classList.remove('model-view');
                 break;
             case 'ArrowLeft':
                 if (currentIndex > 0) showLightbox(currentIndex - 1);
@@ -207,6 +267,16 @@ function initializeLightbox() {
         if (e.target === lightbox) {
             lightbox.classList.remove('active');
             document.body.classList.remove('lightbox-active');
+
+            // Nettoyer le visualisateur 3D si nécessaire
+            if (modelViewer) {
+                modelViewer.dispose();
+                modelViewer = null;
+            }
+
+            // Réinitialiser l'affichage
+            modelContainer.classList.remove('active');
+            document.querySelector('.lightbox-content').classList.remove('model-view');
         }
     });
 }
@@ -222,28 +292,28 @@ function initializeAOS() {
 function createFloatingCreatures() {
     const creatures = ['🦋', '🍃', '🌸'];
     const container = document.body;
-    
+
     function getRandomBetween(min, max) {
         return Math.random() * (max - min) + min;
     }
-    
+
     function createCreature() {
         const creature = document.createElement('div');
         creature.className = 'floating-creature';
         creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
-        
+
         // Taille aléatoire entre 16px et 32px
         const randomSize = getRandomBetween(16, 32);
         creature.style.fontSize = `${randomSize}px`;
-        
+
         // Opacité maximale aléatoire entre 0.4 et 0.9
         const maxOpacity = getRandomBetween(0.4, 0.9);
-        
+
         // Position initiale
         creature.style.left = '-30px';
         creature.style.top = Math.random() * (window.innerHeight - 150) + 50 + 'px';
         creature.style.opacity = '0';
-        
+
         container.appendChild(creature);
 
         // Création d'une timeline GSAP plus fluide

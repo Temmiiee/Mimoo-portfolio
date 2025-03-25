@@ -29,11 +29,11 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="images/mimoo.jpg" as="image">
+    <link rel="preload" href="images/mimoo.png" as="image">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
-    <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.png">
+    <link rel="apple-touch-icon" href="images/favicon/mimoo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -44,6 +44,7 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script defer src="js/translations.js"></script>
     <script defer src="js/language.js"></script>
+    <script defer src="js/3dviewer-enhanced.js"></script>
     <script defer src="js/script.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -53,7 +54,7 @@
     "@type": "Person",
     "name": "Mimoo",
     "url": "https://temmiiee.github.io/Art-Portfolio-Template/",
-    "image": "https://temmiiee.github.io/Art-Portfolio-Template/images/mimoo.jpg",
+    "image": "https://temmiiee.github.io/Art-Portfolio-Template/images/mimoo.png",
     "sameAs": [
         "https://instagram.com/_mimoou",
         "https://twitter.com/mimoo_art",
@@ -117,7 +118,7 @@
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="images/mimoo.jpg" alt="Mimoo" class="profile-img">
+                    <img src="images/mimoo.png" alt="Mimoo" class="profile-img">
                 </div>
                 <div class="about-text">
                     <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
@@ -218,13 +219,12 @@
                         <p data-translate="gallery.items.character5.description">Character design</p>
                     </div>
                 </div>
-                <!-- Note: Le modèle armoire.obj a été supprimé car trop volumineux pour GitHub (>100MB) -->
-                <!-- Vous pouvez le récupérer séparément et le placer dans le dossier models/ -->
-                <div class="gallery-item" data-category="3d" data-type="3d" data-model-path="models/cube.obj">
-                    <img src="images/previews/armoire-preview.jpg" alt="Modèle 3D (utilise cube.obj)">
+                <!-- Modèles 3D -->
+                <div class="gallery-item" data-category="3d" data-type="3d" data-model-path="models/theiere.obj">
+                    <img src="images/previews/theiere-preview.jpg" alt="Théière 3D">
                     <div class="overlay">
-                        <h3 data-translate="gallery.items.3d1.title">Modèle 3D</h3>
-                        <p data-translate="gallery.items.3d1.description">Modèle 3D interactif</p>
+                        <h3 data-translate="gallery.items.3d1.title">Théière 3D</h3>
+                        <p data-translate="gallery.items.3d1.description">Modèle 3D interactif d'un cube</p>
                     </div>
                 </div>
             </div>
