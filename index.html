@@ -11,7 +11,7 @@
     <meta name="googlebot" content="index, follow">
     <meta name="theme-color" content="#557153">
     <meta name="google-site-verification" content="xWZ3srF_x6WJStH_mNOiAKNShKbhl7I6R73bECe6KN0"/>
-    
+
     <meta property="og:type" content="website">
     <meta property="og:title" content="Mimoo - Artiste Digitale | Illustration & Character Design">
     <meta property="og:description" content="Explorez un univers artistique unique où nature et digital se rencontrent. Portfolio d'illustrations et designs de personnages par Mimoo.">
@@ -20,13 +20,13 @@
     <meta property="og:site_name" content="Portfolio de Mimoo">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:locale:alternate" content="en_GB">
-    
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:creator" content="@mimoo_art">
     <meta name="twitter:title" content="Mimoo - Art Digital & Character Design">
     <meta name="twitter:description" content="Découvrez mes créations digitales uniques : illustrations, designs de personnages et univers fantastiques.">
     <meta name="twitter:image" content="https://temmiiee.github.io/Art-Portfolio-Template/images/og-image.jpg">
-    
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="preload" href="images/mimoo.jpg" as="image">
@@ -35,8 +35,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
     <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script defer src="js/translations.js"></script>
@@ -99,7 +102,7 @@
                 <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b" alt="Beautiful Nature Background">
             </div>
         </div>
-        
+
         <div class="hero-content-wrapper">
             <div class="hero-content" data-aos="fade-up">
                 <h1 data-translate="hero.title">Art Digital & Illustration</h1>
@@ -147,11 +150,12 @@
                 <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all">Tout</button>
                 <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration">Illustration</button>
                 <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character">Character Design</button>
+                <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d">Modèles 3D</button>
             </div>
             <div class="gallery-grid">
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/Illustatrion1.jpg" 
-                         alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo" 
+                    <img src="images/gallery/illustration1.jpg"
+                         alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
                          title="Dragon arc-en-ciel par Mimoo">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration1.title">Dragon arc-en-ciel</h3>
@@ -166,7 +170,7 @@
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/Illustatrion2.jpg" alt="Illustration 2">
+                    <img src="images/gallery/illustration2.jpg" alt="Illustration 2">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration2.title">Dragon arc-en-ciel</h3>
                         <p data-translate="gallery.items.illustration2.description">Art digital</p>
@@ -180,7 +184,7 @@
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/Illustatrion3.jpg" alt="Illustration 3">
+                    <img src="images/gallery/illustration3.jpg" alt="Illustration 3">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration3.title">Ange et dragon</h3>
                         <p data-translate="gallery.items.illustration3.description">Art digital</p>
@@ -194,7 +198,7 @@
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/Illustatrion4.jpg" alt="Illustration 4">
+                    <img src="images/gallery/illustration4.jpg" alt="Illustration 4">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration4.title">Endroit mystérieux</h3>
                         <p data-translate="gallery.items.illustration4.description">Art digital</p>
@@ -212,6 +216,14 @@
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character5.title">Spider Wolf</h3>
                         <p data-translate="gallery.items.character5.description">Character design</p>
+                    </div>
+                </div>
+                <!-- Exemple de modèle 3D -->
+                <div class="gallery-item" data-category="3d" data-type="3d" data-model-path="models/armoire.obj">
+                    <img src="images/previews/armoire-preview.jpg" alt="Modèle 3D">
+                    <div class="overlay">
+                        <h3 data-translate="gallery.items.3d1.title">Modèle 3D</h3>
+                        <p data-translate="gallery.items.3d1.description">Modèle 3D interactif</p>
                     </div>
                 </div>
             </div>
@@ -275,7 +287,28 @@
     <div class="lightbox">
         <div class="lightbox-content">
             <button class="lightbox-close">×</button>
-            <img src="" alt="Image en plein écran">
+            <img src="" alt="Image en plein écran" class="lightbox-image">
+            <div id="model-container" class="model-container"></div>
+            <div class="lightbox-info">
+                <h3 class="lightbox-title"></h3>
+            </div>
+            <div class="lightbox-navigation">
+                <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>
+en plein écran">
             <div class="lightbox-info">
                 <h3 class="lightbox-title"></h3>
             </div>
