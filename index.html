@@ -36,19 +36,18 @@
     <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script defer src="js/translations.js"></script>
     <script defer src="js/language.js"></script>
-    <script defer src="js/model-cache.js"></script>
     <script defer src="js/3dviewer-enhanced.js"></script>
-    <script defer src="js/image-optimizer.js"></script>
     <script defer src="js/script.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -101,7 +100,7 @@
         <div class="hero-background">
             <div class="overlay"></div>
             <div class="background-image">
-                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&w=1200&q=75" alt="Beautiful Nature Background" width="1200" height="800" loading="eager">
+                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b" alt="Beautiful Nature Background">
             </div>
         </div>
 
@@ -158,15 +157,14 @@
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/illustration1.jpg"
                          alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
-                         title="Dragon arc-en-ciel par Mimoo"
-                         width="400" height="300" loading="lazy">
+                         title="Dragon arc-en-ciel par Mimoo">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration1.title">Dragon arc-en-ciel</h3>
                         <p data-translate="gallery.items.illustration1.description">Art digital - Création originale mêlant couleurs vibrantes et imagination</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
-                    <img src="images/gallery/character1.webp" alt="Character Design 1" width="400" height="300" loading="lazy">
+                    <img src="images/gallery/character1.webp" alt="Character Design 1">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character1.title">Harley</h3>
                         <p data-translate="gallery.items.character1.description">Character design</p>
@@ -223,7 +221,7 @@
                 </div>
                 <!-- Modèles 3D -->
                 <div class="gallery-item" data-category="3d" data-type="3d" data-model-url="https://portfolio-3d-models.b-cdn.net/theiere.obj">
-                    <img src="images/previews/theiere-preview.jpg" alt="Théière 3D" width="400" height="300" loading="lazy">
+                    <img src="images/previews/theiere-preview.jpg" alt="Théière 3D">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.3d1.title">Théière 3D</h3>
                         <p data-translate="gallery.items.3d1.description">Modèle 3D interactif d'une théière</p>
@@ -303,12 +301,10 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({
-                duration: 1000,
-                once: true,
-                offset: 100
-            });
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
         });
     </script>
 </body>

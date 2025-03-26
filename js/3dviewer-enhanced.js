@@ -1,10 +1,18 @@
 /**
- * Visualisateur de modèles 3D optimisé
+ * Fonctionnalités :
+ * - Chargement de modèles OBJ
+ * - Contrôles de caméra avancés
+ * - Options d'éclairage
+ * - Interface utilisateur personnalisable
+ * - Animations et effets
  */
 class EnhancedModelViewer {
     constructor(container) {
+        // Éléments DOM
         this.container = container;
         this.uiContainer = null;
+
+        // Propriétés Three.js
         this.scene = null;
         this.camera = null;
         this.renderer = null;
@@ -14,6 +22,8 @@ class EnhancedModelViewer {
         this.axes = null;
         this.lights = {};
         this.envMap = null;
+
+        // État
         this.isInitialized = false;
         this.animationFrameId = null;
         this.onRender = null;
@@ -22,18 +32,20 @@ class EnhancedModelViewer {
             showGrid: true,
             showAxes: true,
             backgroundColor: 0x333333,
+            wireframe: false,
             cameraPosition: { x: 3, y: 5, z: 5 },
             lightIntensity: 1.0,
             ambientIntensity: 0.5,
             rotationSpeed: 0.0
         };
 
+        // Bind des méthodes
         this.animate = this.animate.bind(this);
         this.onWindowResize = this.onWindowResize.bind(this);
     }
 
     /**
-     * Initialise la scène
+     * Initialise la scène Three.js et les contrôles
      */
     init() {
         if (this.isInitialized) return;
@@ -52,18 +64,18 @@ class EnhancedModelViewer {
             this.settings.cameraPosition.z
         );
 
-        // Créer un renderer ultra-optimisé
+        // Configurer le renderer
         this.renderer = new THREE.WebGLRenderer({
-            antialias: false, // Désactiver l'antialiasing pour les performances
-            alpha: true,
-            powerPreference: 'high-performance',
-            precision: 'lowp' // Utiliser une précision basse pour améliorer les performances
+            antialias: true,
+            alpha: true
         });
         this.renderer.setSize(width, height);
-        this.renderer.setPixelRatio(1.0); // Forcer un pixel ratio de 1.0 pour maximiser les performances
-        this.renderer.shadowMap.enabled = false; // Désactiver les ombres pour améliorer les performances
-        this.renderer.outputEncoding = THREE.LinearEncoding; // Utiliser un encodage linéaire plus rapide
-        this.renderer.toneMapping = THREE.NoToneMapping; // Désactiver le tone mapping
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.0;
         this.container.appendChild(this.renderer.domElement);
 
         // Ajouter les contrôles OrbitControls
@@ -86,9 +98,6 @@ class EnhancedModelViewer {
         // Créer l'interface utilisateur
         this.createUI();
 
-        // S'assurer qu'il n'y a pas de bouton Filaire
-        this.removeWireframeButton();
-
         // Gérer le redimensionnement de la fenêtre
         window.addEventListener('resize', this.onWindowResize);
 
@@ -100,32 +109,49 @@ class EnhancedModelViewer {
      * Configure l'éclairage de la scène
      */
     setupLights() {
-        // Utiliser uniquement une lumière ambiante pour maximiser les performances
-        this.lights.ambient = new THREE.AmbientLight(0xffffff, this.settings.ambientIntensity * 1.5);
+        // Lumière ambiante
+        this.lights.ambient = new THREE.AmbientLight(0xffffff, this.settings.ambientIntensity);
         this.scene.add(this.lights.ambient);
 
-        // Lumière directionnelle simplifiée sans ombres
+        // Lumière principale (directionnelle)
         this.lights.main = new THREE.DirectionalLight(0xffffff, this.settings.lightIntensity);
         this.lights.main.position.set(5, 10, 7);
-        this.lights.main.castShadow = false; // Désactiver les ombres
+        this.lights.main.castShadow = true;
+        this.lights.main.shadow.mapSize.width = 1024;
+        this.lights.main.shadow.mapSize.height = 1024;
+        this.lights.main.shadow.camera.near = 0.5;
+        this.lights.main.shadow.camera.far = 50;
+        this.lights.main.shadow.camera.left = -10;
+        this.lights.main.shadow.camera.right = 10;
+        this.lights.main.shadow.camera.top = 10;
+        this.lights.main.shadow.camera.bottom = -10;
         this.scene.add(this.lights.main);
+
+        // Lumière d'appoint (directionnelle)
+        this.lights.fill = new THREE.DirectionalLight(0xffffff, this.settings.lightIntensity * 0.5);
+        this.lights.fill.position.set(-5, 5, -5);
+        this.scene.add(this.lights.fill);
+
+        // Lumière de contre-jour
+        this.lights.back = new THREE.DirectionalLight(0xffffff, this.settings.lightIntensity * 0.2);
+        this.lights.back.position.set(0, -5, -10);
+        this.scene.add(this.lights.back);
     }
 
     /**
      * Configure les aides visuelles (grille, axes)
      */
     setupHelpers() {
-        // Grille simplifiée avec moins de divisions
-        this.grid = new THREE.GridHelper(20, 10, 0xaaaaaa, 0x666666); // Réduire le nombre de divisions
+        this.grid = new THREE.GridHelper(20, 20, 0xaaaaaa, 0x666666);
         this.grid.position.y = -1;
         this.grid.material.opacity = 0.6;
         this.grid.material.transparent = true;
         this.grid.visible = this.settings.showGrid;
         this.scene.add(this.grid);
 
-        // Axes simplifiés
+        // Axes - positionnés au niveau de la grille
         this.axes = new THREE.AxesHelper(5);
-        this.axes.position.y = -1;
+        this.axes.position.y = -1; // Aligner avec la grille
         this.axes.visible = this.settings.showAxes;
         this.scene.add(this.axes);
     }
@@ -161,6 +187,13 @@ class EnhancedModelViewer {
             axesBtn.classList.toggle('active', this.settings.showAxes);
         });
         axesBtn.classList.toggle('active', this.settings.showAxes);
+
+        // Bouton pour le mode filaire
+        const wireframeBtn = this.createButton('Filaire', () => {
+            this.settings.wireframe = !this.settings.wireframe;
+            this.toggleWireframe(this.settings.wireframe);
+            wireframeBtn.classList.toggle('active', this.settings.wireframe);
+        });
 
         // Bouton pour réinitialiser la vue
         this.createButton('Réinitialiser', () => {
@@ -235,26 +268,9 @@ class EnhancedModelViewer {
         const button = document.createElement('button');
         button.className = 'model-viewer-btn';
         button.textContent = text;
-        button.setAttribute('aria-label', text); // Ajout d'un label ARIA pour l'accessibilité
         button.addEventListener('click', onClick);
         this.uiContainer.appendChild(button);
         return button;
-    }
-
-    /**
-     * Supprime le bouton Filaire s'il existe
-     */
-    removeWireframeButton() {
-        if (!this.uiContainer) return;
-
-        const buttons = this.uiContainer.querySelectorAll('.model-viewer-btn');
-        buttons.forEach(button => {
-            if (button.textContent === 'Filaire' || button.textContent.toLowerCase().includes('filaire') ||
-                button.textContent === 'Wireframe' || button.textContent.toLowerCase().includes('wireframe')) {
-                button.remove();
-                console.log('Bouton Filaire supprimé');
-            }
-        });
     }
 
     /**
@@ -282,6 +298,25 @@ class EnhancedModelViewer {
     }
 
     /**
+     * Active/désactive le mode filaire pour tous les matériaux
+     */
+    toggleWireframe(enabled) {
+        if (!this.model) return;
+
+        this.model.traverse((child) => {
+            if (child.isMesh && child.material) {
+                if (Array.isArray(child.material)) {
+                    child.material.forEach(mat => {
+                        mat.wireframe = enabled;
+                    });
+                } else {
+                    child.material.wireframe = enabled;
+                }
+            }
+        });
+    }
+
+    /**
      * Met à jour la couleur d'arrière-plan
      */
     updateBackgroundColor() {
@@ -296,22 +331,8 @@ class EnhancedModelViewer {
     loadModel(modelPath, materialPath = null) {
         // Vérifier si le chemin est une URL externe
         const isExternalUrl = modelPath.startsWith('http://') || modelPath.startsWith('https://');
-
-        // Si un modèle est déjà chargé, le supprimer et libérer la mémoire
+        // Si un modèle est déjà chargé, le supprimer
         if (this.model) {
-            // Libérer la mémoire des textures et des géométries
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    if (child.geometry) child.geometry.dispose();
-                    if (child.material) {
-                        if (Array.isArray(child.material)) {
-                            child.material.forEach(mat => this.disposeMaterial(mat));
-                        } else {
-                            this.disposeMaterial(child.material);
-                        }
-                    }
-                }
-            });
             this.scene.remove(this.model);
             this.model = null;
         }
@@ -319,64 +340,106 @@ class EnhancedModelViewer {
         // Afficher un message de chargement
         const loadingElement = document.createElement('div');
         loadingElement.className = 'loading-model';
-        loadingElement.innerHTML = '<div class="spinner"></div><div class="progress-bar"><div class="progress-fill"></div></div>';
+        loadingElement.innerHTML = '<div class="spinner"></div><span>Chargement du modèle...</span>';
         this.container.appendChild(loadingElement);
 
-        // Créer un cube simple comme placeholder (optimisé)
+        // Créer un cube par défaut pour tester le rendu
         const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ // Utiliser MeshBasicMaterial pour économiser des ressources
+        const material = new THREE.MeshStandardMaterial({
             color: 0xA9AF7E,
-            wireframe: false
+            metalness: 0.5,
+            roughness: 0.3,
+            emissive: 0x222222,
+            emissiveIntensity: 0.2
         });
         const cube = new THREE.Mesh(geometry, material);
-        cube.position.y = 0.5;
+        cube.castShadow = true;
+        cube.receiveShadow = true;
+        cube.position.y = 0.5; // Positionner le cube au-dessus de la grille
         this.scene.add(cube);
 
-        // Animation simplifiée du cube (moins de calculs)
+        // Animation du cube
         const animateCube = () => {
             if (cube && this.scene.children.includes(cube)) {
-                cube.rotation.y += 0.01; // Rotation sur un seul axe pour économiser des ressources
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
             }
         };
+
+        // Ajouter l'animation à la boucle de rendu
         this.onRender = animateCube;
 
         try {
-            // Utiliser le cache si disponible
-            if (window.modelCache && window.modelCache.hasModel(modelPath)) {
-                console.log('Utilisation du modèle en cache');
-                const cachedModel = window.modelCache.getModel(modelPath);
-                this.processLoadedModel(cachedModel, cube, loadingElement);
-                return;
-            }
-
-            // Fonction pour charger le modèle OBJ avec des options optimisées
+            // Fonction pour charger le modèle OBJ
             const loadOBJ = () => {
                 const loader = new THREE.OBJLoader();
 
-                // Simplifier le message de chargement
+                // Afficher un message spécial pour les URL externes
                 if (isExternalUrl) {
-                    console.log('Chargement du modèle:', modelPath);
+                    loadingElement.innerHTML = '<div class="spinner"></div><span>Téléchargement depuis une source externe...</span>';
+                    console.log('Chargement du modèle depuis URL externe:', modelPath);
                 }
 
                 loader.load(
                     modelPath,
                     (object) => {
-                        // Traiter le modèle chargé avec notre fonction optimisée
-                        this.processLoadedModel(object, cube, loadingElement);
+                        // Succès du chargement
+                        this.model = object;
 
-                        // Mettre en cache le modèle si possible
-                        if (window.modelCache && !window.modelCache.hasModel(modelPath)) {
-                            window.modelCache.addModel(modelPath, object.clone());
+                        // Supprimer le cube de test
+                        if (cube) {
+                            this.scene.remove(cube);
+                            this.onRender = null;
                         }
+
+                        // Appliquer des matériaux et des ombres
+                        object.traverse((child) => {
+                            if (child.isMesh) {
+                                // Appliquer un matériau standard si aucun n'est défini
+                                if (!child.material) {
+                                    child.material = new THREE.MeshStandardMaterial({
+                                        color: 0xcccccc,
+                                        metalness: 0.3,
+                                        roughness: 0.7
+                                    });
+                                }
+
+                                // Activer les ombres
+                                child.castShadow = true;
+                                child.receiveShadow = true;
+
+                                // Appliquer le mode filaire si activé
+                                if (this.settings.wireframe) {
+                                    if (Array.isArray(child.material)) {
+                                        child.material.forEach(mat => {
+                                            mat.wireframe = true;
+                                        });
+                                    } else {
+                                        child.material.wireframe = true;
+                                    }
+                                }
+                            }
+                        });
+
+                        // Centrer et dimensionner le modèle
+                        this.centerAndScaleModel(object);
+
+                        // Ajouter le modèle à la scène
+                        this.scene.add(object);
+
+                        // Supprimer le message de chargement
+                        if (this.container.contains(loadingElement)) {
+                            this.container.removeChild(loadingElement);
+                        }
+
+                        // Forcer un redimensionnement
+                        this.onWindowResize();
                     },
                     (xhr) => {
                         // Progression du chargement
                         if (xhr.lengthComputable) {
                             const percent = Math.round((xhr.loaded / xhr.total) * 100);
-                            const progressFill = loadingElement.querySelector('.progress-fill');
-                            if (progressFill) {
-                                progressFill.style.width = `${percent}%`;
-                            }
+                            loadingElement.querySelector('span').textContent = `Chargement: ${percent}%`;
                         }
                     },
                     (error) => {
@@ -429,6 +492,17 @@ class EnhancedModelViewer {
                                     if (child.isMesh) {
                                         child.castShadow = true;
                                         child.receiveShadow = true;
+
+                                        // Appliquer le mode filaire si activé
+                                        if (this.settings.wireframe) {
+                                            if (Array.isArray(child.material)) {
+                                                child.material.forEach(mat => {
+                                                    mat.wireframe = true;
+                                                });
+                                            } else {
+                                                child.material.wireframe = true;
+                                            }
+                                        }
                                     }
                                 });
 
@@ -525,12 +599,7 @@ class EnhancedModelViewer {
         }
 
         if (this.renderer) {
-            // Utiliser un timeout pour éviter les redimensionnements multiples rapprochés
-            if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
-
-            this.resizeTimeout = setTimeout(() => {
-                this.renderer.setSize(width, height);
-            }, 100);
+            this.renderer.setSize(width, height);
         }
     }
 
@@ -540,36 +609,28 @@ class EnhancedModelViewer {
     animate() {
         if (!this.isInitialized) return;
 
-        // Utiliser setTimeout au lieu de requestAnimationFrame pour réduire la fréquence de rendu
-        // et économiser des ressources
-        clearTimeout(this.animationFrameId);
-        this.animationFrameId = setTimeout(() => {
-            requestAnimationFrame(this.animate);
+        this.animationFrameId = requestAnimationFrame(this.animate);
 
-            // Ne pas mettre à jour si l'onglet est inactif ou si le conteneur n'est pas visible
-            if (document.hidden || !this.container.offsetParent) return;
+        // Mettre à jour les contrôles
+        if (this.controls) {
+            this.controls.update();
+        }
 
-            // Mettre à jour les contrôles
-            if (this.controls) {
-                this.controls.update();
-            }
+        // Exécuter la fonction de rendu personnalisée si elle existe
+        if (this.onRender) {
+            this.onRender();
+        }
 
-            // Exécuter la fonction de rendu personnalisée si elle existe
-            if (this.onRender) {
-                this.onRender();
-            }
+        // Faire tourner le modèle si l'autorotation est activée
+        if (this.settings.autoRotate && this.model) {
+            // Vitesse de rotation fixe pour l'autorotation
+            this.model.rotation.y += 0.01;
+        }
 
-            // Faire tourner le modèle si l'autorotation est activée
-            if (this.settings.autoRotate && this.model) {
-                // Vitesse de rotation réduite pour économiser des ressources
-                this.model.rotation.y += 0.005;
-            }
-
-            // Effectuer le rendu seulement si tous les éléments sont prêts
-            if (this.renderer && this.scene && this.camera) {
-                this.renderer.render(this.scene, this.camera);
-            }
-        }, 50); // Limiter à environ 20 FPS pour économiser des ressources
+        // Rendre la scène
+        if (this.renderer && this.scene && this.camera) {
+            this.renderer.render(this.scene, this.camera);
+        }
     }
 
     /**
@@ -578,7 +639,6 @@ class EnhancedModelViewer {
     dispose() {
         // Arrêter la boucle d'animation
         if (this.animationFrameId) {
-            clearTimeout(this.animationFrameId);
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
         }
@@ -591,164 +651,19 @@ class EnhancedModelViewer {
             this.container.removeChild(this.uiContainer);
         }
 
-        // Libérer la mémoire des textures et des géométries
-        if (this.model) {
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    if (child.geometry) {
-                        child.geometry.dispose();
-                    }
-                    if (child.material) {
-                        if (Array.isArray(child.material)) {
-                            child.material.forEach(material => {
-                                this.disposeMaterial(material);
-                            });
-                        } else {
-                            this.disposeMaterial(child.material);
-                        }
-                    }
-                }
-            });
-            this.scene.remove(this.model);
-            this.model = null;
-        }
-
-        // Nettoyer les helpers
-        if (this.grid) {
-            this.grid.material.dispose();
-            this.scene.remove(this.grid);
-            this.grid = null;
-        }
-
-        if (this.axes) {
-            this.axes.material.dispose();
-            this.scene.remove(this.axes);
-            this.axes = null;
-        }
-
-        // Nettoyer les lumières
-        Object.values(this.lights).forEach(light => {
-            if (light) {
-                this.scene.remove(light);
-            }
-        });
-        this.lights = {};
-
-        // Nettoyer les contrôles
-        if (this.controls) {
-            this.controls.dispose();
-            this.controls = null;
-        }
-
         // Nettoyer le renderer
         if (this.renderer) {
             this.renderer.dispose();
             if (this.container.contains(this.renderer.domElement)) {
                 this.container.removeChild(this.renderer.domElement);
             }
-            this.renderer = null;
         }
 
         // Nettoyer la scène
         if (this.scene) {
             this.scene.clear();
-            this.scene = null;
-        }
-
-        // Nettoyer la caméra
-        this.camera = null;
-
-        // Forcer le garbage collector
-        if (window.gc) {
-            try {
-                window.gc();
-            } catch (e) {
-                console.log('Impossible de forcer le garbage collector');
-            }
         }
 
         this.isInitialized = false;
-    }
-
-    /**
-     * Traite un modèle 3D après son chargement
-     */
-    processLoadedModel(object, cube, loadingElement) {
-        // Succès du chargement
-        this.model = object;
-
-        // Supprimer le cube de test
-        if (cube) {
-            this.scene.remove(cube);
-            this.onRender = null;
-        }
-
-        // Appliquer des matériaux optimisés et simplifier le modèle
-        object.traverse((child) => {
-            if (child.isMesh) {
-                // Appliquer un matériau simplifié si aucun n'est défini
-                if (!child.material) {
-                    child.material = new THREE.MeshBasicMaterial({
-                        color: 0xcccccc
-                    });
-                }
-
-                // Optimiser les matériaux existants pour de meilleures performances
-                if (child.material.type === 'MeshStandardMaterial' ||
-                    child.material.type === 'MeshPhongMaterial') {
-                    const color = child.material.color;
-                    const map = child.material.map;
-                    child.material = new THREE.MeshBasicMaterial({
-                        color: color,
-                        map: map
-                    });
-                }
-
-                // Désactiver les ombres pour améliorer les performances
-                child.castShadow = false;
-                child.receiveShadow = false;
-
-                // Simplifier la géométrie si possible
-                if (child.geometry && child.geometry.attributes &&
-                    child.geometry.attributes.position &&
-                    child.geometry.attributes.position.count > 5000) {
-                    console.log('Simplification de la géométrie pour améliorer les performances');
-                    // Nous ne pouvons pas simplifier directement, mais nous pouvons réduire la précision
-                    child.geometry.attributes.position.needsUpdate = true;
-                }
-            }
-        });
-
-        // Centrer et dimensionner le modèle
-        this.centerAndScaleModel(object);
-
-        // Ajouter le modèle à la scène
-        this.scene.add(object);
-
-        // Supprimer le message de chargement
-        if (this.container.contains(loadingElement)) {
-            this.container.removeChild(loadingElement);
-        }
-
-        // Forcer un redimensionnement
-        this.onWindowResize();
-    }
-
-    /**
-     * Libère la mémoire d'un matériau
-     */
-    disposeMaterial(material) {
-        if (!material) return;
-
-        // Libérer les textures
-        if (material.map) material.map.dispose();
-        if (material.lightMap) material.lightMap.dispose();
-        if (material.bumpMap) material.bumpMap.dispose();
-        if (material.normalMap) material.normalMap.dispose();
-        if (material.specularMap) material.specularMap.dispose();
-        if (material.envMap) material.envMap.dispose();
-
-        // Libérer le matériau lui-même
-        material.dispose();
     }
 }

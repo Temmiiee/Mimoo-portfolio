@@ -6,21 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSnail();
     initializeHoverEffects();
     createFloatingCreatures();
-    preload3DModels();
 });
-
-function preload3DModels() {
-    if (!window.modelCache) return;
-
-    const modelItems = document.querySelectorAll('.gallery-item[data-type="3d"]');
-
-    modelItems.forEach(item => {
-        const modelUrl = item.getAttribute('data-model-url') || item.getAttribute('data-model-path');
-        if (modelUrl) {
-            window.modelCache.preloadModel(modelUrl);
-        }
-    });
-}
 
 function initializeNavigation() {
     const nav = document.querySelector('nav');
@@ -32,6 +18,7 @@ function initializeNavigation() {
         hamburger.classList.toggle('active');
     });
 
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -52,6 +39,7 @@ function initializeNavigation() {
         });
     });
 
+    // Sticky navigation
     let lastScroll = 0;
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
@@ -118,7 +106,9 @@ function initializeGalleryFilters() {
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            // Retirer la classe active de tous les boutons
             filterBtns.forEach(b => b.classList.remove('active'));
+            // Ajouter la classe active au bouton cliqué
             btn.classList.add('active');
 
             const filter = btn.getAttribute('data-filter');
@@ -162,32 +152,39 @@ function initializeLightbox() {
         const overlay = item.querySelector('.overlay');
         const title = overlay.querySelector('h3').textContent;
         const is3DModel = item.getAttribute('data-type') === '3d';
+        // Vérifier si le modèle est spécifié par un chemin local ou une URL externe
         const modelPath = item.getAttribute('data-model-url') || item.getAttribute('data-model-path');
 
+        // Gestion de l'affichage de l'image ou du modèle 3D
         if (is3DModel && modelPath) {
+            // Afficher le modèle 3D
             lightboxImg.style.display = 'none';
             modelContainer.classList.add('active');
             document.querySelector('.lightbox-content').classList.add('model-view');
 
+            // Initialiser le visualisateur 3D amélioré si nécessaire
             if (!modelViewer) {
                 modelViewer = new EnhancedModelViewer(modelContainer);
             }
 
+            // Initialiser la scène et charger le modèle
             setTimeout(() => {
+                // Délai pour s'assurer que le conteneur est visible et a les bonnes dimensions
                 modelViewer.init();
                 modelViewer.loadModel(modelPath);
 
+                // Forcer un redimensionnement après l'initialisation
                 setTimeout(() => {
-                    if (modelViewer) {
-                        modelViewer.onWindowResize();
-                    }
+                    if (modelViewer) modelViewer.onWindowResize();
                 }, 100);
             }, 50);
         } else {
+            // Afficher l'image normale
             lightboxImg.style.display = 'block';
             modelContainer.classList.remove('active');
             document.querySelector('.lightbox-content').classList.remove('model-view');
 
+            // Nettoyer le visualisateur 3D s'il existe
             if (modelViewer) {
                 modelViewer.dispose();
             }
@@ -200,10 +197,12 @@ function initializeLightbox() {
         lightbox.classList.add('active');
         document.body.classList.add('lightbox-active');
 
+        // Gestion de la visibilité des boutons de navigation
         lightboxPrev.style.visibility = index === 0 ? 'hidden' : 'visible';
         lightboxNext.style.visibility = index === galleryItems.length - 1 ? 'hidden' : 'visible';
     }
 
+    // Ouvrir la lightbox au clic sur une image
     galleryItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -245,10 +244,13 @@ function initializeLightbox() {
                 lightbox.classList.remove('active');
                 document.body.classList.remove('lightbox-active');
 
+                // Nettoyer le visualisateur 3D si nécessaire
                 if (modelViewer) {
                     modelViewer.dispose();
                     modelViewer = null;
                 }
+
+                // Réinitialiser l'affichage
                 modelContainer.classList.remove('active');
                 document.querySelector('.lightbox-content').classList.remove('model-view');
                 break;
@@ -267,10 +269,13 @@ function initializeLightbox() {
             lightbox.classList.remove('active');
             document.body.classList.remove('lightbox-active');
 
+            // Nettoyer le visualisateur 3D si nécessaire
             if (modelViewer) {
                 modelViewer.dispose();
                 modelViewer = null;
             }
+
+            // Réinitialiser l'affichage
             modelContainer.classList.remove('active');
             document.querySelector('.lightbox-content').classList.remove('model-view');
         }
@@ -298,17 +303,21 @@ function createFloatingCreatures() {
         creature.className = 'floating-creature';
         creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
 
+        // Taille aléatoire entre 16px et 32px
         const randomSize = getRandomBetween(16, 32);
         creature.style.fontSize = `${randomSize}px`;
 
+        // Opacité maximale aléatoire entre 0.4 et 0.9
         const maxOpacity = getRandomBetween(0.4, 0.9);
 
+        // Position initiale
         creature.style.left = '-30px';
         creature.style.top = Math.random() * (window.innerHeight - 150) + 50 + 'px';
         creature.style.opacity = '0';
 
         container.appendChild(creature);
 
+        // Création d'une timeline GSAP plus fluide
         const timeline = gsap.timeline({
             onComplete: () => {
                 container.removeChild(creature);
@@ -316,6 +325,7 @@ function createFloatingCreatures() {
             }
         });
 
+        // Animation principale
         timeline
             .to(creature, {
                 opacity: maxOpacity,
@@ -326,7 +336,7 @@ function createFloatingCreatures() {
                 left: window.innerWidth + 30 + 'px',
                 top: '+=' + (Math.random() * 60 - 30) + 'px',
                 rotation: Math.random() * 360,
-                duration: getRandomBetween(8, 15),
+                duration: getRandomBetween(8, 15), // Vitesse aléatoire
                 ease: "power1.inOut"
             }, "-=0.8")
             .to(creature, {
@@ -335,6 +345,7 @@ function createFloatingCreatures() {
                 ease: "power1.out"
             }, "-=2");
 
+        // Animation de flottement avec amplitude aléatoire
         gsap.to(creature, {
             y: `+=${getRandomBetween(10, 20)}`,
             duration: getRandomBetween(1, 2),
@@ -343,6 +354,7 @@ function createFloatingCreatures() {
             ease: "sine.inOut"
         });
 
+        // Animation de rotation avec vitesse aléatoire
         gsap.to(creature, {
             rotation: "+=45",
             duration: getRandomBetween(2, 4),
@@ -352,6 +364,7 @@ function createFloatingCreatures() {
         });
     }
 
+    // Créer plusieurs émojis initialement avec un délai aléatoire
     for (let i = 0; i < 5; i++) {
         setTimeout(createCreature, getRandomBetween(0, 3000));
     }
