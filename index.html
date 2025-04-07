@@ -37,7 +37,7 @@
     </noscript>
     <!-- Préchargement des ressources critiques -->
     <link rel="preload" href="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&q=80&w=1920&h=1080" as="image" fetchpriority="high">
-    <link rel="preload" href="images/mimoo.png" as="image" fetchpriority="low">
+    <link rel="preload" href="images/mimoo.webp" as="image" fetchpriority="low">
     <!-- Styles critiques inline pour un chargement rapide -->
     <style>
         /* Styles critiques pour le chargement initial */
@@ -117,20 +117,20 @@
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/accessibility.css" media="print" onload="this.media='all'">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
-    <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/favicon.ico">
     <!-- Chargement différé de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </noscript>
 
-    <!-- Chargement du bundle Three.js optimisé -->
-    <script defer src="js/three-bundle.js"></script>
+    <!-- Chargement du bundle Three.js minimal et optimisé -->
+    <script defer src="js/three-minimal.js"></script>
     <script>
     // Fonction pour charger Three.js à la demande (utilise le bundle optimisé)
     function loadThreeJsScripts() {
-        return window.waitForThreeJs();
+        return window.loadThreeJs();
     }
     </script>
     <!-- GSAP et AOS seront chargés de manière différée via JavaScript -->
@@ -217,7 +217,7 @@
     "@type": "Person",
     "name": "Mimoo",
     "url": "https://temmiiee.github.io/Art-Portfolio-Template/",
-    "image": "https://temmiiee.github.io/Art-Portfolio-Template/images/mimoo.png",
+    "image": "https://temmiiee.github.io/Art-Portfolio-Template/images/mimoo.webp",
     "sameAs": [
         "https://instagram.com/_mimoou",
         "https://twitter.com/mimoo_art",
@@ -281,7 +281,7 @@
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="images/mimoo.png" alt="Mimoo" class="profile-img" width="300" height="300" loading="lazy">
+                    <img src="images/mimoo.webp" alt="Mimoo" class="profile-img" width="300" height="300" loading="lazy">
                 </div>
                 <div class="about-text">
                     <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
@@ -318,7 +318,7 @@
             </div>
             <div class="gallery-grid">
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration1.jpg"
+                    <img src="images/gallery/illustration1.webp"
                          alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
                          title="Dragon arc-en-ciel par Mimoo">
                     <div class="overlay">
@@ -334,7 +334,7 @@
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration2.jpg" alt="Illustration 2">
+                    <img src="images/gallery/illustration2.webp" alt="Illustration 2">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration2.title">Dragon arc-en-ciel</h3>
                         <p data-translate="gallery.items.illustration2.description">Art digital</p>
@@ -348,7 +348,7 @@
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration3.jpg" alt="Illustration 3">
+                    <img src="images/gallery/illustration3.webp" alt="Illustration 3">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration3.title">Ange et dragon</h3>
                         <p data-translate="gallery.items.illustration3.description">Art digital</p>
@@ -362,7 +362,7 @@
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration4.jpg" alt="Illustration 4">
+                    <img src="images/gallery/illustration4.webp" alt="Illustration 4">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration4.title">Endroit mystérieux</h3>
                         <p data-translate="gallery.items.illustration4.description">Art digital</p>

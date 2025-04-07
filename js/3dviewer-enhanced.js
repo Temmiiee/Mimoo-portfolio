@@ -378,9 +378,17 @@ class EnhancedModelViewer {
                 // Afficher un message spécial pour GLTF
                 loadingElement.innerHTML = '<div class="spinner"></div><span>Chargement du modèle GLTF optimisé...</span>';
 
+                // Ajouter un proxy CORS pour les URL externes si nécessaire
+                if (isExternalUrl && !modelPath.includes('githubusercontent.com') && !modelPath.includes('allorigins.win')) {
+                    // Utiliser un proxy CORS plus fiable et plus rapide
+                    const corsProxy = 'https://api.allorigins.win/raw?url=';
+                    // Encoder l'URL pour éviter les problèmes avec les caractères spéciaux
+                    modelPath = corsProxy + encodeURIComponent(modelPath);
+                }
+
                 // Vérifier si GLTFLoader est disponible
                 if (typeof THREE.GLTFLoader === 'undefined') {
-                    console.error('GLTFLoader n\'est pas disponible. Assurez-vous d\'inclure le script GLTFLoader.js');
+                    // GLTFLoader n'est pas disponible
                     loadingElement.innerHTML = '<span class="error">GLTFLoader non disponible - Affichage du cube par défaut</span>';
                     return;
                 }
@@ -449,7 +457,7 @@ class EnhancedModelViewer {
                         }
                     },
                     (error) => {
-                        console.error('Erreur lors du chargement du modèle GLTF:', error);
+                        // Erreur lors du chargement du modèle GLTF
                         loadingElement.innerHTML = '<span class="error">Erreur de chargement GLTF - Affichage du cube par défaut</span>';
                         setTimeout(() => {
                             if (this.container.contains(loadingElement)) {
@@ -468,6 +476,14 @@ class EnhancedModelViewer {
                 // Afficher un message spécial pour les URL externes
                 if (isExternalUrl) {
                     loadingElement.innerHTML = '<div class="spinner"></div><span>Téléchargement depuis une source externe...</span>';
+
+                    // Ajouter un proxy CORS pour les URL externes si nécessaire
+                    if (!modelPath.includes('githubusercontent.com') && !modelPath.includes('allorigins.win')) {
+                        // Utiliser un proxy CORS plus fiable et plus rapide
+                        const corsProxy = 'https://api.allorigins.win/raw?url=';
+                        // Encoder l'URL pour éviter les problèmes avec les caractères spéciaux
+                        modelPath = corsProxy + encodeURIComponent(modelPath);
+                    }
                 }
 
                 loader.load(

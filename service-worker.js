@@ -20,9 +20,10 @@ const ASSETS_TO_CACHE = [
     BASE_PATH + 'js/redirect.js',
     BASE_PATH + 'js/load-resources.js',
     BASE_PATH + 'js/optimize-animations.js',
-    BASE_PATH + 'js/three-bundle.js',
-    BASE_PATH + 'images/mimoo.png',
-    BASE_PATH + 'images/favicon/mimoo.jpg'
+    BASE_PATH + 'js/three-minimal.js',
+    BASE_PATH + 'images/mimoo.webp',
+    BASE_PATH + 'images/favicon.ico',
+    BASE_PATH + 'site.webmanifest'
 ];
 
 // Installation du service worker

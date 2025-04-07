@@ -6,7 +6,7 @@ const ASSETS_TO_CACHE = [
     '/script.js',
     '/js/translations.js',
     '/js/language.js',
-    '/images/mimoo.jpg',
+    '/images/mimoo.webp',
     '/fonts/Poppins-Regular.ttf',
     '/images/gallery/illustration1.webp',
     '/images/gallery/illustration2.webp',
