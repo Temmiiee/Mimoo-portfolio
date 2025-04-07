@@ -122,7 +122,24 @@
     </script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <!-- AOS sera chargé de manière différée via JavaScript -->
-    <!-- Script de redirection pour les URLs inexistantes -->
+    <!-- Script de gestion des chemins de base et redirection -->
+    <script>
+        // Détecter le chemin de base pour GitHub Pages
+        function getBasePath() {
+            const host = window.location.hostname;
+
+            // Si nous sommes sur GitHub Pages (temmiiee.github.io)
+            if (host.includes('github.io')) {
+                return '/Mimoo-portfolio/';
+            }
+
+            // Par défaut, retourner la racine
+            return '/';
+        }
+
+        // Définir une variable globale pour le chemin de base
+        window.basePath = getBasePath();
+    </script>
     <script src="js/redirect.js"></script>
 
     <!-- Configuration pour la production -->

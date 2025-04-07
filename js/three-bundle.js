@@ -1,18 +1,3 @@
-/**
- * Three.js Bundle optimisé pour Mimoo Portfolio
- * Ce fichier combine les fonctionnalités essentielles de Three.js pour le visualisateur 3D
- * Version: 1.0.0
- * Date: 2023
- *
- * Inclut:
- * - Three.js core (r128)
- * - OBJLoader
- * - MTLLoader
- * - GLTFLoader
- * - DRACOLoader
- * - OrbitControls
- */
-
 // Définir l'espace de noms THREE s'il n'existe pas déjà
 window.THREE = window.THREE || {};
 

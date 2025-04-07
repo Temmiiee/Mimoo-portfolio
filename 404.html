@@ -3,110 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page non trouvée - Mimoo Portfolio</title>
-    <meta name="description" content="La page que vous recherchez n'existe pas ou a été déplacée.">
+    <title>Redirection - Mimoo Portfolio</title>
+    <meta name="description" content="Redirection vers la page d'accueil">
 
-    <!-- Politique de sécurité du contenu (CSP) très permissive pour la page 404 -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' data: blob: 'unsafe-inline' 'unsafe-eval';">
+    <!-- Script de redirection spécifique pour GitHub Pages -->
+    <script>
+        // Détecter le chemin de base pour GitHub Pages
+        function getBasePath() {
+            const host = window.location.hostname;
+            const path = window.location.pathname;
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap&font-display=swap" rel="stylesheet">
+            // Si nous sommes sur GitHub Pages (temmiiee.github.io)
+            if (host.includes('github.io')) {
+                // Extraire le nom du répertoire du projet
+                const segments = path.split('/');
+                if (segments.length > 1) {
+                    return '/' + segments[1] + '/';
+                }
+            }
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
-    <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
+            // Par défaut, retourner la racine
+            return '/';
+        }
+
+        // Rediriger vers la page d'accueil avec le bon chemin de base
+        window.location.replace(getBasePath());
+    </script>
 
     <style>
-        :root {
-            --primary-color: #557153;
-            --secondary-color: #A9AF7E;
-            --light-color: #f8f9fa;
-            --dark-color: #333;
-            --text-color: #333;
-            --font-family: 'Poppins', sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-family);
-            color: var(--text-color);
-            line-height: 1.6;
-            background-color: #FEFAE0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            padding: 2rem;
+            padding: 50px;
+            background: #f8f9fa;
         }
-
-        .error-container {
-            max-width: 600px;
-        }
-
         h1 {
-            font-size: 4rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+            color: #557153;
         }
-
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
         p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+            margin: 20px 0;
         }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
+        a {
+            color: #557153;
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .error-emoji {
-            font-size: 6rem;
-            margin-bottom: 2rem;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
+            border-bottom: 1px solid;
         }
     </style>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-emoji">🍃</div>
-        <h1>404</h1>
-        <h2>Page non trouvée</h2>
-        <p>La page que vous recherchez n'existe pas ou a été déplacée.</p>
-        <a href="/" class="btn">Retour à l'accueil</a>
-    </div>
+    <h1>Redirection en cours...</h1>
+    <p>Vous allez être redirigé vers la page d'accueil.</p>
+    <p>Si la redirection ne fonctionne pas, <a id="home-link" href="/">cliquez ici</a>.</p>
+
+    <script>
+        // Mettre à jour le lien manuel avec le bon chemin
+        document.getElementById('home-link').href = getBasePath();
+    </script>
 </body>
 </html>

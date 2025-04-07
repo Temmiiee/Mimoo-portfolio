@@ -1,0 +1,8 @@
+# Configuration pour GitHub Pages
+title: Mimoo Portfolio
+description: Portfolio d'art digital et d'illustrations
+baseurl: "/Mimoo-portfolio"
+url: "https://temmiiee.github.io"
+
+# Paramètres pour les pages 404
+permalink: pretty
