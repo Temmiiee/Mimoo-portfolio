@@ -29,14 +29,32 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Chargement optimisé des polices avec font-display=swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap&font-display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <!-- Préchargement de la police Poppins Bold pour le titre principal (LCP) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" as="style" fetchpriority="high">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap">
+    <!-- Chargement différé des autres variantes de police -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <!-- Fallback pour les navigateurs qui ne supportent pas onload -->
     <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap&font-display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     </noscript>
+    <!-- Styles de secours pour éviter le FOUT -->
+    <style>
+        /* Police de secours en attendant le chargement de Poppins */
+        @font-face {
+            font-family: 'Poppins Fallback';
+            size-adjust: 105%;
+            ascent-override: 95%;
+            src: local('Arial');
+        }
+
+        /* Utiliser la police de secours si Poppins n'est pas encore chargée */
+        body {
+            font-family: 'Poppins', 'Poppins Fallback', sans-serif;
+        }
+    </style>
     <!-- Préchargement des ressources critiques -->
-    <link rel="preload" href="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&q=80&w=1920&h=1080" as="image" fetchpriority="high">
+    <link rel="preload" href="images/background.webp" as="image" fetchpriority="high">
     <link rel="preload" href="images/mimoo.webp" as="image" fetchpriority="low">
     <!-- Styles critiques inline pour un chargement rapide -->
     <style>
@@ -54,16 +72,77 @@
             margin-bottom: 1.5rem;
             font-weight: 700;
             color: white;
-            will-change: transform; /* Optimisation pour les animations */
-            contain: layout; /* Optimisation pour le rendu */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            will-change: transform, opacity;
+            contain: layout;
+            font-display: swap;
         }
         :root {
             --primary-color: #557153;
             --secondary-color: #A9AF7E;
-            --light-color: #f8f9fa;
+            --accent-color: #E6E5A3;
+            --light-color: #FEFAE0;
             --dark-color: #333;
             --text-color: #333;
             --font-family: 'Poppins', sans-serif;
+        }
+
+        /* Styles de la section hero */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            background-color: #333; /* Couleur de fond par défaut en attendant l'image */
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/background.webp');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Styles des boutons */
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -125,12 +204,21 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </noscript>
 
-    <!-- Chargement du bundle Three.js minimal et optimisé -->
-    <script defer src="js/three-minimal.js"></script>
+    <!-- Chargement du bundle Three.js minimal et optimisé avec un délai -->
     <script>
-    // Fonction pour charger Three.js à la demande (utilise le bundle optimisé)
+    // Charger Three.js après le chargement initial de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            var script = document.createElement('script');
+            script.src = 'js/three-minimal.js';
+            script.async = true;
+            document.head.appendChild(script);
+        }, 2000); // Délai de 2 secondes pour prioriser le rendu initial
+    });
+
+    // Fonction pour charger Three.js à la demande
     function loadThreeJsScripts() {
-        return window.loadThreeJs();
+        return window.loadThreeJs ? window.loadThreeJs() : Promise.resolve();
     }
     </script>
     <!-- GSAP et AOS seront chargés de manière différée via JavaScript -->
@@ -180,36 +268,50 @@
     <script defer src="js/script.js"></script>
     <script defer src="js/optimize-animations.js"></script>
     <!-- Chargement optimisé d'AOS (Animate On Scroll) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" media="print" onload="this.media='all'">
     <script>
-    // Définir une variable globale pour indiquer si AOS est chargé
-    window.isAOSLoaded = false;
+    // Fonction pour charger AOS uniquement lorsque l'utilisateur fait défiler la page
+    function loadAOS() {
+        // Vérifier si AOS est déjà chargé
+        if (window.isAOSLoaded) return;
 
-    // Fonction pour initialiser AOS
-    window.initAOS = function() {
-        if (typeof AOS !== 'undefined') {
-            AOS.init({
-                duration: 1000,
-                once: true,
-                offset: 100,
-                disable: 'mobile' // Désactiver sur mobile pour de meilleures performances
-            });
-            window.isAOSLoaded = true;
-        }
+        // Charger la feuille de style AOS
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css';
+        document.head.appendChild(link);
+
+        // Charger le script AOS
+        var aosScript = document.createElement('script');
+        aosScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js';
+        aosScript.onload = function() {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 1000,
+                    once: true,
+                    offset: 100,
+                    disable: 'mobile' // Désactiver sur mobile pour de meilleures performances
+                });
+                window.isAOSLoaded = true;
+            }
+        };
+        document.head.appendChild(aosScript);
+    }
+
+    // Charger AOS uniquement lorsque l'utilisateur fait défiler la page
+    var scrollHandler = function() {
+        loadAOS();
+        // Supprimer l'écouteur d'événement après le chargement
+        window.removeEventListener('scroll', scrollHandler);
     };
 
-    // Chargement différé d'AOS
-    document.addEventListener('DOMContentLoaded', function() {
-        // Charger AOS uniquement après le chargement initial de la page
-        setTimeout(function() {
-            var aosScript = document.createElement('script');
-            aosScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js';
-            aosScript.onload = function() {
-                window.initAOS();
-            };
-            document.head.appendChild(aosScript);
-        }, 1000); // Délai de 1 seconde après le chargement initial
-    });
+    // Ajouter un écouteur d'événement pour le défilement
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+
+    // Charger AOS après un délai si l'utilisateur ne fait pas défiler
+    setTimeout(loadAOS, 5000);
+
+    // Définir une variable globale pour indiquer si AOS est chargé
+    window.isAOSLoaded = false;
     </script>
     <script type="application/ld+json">
 {
@@ -260,24 +362,19 @@
     </nav>
 
     <section id="accueil" class="hero">
-        <div class="hero-background">
-            <div class="overlay"></div>
-            <div class="background-image">
-                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&q=80&w=1920&h=1080" alt="Beautiful Nature Background" width="1920" height="1080" loading="eager" fetchpriority="high">
-            </div>
-        </div>
+        <!-- Utilisation d'un arrière-plan CSS au lieu d'une image pour un rendu plus rapide -->
+        <!-- L'image est préchargée dans le head avec preload -->
 
-        <div class="hero-content-wrapper">
-            <div class="hero-content" data-aos="fade-up">
-                <h1 data-translate="hero.title" id="main-title">Art Digital & Illustration</h1>
-                <p data-translate="hero.subtitle">Bienvenue dans mon univers créatif</p>
-                <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
-            </div>
+        <div class="hero-content">
+            <!-- Suppression de data-aos pour éviter le délai de rendu -->
+            <h1 data-translate="hero.title" id="main-title">Art Digital & Illustration</h1>
+            <p data-translate="hero.subtitle" class="hero-subtitle">Bienvenue dans mon univers créatif</p>
+            <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
         </div>
     </section>
 
     <section id="apropos" class="about">
-        <div class="container" data-aos="fade-right">
+        <div class="container">
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image">
@@ -308,7 +405,7 @@
     </section>
 
     <section id="galerie" class="gallery">
-        <div class="container" data-aos="fade-up">
+        <div class="container">
             <h2 data-translate="gallery.title">Galerie</h2>
             <div class="gallery-filters">
                 <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all">Tout</button>
@@ -395,7 +492,7 @@
     </section>
 
     <section id="contact" class="contact">
-        <div class="container" data-aos="fade-up">
+        <div class="container">
             <h2 data-translate="contact.title">Contactez-moi</h2>
             <div class="contact-content">
                 <div class="contact-form-wrapper">
