@@ -2,7 +2,7 @@ class LanguageManager {
     constructor() {
         // S'assurer que les traductions sont chargées
         if (typeof window.translations === 'undefined') {
-            console.error('Translations not loaded');
+            // Translations not loaded
             return;
         }
         this.currentLang = localStorage.getItem('preferred-language') || 'fr';
@@ -52,6 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof window.translations !== 'undefined') {
         window.languageManager = new LanguageManager();
     } else {
-        console.error('Translations not loaded');
+        // Translations not loaded
     }
 });  // Ajout de la parenthèse fermante manquante ici

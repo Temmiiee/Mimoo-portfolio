@@ -51,7 +51,6 @@
 
         // Si ce n'est pas un fichier connu et que ce n'est pas une section valide, rediriger vers l'accueil
         if (!isFile) {
-            console.log('URL non reconnue, redirection vers la page d\'accueil');
             window.location.href = basePath; // Utiliser le chemin de base détecté
         }
     }

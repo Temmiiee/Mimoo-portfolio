@@ -10,7 +10,6 @@ function notifyThreeJsLoaded() {
     // Déclencher un événement personnalisé pour notifier que Three.js est chargé
     const event = new CustomEvent('threeJsLoaded');
     document.dispatchEvent(event);
-    console.log('Three.js bundle chargé avec succès');
 }
 
 // Charger dynamiquement le contenu minifié de Three.js

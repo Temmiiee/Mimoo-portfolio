@@ -1,0 +1,104 @@
+/**
+ * Styles d'accessibilité pour Mimoo Portfolio
+ * Améliore les contrastes et l'accessibilité du site
+ */
+
+/* Amélioration des contrastes */
+.btn {
+    background-color: #446043; /* Version plus foncée du vert pour un meilleur contraste */
+    color: white;
+    font-weight: 700; /* Plus gras pour une meilleure lisibilité */
+}
+
+.btn:hover {
+    background-color: #557153;
+}
+
+/* Amélioration du contraste des textes sur fond clair */
+body {
+    color: #333333; /* Texte plus foncé pour un meilleur contraste */
+}
+
+/* Amélioration du contraste des liens */
+a {
+    color: #446043; /* Version plus foncée du vert pour un meilleur contraste */
+    text-decoration: underline; /* Soulignement pour une meilleure identification */
+}
+
+a:hover {
+    color: #557153;
+}
+
+/* Amélioration du contraste des titres */
+h2, h3, h4, h5, h6 {
+    color: #333333; /* Texte plus foncé pour un meilleur contraste */
+}
+
+/* Amélioration du contraste des boutons de navigation */
+.nav-links a {
+    color: #333333; /* Texte plus foncé pour un meilleur contraste */
+    font-weight: 600; /* Plus gras pour une meilleure lisibilité */
+}
+
+/* Amélioration du contraste des boutons de langue */
+.lang-btn {
+    background-color: #446043; /* Version plus foncée du vert pour un meilleur contraste */
+    color: white;
+    font-weight: 700; /* Plus gras pour une meilleure lisibilité */
+}
+
+/* Amélioration du contraste des éléments de formulaire */
+input, textarea {
+    border: 2px solid #333333; /* Bordure plus visible */
+    color: #333333; /* Texte plus foncé */
+}
+
+/* Amélioration du contraste des placeholders */
+::placeholder {
+    color: #666666; /* Gris plus foncé pour un meilleur contraste */
+    opacity: 1; /* Opacité maximale */
+}
+
+/* Amélioration du focus pour la navigation au clavier */
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+    outline: 3px solid #446043; /* Contour plus visible */
+    outline-offset: 2px;
+}
+
+/* Amélioration du contraste des icônes */
+.fas, .fab, .far {
+    color: #446043; /* Version plus foncée du vert pour un meilleur contraste */
+}
+
+/* Amélioration du contraste des éléments de la galerie */
+.gallery-item .overlay {
+    background-color: rgba(0, 0, 0, 0.7); /* Fond plus foncé pour un meilleur contraste */
+}
+
+.gallery-item .overlay h3,
+.gallery-item .overlay p {
+    color: white; /* Texte blanc pour un meilleur contraste */
+}
+
+/* Amélioration du contraste du pied de page */
+footer {
+    background-color: #333333; /* Fond plus foncé pour un meilleur contraste */
+}
+
+footer p, footer a {
+    color: white; /* Texte blanc pour un meilleur contraste */
+}
+
+/* Amélioration du contraste des boutons sociaux */
+.social-links a {
+    background-color: #446043; /* Version plus foncée du vert pour un meilleur contraste */
+    color: white;
+}
+
+.social-links i {
+    color: #9de099; /* Version plus claire du vert pour un meilleur contraste */
+}
+
+.social-links a:hover {
+    background-color: #557153;
+}

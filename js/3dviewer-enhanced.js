@@ -468,7 +468,6 @@ class EnhancedModelViewer {
                 // Afficher un message spécial pour les URL externes
                 if (isExternalUrl) {
                     loadingElement.innerHTML = '<div class="spinner"></div><span>Téléchargement depuis une source externe...</span>';
-                    console.log('Chargement du modèle depuis URL externe:', modelPath);
                 }
 
                 loader.load(

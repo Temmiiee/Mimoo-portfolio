@@ -35,7 +35,9 @@
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap&font-display=swap" rel="stylesheet">
     </noscript>
-    <link rel="preload" href="images/mimoo.png" as="image">
+    <!-- Préchargement des ressources critiques -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&q=80&w=1920&h=1080" as="image" fetchpriority="high">
+    <link rel="preload" href="images/mimoo.png" as="image" fetchpriority="low">
     <!-- Styles critiques inline pour un chargement rapide -->
     <style>
         /* Styles critiques pour le chargement initial */
@@ -44,6 +46,16 @@
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
             font-weight: 700;
+        }
+
+        /* Style spécifique pour le h1 du hero (LCP) */
+        .hero-content h1, #main-title {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: white;
+            will-change: transform; /* Optimisation pour les animations */
+            contain: layout; /* Optimisation pour le rendu */
         }
         :root {
             --primary-color: #557153;
@@ -103,6 +115,7 @@
     </style>
     <!-- Chargement différé du CSS complet -->
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/accessibility.css" media="print" onload="this.media='all'">
     <link rel="manifest" href="site.webmanifest">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/mimoo.jpg">
     <link rel="apple-touch-icon" href="images/favicon/mimoo.jpg">
@@ -120,8 +133,7 @@
         return window.waitForThreeJs();
     }
     </script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <!-- AOS sera chargé de manière différée via JavaScript -->
+    <!-- GSAP et AOS seront chargés de manière différée via JavaScript -->
     <!-- Script de gestion des chemins de base et redirection -->
     <script>
         // Détecter le chemin de base pour GitHub Pages
@@ -141,6 +153,24 @@
         window.basePath = getBasePath();
     </script>
     <script src="js/redirect.js"></script>
+    <script src="js/load-resources.js"></script>
+
+    <!-- Enregistrement du service worker pour le cache -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Utiliser le chemin de base pour l'enregistrement du service worker
+                const swPath = window.basePath + 'service-worker.js';
+                navigator.serviceWorker.register(swPath)
+                    .then(function(registration) {
+                        // Service Worker enregistré avec succès
+                    })
+                    .catch(function(error) {
+                        // Erreur silencieuse lors de l'enregistrement du Service Worker
+                    });
+            });
+        }
+    </script>
 
     <!-- Configuration pour la production -->
     <script defer src="js/config.js"></script>
@@ -148,6 +178,7 @@
     <script defer src="js/language.js"></script>
     <script defer src="js/3dviewer-enhanced.js"></script>
     <script defer src="js/script.js"></script>
+    <script defer src="js/optimize-animations.js"></script>
     <!-- Chargement optimisé d'AOS (Animate On Scroll) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" media="print" onload="this.media='all'">
     <script>
@@ -164,7 +195,6 @@
                 disable: 'mobile' // Désactiver sur mobile pour de meilleures performances
             });
             window.isAOSLoaded = true;
-            console.log('AOS initialized successfully');
         }
     };
 
@@ -212,11 +242,11 @@
             <span class="logo-text">o</span>
             <span class="logo-text">o</span>
         </div>
-        <div class="language-selector">
-            <button class="lang-btn" data-lang="fr">FR</button>
-            <button class="lang-btn" data-lang="en">EN</button>
+        <div class="language-selector" role="group" aria-label="Sélection de la langue">
+            <button class="lang-btn" data-lang="fr" aria-label="Français" aria-pressed="true">FR</button>
+            <button class="lang-btn" data-lang="en" aria-label="English" aria-pressed="false">EN</button>
         </div>
-        <button class="hamburger">
+        <button class="hamburger" aria-label="Menu de navigation" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
@@ -233,13 +263,13 @@
         <div class="hero-background">
             <div class="overlay"></div>
             <div class="background-image">
-                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b" alt="Beautiful Nature Background">
+                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&q=80&w=1920&h=1080" alt="Beautiful Nature Background" width="1920" height="1080" loading="eager" fetchpriority="high">
             </div>
         </div>
 
         <div class="hero-content-wrapper">
             <div class="hero-content" data-aos="fade-up">
-                <h1 data-translate="hero.title" style="font-size: 4rem; margin-bottom: 1.5rem; font-weight: 700; color: white;">Art Digital & Illustration</h1>
+                <h1 data-translate="hero.title" id="main-title">Art Digital & Illustration</h1>
                 <p data-translate="hero.subtitle">Bienvenue dans mon univers créatif</p>
                 <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
             </div>
@@ -251,7 +281,7 @@
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="images/mimoo.png" alt="Mimoo" class="profile-img">
+                    <img src="images/mimoo.png" alt="Mimoo" class="profile-img" width="300" height="300" loading="lazy">
                 </div>
                 <div class="about-text">
                     <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
@@ -420,15 +450,15 @@
     <!-- Lightbox pour l'affichage en plein écran -->
     <div class="lightbox">
         <div class="lightbox-content">
-            <button class="lightbox-close">×</button>
+            <button class="lightbox-close" aria-label="Fermer">×</button>
             <img src="" alt="Image en plein écran" class="lightbox-image">
             <div id="model-container" class="model-container"></div>
             <div class="lightbox-info">
                 <h3 class="lightbox-title"></h3>
             </div>
             <div class="lightbox-navigation">
-                <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
-                <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
+                <button class="lightbox-prev" aria-label="Image précédente"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                <button class="lightbox-next" aria-label="Image suivante"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
