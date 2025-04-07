@@ -293,10 +293,12 @@ nav a:hover {
     margin: 0 auto;
 }
 
-.hero-content h1 {
+/* Style spécifique pour le h1 du hero avec une spécificité plus élevée */
+section.hero .hero-content h1 {
     font-size: 4rem;
     margin-bottom: 1.5rem;
     font-weight: 700;
+    color: white; /* Conserver la couleur blanche pour le titre du hero */
 }
 
 .hero-content p {
@@ -378,7 +380,7 @@ nav a:hover {
     object-fit: contain;
     display: block;
     margin: 0 auto;
-    transform: translateX(15%) translateY(-22%);
+    transform: translateX(15%) translateY(-27%);
 }
 
 .about-text {
@@ -1329,7 +1331,7 @@ footer {
 
 .snail {
     position: fixed;
-    top: 63px;
+    top: 54px;
     left: 20px;
     font-size: 24px;
     z-index: 9999;
@@ -1387,13 +1389,13 @@ body.lightbox-active .snail {
 
 @keyframes jump {
     0% {
-        top: 63px;
+        top: 53px;
     }
     50% {
         top: 43px;
     }
     100% {
-        top: 63px;
+        top: 53px;
     }
 }
 
@@ -1440,3 +1442,26 @@ body.lightbox-active .snail {
 .share-btn.facebook { background: #3b5998; }
 .share-btn.twitter { background: #1da1f2; }
 .share-btn.pinterest { background: #bd081c; }
+
+/* Styles additionnels pour les titres et sections */
+/* Définir une taille uniforme pour tous les h1, qu'ils soient dans une section ou non */
+h1, section h1, article h1, nav h1, header h1, footer h1, aside h1, div h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color); /* Couleur par défaut pour tous les h1 */
+}
+
+/* Note: Le style spécifique pour le h1 du hero est déjà défini plus haut */
+
+section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+}
+
+section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}

@@ -1,0 +1,70 @@
+# Configuration Apache pour Mimoo Portfolio
+
+# Activer la compression GZIP
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json
+</IfModule>
+
+# Définir les en-têtes d'expiration
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Images
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+
+  # Vidéo
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType video/mpeg "access plus 1 year"
+
+  # CSS, JavaScript
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+
+  # Autres
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType application/x-shockwave-flash "access plus 1 month"
+</IfModule>
+
+# Définir les en-têtes de sécurité
+<IfModule mod_headers.c>
+  # Désactiver la détection MIME
+  Header set X-Content-Type-Options "nosniff"
+
+  # Protection XSS
+  Header set X-XSS-Protection "1; mode=block"
+
+  # Empêcher le site d'être affiché dans un iframe (protection contre le clickjacking)
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Redirection vers HTTPS (à décommenter lorsque vous aurez un certificat SSL)
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} off
+#   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# Redirection vers www (à décommenter et adapter selon vos besoins)
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTP_HOST} ^mimoo-portfolio.com [NC]
+#   RewriteRule ^(.*)$ https://www.mimoo-portfolio.com/$1 [L,R=301]
+# </IfModule>
+
+# Redirection vers la page d'accueil pour toutes les URLs inexistantes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ / [L,R=302]
+</IfModule>
+
+# Fallback pour les serveurs qui ne supportent pas mod_rewrite
+ErrorDocument 404 /
+ErrorDocument 500 /

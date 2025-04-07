@@ -1,3 +1,27 @@
+# robots.txt pour Mimoo Portfolio
+
 User-agent: *
 Allow: /
+
+# Permettre l'accès à tous les fichiers CSS et JavaScript
+Allow: /*.css$
+Allow: /*.js$
+
+# Permettre l'accès aux images
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Bloquer l'accès aux fichiers de développement
 Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.md$
+Disallow: /*.log$
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /node_modules/
+
+Sitemap: https://temmiiee.github.io/Mimoo-portfolio/sitemap.xmll

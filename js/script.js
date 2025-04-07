@@ -157,27 +157,44 @@ function initializeLightbox() {
 
         // Gestion de l'affichage de l'image ou du modèle 3D
         if (is3DModel && modelPath) {
-            // Afficher le modèle 3D
+            // Afficher un indicateur de chargement
             lightboxImg.style.display = 'none';
             modelContainer.classList.add('active');
             document.querySelector('.lightbox-content').classList.add('model-view');
 
-            // Initialiser le visualisateur 3D amélioré si nécessaire
-            if (!modelViewer) {
-                modelViewer = new EnhancedModelViewer(modelContainer);
-            }
+            // Afficher un message de chargement
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'loading-model';
+            loadingIndicator.innerHTML = '<div class="spinner"></div><span>Chargement des scripts 3D...</span>';
+            modelContainer.appendChild(loadingIndicator);
 
-            // Initialiser la scène et charger le modèle
-            setTimeout(() => {
-                // Délai pour s'assurer que le conteneur est visible et a les bonnes dimensions
-                modelViewer.init();
-                modelViewer.loadModel(modelPath);
+            // Charger les scripts Three.js à la demande
+            loadThreeJsScripts().then(() => {
+                // Supprimer l'indicateur de chargement initial
+                if (modelContainer.contains(loadingIndicator)) {
+                    modelContainer.removeChild(loadingIndicator);
+                }
 
-                // Forcer un redimensionnement après l'initialisation
+                // Initialiser le visualisateur 3D amélioré si nécessaire
+                if (!modelViewer) {
+                    modelViewer = new EnhancedModelViewer(modelContainer);
+                }
+
+                // Initialiser la scène et charger le modèle
                 setTimeout(() => {
-                    if (modelViewer) modelViewer.onWindowResize();
-                }, 100);
-            }, 50);
+                    // Délai pour s'assurer que le conteneur est visible et a les bonnes dimensions
+                    modelViewer.init();
+                    modelViewer.loadModel(modelPath);
+
+                    // Forcer un redimensionnement après l'initialisation
+                    setTimeout(() => {
+                        if (modelViewer) modelViewer.onWindowResize();
+                    }, 100);
+                }, 50);
+            }).catch(error => {
+                console.error('Erreur lors du chargement des scripts Three.js:', error);
+                loadingIndicator.innerHTML = '<span class="error">Erreur lors du chargement des scripts 3D</span>';
+            });
         } else {
             // Afficher l'image normale
             lightboxImg.style.display = 'block';
@@ -283,11 +300,12 @@ function initializeLightbox() {
 }
 
 function initializeAOS() {
-    AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100
-    });
+    // Utiliser la fonction globale d'initialisation d'AOS
+    if (window.initAOS) {
+        window.initAOS();
+    } else {
+        console.log('La fonction initAOS n\'est pas disponible. AOS sera initialisé automatiquement.');
+    }
 }
 
 function createFloatingCreatures() {

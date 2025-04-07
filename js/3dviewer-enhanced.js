@@ -326,11 +326,14 @@ class EnhancedModelViewer {
     }
 
     /**
-     * Charge un modèle OBJ (chemin local ou URL)
+     * Charge un modèle 3D (OBJ ou GLTF/GLB)
      */
     loadModel(modelPath, materialPath = null) {
         // Vérifier si le chemin est une URL externe
         const isExternalUrl = modelPath.startsWith('http://') || modelPath.startsWith('https://');
+
+        // Détecter le type de fichier (OBJ ou GLTF/GLB)
+        const isGLTF = modelPath.toLowerCase().endsWith('.gltf') || modelPath.toLowerCase().endsWith('.glb');
         // Si un modèle est déjà chargé, le supprimer
         if (this.model) {
             this.scene.remove(this.model);
@@ -370,7 +373,95 @@ class EnhancedModelViewer {
         this.onRender = animateCube;
 
         try {
-            // Fonction pour charger le modèle OBJ
+            // Si c'est un fichier GLTF/GLB
+            if (isGLTF) {
+                // Afficher un message spécial pour GLTF
+                loadingElement.innerHTML = '<div class="spinner"></div><span>Chargement du modèle GLTF optimisé...</span>';
+
+                // Vérifier si GLTFLoader est disponible
+                if (typeof THREE.GLTFLoader === 'undefined') {
+                    console.error('GLTFLoader n\'est pas disponible. Assurez-vous d\'inclure le script GLTFLoader.js');
+                    loadingElement.innerHTML = '<span class="error">GLTFLoader non disponible - Affichage du cube par défaut</span>';
+                    return;
+                }
+
+                // Créer un loader GLTF
+                const loader = new THREE.GLTFLoader();
+
+                // Configurer DRACOLoader si disponible
+                if (typeof THREE.DRACOLoader !== 'undefined') {
+                    const dracoLoader = new THREE.DRACOLoader();
+                    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+                    loader.setDRACOLoader(dracoLoader);
+                }
+
+                // Charger le modèle GLTF
+                loader.load(
+                    modelPath,
+                    (gltf) => {
+                        // Succès du chargement
+                        this.model = gltf.scene;
+
+                        // Supprimer le cube de test
+                        if (cube) {
+                            this.scene.remove(cube);
+                            this.onRender = null;
+                        }
+
+                        // Appliquer des ombres
+                        this.model.traverse((child) => {
+                            if (child.isMesh) {
+                                child.castShadow = true;
+                                child.receiveShadow = true;
+
+                                // Appliquer le mode filaire si activé
+                                if (this.settings.wireframe && child.material) {
+                                    if (Array.isArray(child.material)) {
+                                        child.material.forEach(mat => {
+                                            mat.wireframe = true;
+                                        });
+                                    } else {
+                                        child.material.wireframe = true;
+                                    }
+                                }
+                            }
+                        });
+
+                        // Centrer et dimensionner le modèle
+                        this.centerAndScaleModel(this.model);
+
+                        // Ajouter le modèle à la scène
+                        this.scene.add(this.model);
+
+                        // Supprimer le message de chargement
+                        if (this.container.contains(loadingElement)) {
+                            this.container.removeChild(loadingElement);
+                        }
+
+                        // Forcer un redimensionnement
+                        this.onWindowResize();
+                    },
+                    (xhr) => {
+                        // Progression du chargement
+                        if (xhr.lengthComputable) {
+                            const percent = Math.round((xhr.loaded / xhr.total) * 100);
+                            loadingElement.querySelector('span').textContent = `Chargement GLTF: ${percent}%`;
+                        }
+                    },
+                    (error) => {
+                        console.error('Erreur lors du chargement du modèle GLTF:', error);
+                        loadingElement.innerHTML = '<span class="error">Erreur de chargement GLTF - Affichage du cube par défaut</span>';
+                        setTimeout(() => {
+                            if (this.container.contains(loadingElement)) {
+                                this.container.removeChild(loadingElement);
+                            }
+                        }, 4000);
+                    }
+                );
+                return; // Sortir de la fonction après avoir chargé le GLTF
+            }
+
+            // Fonction pour charger le modèle OBJ (si ce n'est pas un GLTF)
             const loadOBJ = () => {
                 const loader = new THREE.OBJLoader();
 
