@@ -379,11 +379,13 @@ class EnhancedModelViewer {
                 loadingElement.innerHTML = '<div class="spinner"></div><span>Chargement du modèle GLTF optimisé...</span>';
 
                 // Ajouter un proxy CORS pour les URL externes si nécessaire
-                if (isExternalUrl && !modelPath.includes('githubusercontent.com') && !modelPath.includes('allorigins.win')) {
-                    // Utiliser un proxy CORS plus fiable et plus rapide
-                    const corsProxy = 'https://api.allorigins.win/raw?url=';
-                    // Encoder l'URL pour éviter les problèmes avec les caractères spéciaux
-                    modelPath = corsProxy + encodeURIComponent(modelPath);
+                if (isExternalUrl && !modelPath.includes('githubusercontent.com') && !modelPath.includes('cors-anywhere')) {
+                    // Utiliser un proxy CORS plus fiable
+                    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+                    // Utiliser l'URL directement sans encodage
+                    modelPath = corsProxy + modelPath;
+
+                    // Utilisation du proxy CORS pour le modèle GLTF
                 }
 
                 // Vérifier si GLTFLoader est disponible
@@ -456,7 +458,7 @@ class EnhancedModelViewer {
                             loadingElement.querySelector('span').textContent = `Chargement GLTF: ${percent}%`;
                         }
                     },
-                    (error) => {
+                    (_) => { // Ignorer le paramètre d'erreur
                         // Erreur lors du chargement du modèle GLTF
                         loadingElement.innerHTML = '<span class="error">Erreur de chargement GLTF - Affichage du cube par défaut</span>';
                         setTimeout(() => {
@@ -471,19 +473,41 @@ class EnhancedModelViewer {
 
             // Fonction pour charger le modèle OBJ (si ce n'est pas un GLTF)
             const loadOBJ = () => {
-                const loader = new THREE.OBJLoader();
-
                 // Afficher un message spécial pour les URL externes
                 if (isExternalUrl) {
                     loadingElement.innerHTML = '<div class="spinner"></div><span>Téléchargement depuis une source externe...</span>';
+                }
 
-                    // Ajouter un proxy CORS pour les URL externes si nécessaire
-                    if (!modelPath.includes('githubusercontent.com') && !modelPath.includes('allorigins.win')) {
-                        // Utiliser un proxy CORS plus fiable et plus rapide
-                        const corsProxy = 'https://api.allorigins.win/raw?url=';
-                        // Encoder l'URL pour éviter les problèmes avec les caractères spéciaux
-                        modelPath = corsProxy + encodeURIComponent(modelPath);
-                    }
+                // Utiliser notre chargeur de modèles personnalisé s'il est disponible
+                if (window.modelLoader) {
+                    window.modelLoader.loadModel(
+                        modelPath,
+                        'obj',
+                        // Progression
+                        (percent) => {
+                            loadingElement.querySelector('span').textContent = `Chargement: ${percent}%`;
+                        },
+                        // Succès
+                        (object) => {
+                            handleModelLoaded(object);
+                        },
+                        // Erreur
+                        (_) => {
+                            handleModelError();
+                        }
+                    );
+                    return;
+                }
+
+                // Fallback si le chargeur de modèles n'est pas disponible
+                const loader = new THREE.OBJLoader();
+
+                // Ajouter un proxy CORS pour les URL externes si nécessaire
+                if (isExternalUrl && !modelPath.includes('githubusercontent.com') && !modelPath.includes('cors-anywhere')) {
+                    // Utiliser un proxy CORS plus fiable
+                    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+                    // Utiliser l'URL directement sans encodage
+                    modelPath = corsProxy + modelPath;
                 }
 
                 loader.load(

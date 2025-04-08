@@ -16,7 +16,8 @@ const ASSETS_TO_CACHE = [
     '/images/gallery/character2.webp',
     '/images/gallery/character3.webp',
     '/images/gallery/character4.webp',
-    '/images/gallery/character5.webp'
+    '/images/gallery/character5.webp',
+    '/images/background.jpg'
 ];
 
 self.addEventListener('install', event => {

@@ -36,15 +36,22 @@ h2, h3, h4, h5, h6 {
 
 /* Amélioration du contraste des boutons de navigation */
 .nav-links a {
-    color: #333333; /* Texte plus foncé pour un meilleur contraste */
+    color: var(--primary-color); /* Texte plus foncé pour un meilleur contraste */
     font-weight: 600; /* Plus gras pour une meilleure lisibilité */
 }
 
 /* Amélioration du contraste des boutons de langue */
 .lang-btn {
-    background-color: #446043; /* Version plus foncée du vert pour un meilleur contraste */
+    background-color: #2D4A2D; /* Vert très foncé pour un contraste élevé */
     color: white;
     font-weight: 700; /* Plus gras pour une meilleure lisibilité */
+    border: 2px solid #1A2E1A; /* Bordure plus visible */
+}
+
+.lang-btn.active {
+    background-color: #1A2E1A; /* Encore plus foncé pour le bouton actif */
+    color: white;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #1A2E1A; /* Double bordure pour meilleure visibilité */
 }
 
 /* Amélioration du contraste des éléments de formulaire */
@@ -100,5 +107,24 @@ footer p, footer a {
 }
 
 .social-links a:hover {
-    background-color: #557153;
+    background-color: #1A2E1A; /* Encore plus foncé pour le survol */
+}
+
+/* Amélioration du contraste des boutons */
+.cta-button, .btn, button[type="submit"], .filter-btn {
+    background-color: #2D4A2D; /* Vert très foncé pour un contraste élevé */
+    color: white;
+    font-weight: 700; /* Plus gras pour une meilleure lisibilité */
+    border: 2px solid #1A2E1A; /* Bordure plus visible */
+}
+
+.cta-button:hover, .btn:hover, button[type="submit"]:hover, .filter-btn:hover {
+    background-color: #1A2E1A; /* Encore plus foncé pour le survol */
+    color: white;
+}
+
+.filter-btn.active {
+    background-color: #1A2E1A; /* Encore plus foncé pour le bouton actif */
+    color: white;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #1A2E1A; /* Double bordure pour meilleure visibilité */
 }

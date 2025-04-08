@@ -71,10 +71,6 @@ header {
     transition: color 0.3s ease;
 }
 
-.nav-links a:hover {
-    color: var(--primary-color);
-}
-
 .hero {
     height: 100vh;
     display: flex;

@@ -17,12 +17,14 @@ const ASSETS_TO_CACHE = [
     BASE_PATH + 'js/translations.js',
     BASE_PATH + 'js/language.js',
     BASE_PATH + 'js/3dviewer-enhanced.js',
-    BASE_PATH + 'js/redirect.js',
+    BASE_PATH + 'js/redirect-optimized.js',
     BASE_PATH + 'js/load-resources.js',
     BASE_PATH + 'js/optimize-animations.js',
-    BASE_PATH + 'js/three-minimal.js',
+    BASE_PATH + 'js/model-loader.js',
     BASE_PATH + 'images/mimoo.webp',
     BASE_PATH + 'images/favicon.ico',
+    BASE_PATH + 'images/background.webp',
+    BASE_PATH + 'images/background.jpg',
     BASE_PATH + 'site.webmanifest'
 ];
 

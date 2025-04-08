@@ -304,7 +304,10 @@ function initializeAOS() {
     if (window.initAOS) {
         window.initAOS();
     } else {
-        console.error('AOS is not loaded or initialized properly.');
+        // AOS n'est pas encore chargé, on va le charger maintenant
+        if (typeof loadAOS === 'function') {
+            loadAOS();
+        }
     }
 }
 

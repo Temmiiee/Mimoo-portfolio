@@ -1,10 +1,12 @@
 /**
- * Script de redirection pour les URLs inexistantes
+ * Script de redirection optimisé pour les URLs inexistantes
  * Ce script détecte si l'URL actuelle ne correspond pas à une section valide
  * et redirige vers la page d'accueil si nécessaire
+ * Version optimisée qui ne bloque pas le rendu
  */
 
-(function() {
+// Exécuter la redirection après le chargement du contenu principal
+document.addEventListener('DOMContentLoaded', function() {
     // Liste des sections valides (IDs) dans votre site one-page
     const validSections = ['accueil', 'apropos', 'galerie', 'contact'];
 
@@ -55,6 +57,6 @@
         }
     }
 
-    // Exécuter la fonction de redirection
-    handleRedirect();
-})();
+    // Exécuter la fonction de redirection avec un léger délai pour ne pas bloquer le rendu
+    setTimeout(handleRedirect, 100);
+});

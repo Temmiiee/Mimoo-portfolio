@@ -27,6 +27,7 @@
     --bg-color: #FEFAE0;         /* Beige clair */
     --text-color: #2C3639;       /* Gris foncé */
     --overlay-color: rgba(85, 113, 83, 0.8); /* Version transparente du primary-color */
+    --dark-color: #333;          /* Ajout de la variable dark-color */
 }
 
 * {
@@ -137,13 +138,14 @@ nav {
 
 nav a {
     text-decoration: none;
-    color: var(--text-color);
+    color: var(--primary-color);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 nav a:hover {
-    color: var(--accent-color);
+    color: #374935;
+    transform: translateY(-3px);
 }
 
 .hamburger {
@@ -257,15 +259,23 @@ nav a:hover {
     overflow: hidden;
 }
 
-.background-image {
+/* Classe renommée pour correspondre à la structure HTML */
+.hero-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.8);
+    overflow: hidden;
+    z-index: -1;
+}
+
+.hero-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.7);
 }
 
 .overlay {
@@ -1331,7 +1341,7 @@ footer {
 
 .snail {
     position: fixed;
-    top: 54px;
+    top: 64px;
     left: 20px;
     font-size: 24px;
     z-index: 9999;
@@ -1389,59 +1399,17 @@ body.lightbox-active .snail {
 
 @keyframes jump {
     0% {
-        top: 53px;
+        top: 63px;
     }
     50% {
-        top: 43px;
-    }
-    100% {
         top: 53px;
     }
+    100% {
+        top: 63px;
+    }
 }
 
-/* Supprimer tout ce bloc de code */
-.share-buttons {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 1rem;
-    z-index: 3;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
 
-.gallery-item:hover .share-buttons {
-    opacity: 1;
-}
-
-.share-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 50%;
-    background: var(--primary-color);
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.share-btn:hover {
-    transform: scale(1.1);
-    background: var(--accent-color);
-}
-
-.share-btn i {
-    font-size: 1.2rem;
-}
-
-.share-btn.facebook { background: #3b5998; }
-.share-btn.twitter { background: #1da1f2; }
-.share-btn.pinterest { background: #bd081c; }
 
 /* Styles additionnels pour les titres et sections */
 /* Définir une taille uniforme pour tous les h1, qu'ils soient dans une section ou non */
