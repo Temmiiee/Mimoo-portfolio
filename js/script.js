@@ -79,10 +79,57 @@ function initializeNavigation() {
     const nav = document.querySelector('nav');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const navItems = document.querySelectorAll('.nav-links li a');
 
+    // Fonction pour ouvrir le menu mobile
+    const openMobileMenu = () => {
+        navLinks.classList.add('active');
+        hamburger.classList.add('active');
+        navOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Empêcher le défilement du body
+
+        // Mettre à jour les attributs ARIA
+        hamburger.setAttribute('aria-expanded', 'true');
+    };
+
+    // Fonction pour fermer le menu mobile
+    const closeMobileMenu = () => {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
+        navOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // Rétablir le défilement du body
+
+        // Mettre à jour les attributs ARIA
+        hamburger.setAttribute('aria-expanded', 'false');
+    };
+
+    // Gestionnaire d'événement pour le bouton hamburger
     hamburger?.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        hamburger.classList.toggle('active');
+        if (navLinks.classList.contains('active')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    });
+
+    // Gestionnaire d'événement pour l'overlay
+    navOverlay?.addEventListener('click', closeMobileMenu);
+
+    // Gestionnaire d'événement pour les liens de navigation
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                closeMobileMenu();
+            }
+        });
+    });
+
+    // Fermer le menu avec la touche Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMobileMenu();
+        }
     });
 
     // Smooth scroll
@@ -99,11 +146,15 @@ function initializeNavigation() {
                     top: offsetPosition,
                     behavior: 'smooth'
                 });
-
-                navLinks.classList.remove('active');
-                hamburger.classList.remove('active');
             }
         });
+    });
+
+    // Ajuster la navigation lors du redimensionnement de la fenêtre
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+            closeMobileMenu();
+        }
     });
 
     // Sticky navigation
@@ -141,9 +192,36 @@ function initializeSnail() {
     const snailContainer = document.createElement('div');
     snailContainer.className = 'snail-container';
     snailContainer.style.position = 'fixed';
-    snailContainer.style.top = '62px';
+    // Ajuster la position verticale de l'escargot en fonction de la taille de l'écran
+    const setSnailPosition = () => {
+        const windowWidth = window.innerWidth;
+        if (windowWidth > 1600) {
+            snailContainer.style.top = '71px';
+            snailContainer.style.fontSize = '24px';
+        } else if (windowWidth > 1200) {
+            snailContainer.style.top = '64px';
+            snailContainer.style.fontSize = '23px';
+        } else if (windowWidth > 768) {
+            snailContainer.style.top = '52px';
+            snailContainer.style.fontSize = '22px';
+        } else if (windowWidth > 480) {
+            snailContainer.style.top = '46px';
+            snailContainer.style.fontSize = '20px';
+        } else if (windowWidth > 360) {
+            snailContainer.style.top = '42px';
+            snailContainer.style.fontSize = '18px';
+        } else {
+            snailContainer.style.top = '38px';
+            snailContainer.style.fontSize = '16px';
+        }
+    };
+
+    // Positionner l'escargot initialement
+    setSnailPosition();
+
+    // Ajuster la position lors du redimensionnement de la fenêtre
+    window.addEventListener('resize', setSnailPosition);
     snailContainer.style.left = '20px';
-    snailContainer.style.fontSize = '24px';
     snailContainer.style.zIndex = '9999';
     snailContainer.style.cursor = 'pointer';
     snailContainer.style.userSelect = 'none';
@@ -280,9 +358,25 @@ function initializeHoverEffects() {
 }
 
 function initializeGalleryFilters() {
+    // Sélectionner les éléments nécessaires
     const filterBtns = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-item');
-    const galleryRegion = document.getElementById('gallery-items');
+    const galleryRegion = document.getElementById('gallery-grid');
+
+    // Si la galerie n'existe pas, sortir de la fonction
+    if (!galleryRegion || filterBtns.length === 0 || galleryItems.length === 0) {
+        console.warn('Gallery elements not found');
+        return;
+    }
+
+    // Initialiser tous les éléments de la galerie pour qu'ils soient visibles au début
+    galleryItems.forEach(item => {
+        item.style.opacity = '1';
+        item.style.transform = 'scale(1)';
+        item.style.display = '';
+        item.setAttribute('aria-hidden', 'false');
+        item.setAttribute('tabindex', '0');
+    });
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -350,6 +444,25 @@ function initializeGalleryFilters() {
                 btn.click();
             }
         });
+    });
+
+    // Activer le filtre "Tout" par défaut
+    const defaultFilter = document.querySelector('.filter-btn[data-filter="all"]');
+    if (defaultFilter) {
+        defaultFilter.click();
+    }
+
+    // Ajouter un gestionnaire d'événements pour réinitialiser les filtres lors du redimensionnement
+    window.addEventListener('resize', () => {
+        // Réinitialiser les filtres si la fenêtre est redimensionnée
+        if (window.innerWidth !== window.lastWidth) {
+            window.lastWidth = window.innerWidth;
+            // Attendre un peu pour éviter les déclenchements multiples
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(() => {
+                defaultFilter.click();
+            }, 250);
+        }
     });
 }
 

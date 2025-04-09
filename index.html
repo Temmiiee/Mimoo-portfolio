@@ -80,9 +80,17 @@
     <!-- Chargement différé du CSS complet -->
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/accessibility.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="contact-styles.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="gallery-filters.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="nav-responsive.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="responsive.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="css/accessibility.css">
+        <link rel="stylesheet" href="contact-styles.css">
+        <link rel="stylesheet" href="gallery-filters.css">
+        <link rel="stylesheet" href="nav-responsive.css">
+        <link rel="stylesheet" href="responsive.css">
     </noscript>
 
     <link rel="manifest" href="site.webmanifest">
@@ -221,6 +229,7 @@
 </head>
 <body>
 
+    <div class="nav-overlay"></div>
     <nav>
         <div class="logo">
             <span class="logo-text">M</span>
@@ -249,10 +258,12 @@
     <section id="accueil" class="hero" style="background-color: #333; background-size: cover; background-position: center; background-repeat: no-repeat; position: relative;">
         <!-- Overlay pour assombrir l'image -->
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 0;"></div>
-        <div class="hero-content" style="position: relative; z-index: 1;">
-            <h1 data-translate="hero.title" id="main-title" style="font-size: 4rem; margin: 0 0 1.5rem 0;">Art Digital & Illustration</h1>
-            <p data-translate="hero.subtitle" class="hero-subtitle">Bienvenue dans mon univers créatif</p>
-            <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
+        <div class="hero-content-wrapper">
+            <div class="hero-content" style="position: relative; z-index: 1;">
+                <h1 data-translate="hero.title" id="main-title">Art Digital & Illustration</h1>
+                <p data-translate="hero.subtitle" class="hero-subtitle">Bienvenue dans mon univers créatif</p>
+                <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
+            </div>
         </div>
     </section>
 
@@ -292,13 +303,13 @@
     <section id="galerie" class="gallery">
         <div class="container">
             <h2 data-translate="gallery.title">Galerie</h2>
-            <div class="gallery-filters">
-                <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all">Tout</button>
-                <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration">Illustration</button>
-                <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character">Character Design</button>
-                <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d">Modèles 3D</button>
+            <div class="gallery-filters" role="tablist" aria-label="Filtres de galerie">
+                <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all" role="tab" aria-selected="true" aria-controls="gallery-grid">Tout</button>
+                <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration" role="tab" aria-selected="false" aria-controls="gallery-grid">Illustration</button>
+                <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character" role="tab" aria-selected="false" aria-controls="gallery-grid">Character Design</button>
+                <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d" role="tab" aria-selected="false" aria-controls="gallery-grid">Modèles 3D</button>
             </div>
-            <div class="gallery-grid">
+            <div class="gallery-grid" id="gallery-grid" role="tabpanel">
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/illustration1.webp"
                          alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
@@ -379,7 +390,7 @@
     <section id="contact" class="contact">
         <div class="container">
             <h2 data-translate="contact.title">Contactez-moi</h2>
-            <div class="contact-content">
+            <div class="contact-container">
                 <div class="contact-form-wrapper">
                     <form id="contact-form" action="https://formspree.io/f/mvgkonpd" method="POST">
                         <div class="form-group">
@@ -401,17 +412,17 @@
                 </div>
                 <div class="contact-info">
                     <h3 data-translate="contact.social.title">Retrouvez-moi sur</h3>
-                    <div class="social-links" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <a href="https://instagram.com/_mimoou" target="_blank" class="social-link" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: #333; font-size: 1.1rem; padding: 1rem; border-radius: 12px; transition: all 0.3s ease; background: white; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);">
-                            <i class="fab fa-instagram" style="font-size: 1.5rem; color: #557153; transition: color 0.3s ease;"></i>
+                    <div class="social-links">
+                        <a href="https://instagram.com/_mimoou" target="_blank" class="social-link">
+                            <i class="fab fa-instagram"></i>
                             <span>Instagram</span>
                         </a>
-                        <a href="https://twitter.com/mimoo_art" target="_blank" class="social-link" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: #333; font-size: 1.1rem; padding: 1rem; border-radius: 12px; transition: all 0.3s ease; background: white; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);">
-                            <i class="fab fa-twitter" style="font-size: 1.5rem; color: #557153; transition: color 0.3s ease;"></i>
+                        <a href="https://twitter.com/mimoo_art" target="_blank" class="social-link">
+                            <i class="fab fa-twitter"></i>
                             <span>Twitter</span>
                         </a>
-                        <a href="https://vgen.co/Mimoo" target="_blank" class="social-link" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: #333; font-size: 1.1rem; padding: 1rem; border-radius: 12px; transition: all 0.3s ease; background: white; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);">
-                            <i class="fas fa-palette" style="font-size: 1.5rem; color: #557153; transition: color 0.3s ease;"></i>
+                        <a href="https://vgen.co/Mimoo" target="_blank" class="social-link">
+                            <i class="fas fa-palette"></i>
                             <span>VGen</span>
                         </a>
                     </div>
@@ -421,8 +432,16 @@
     </section>
 
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2025 Temmiie. <span data-translate="footer.rights">Tous droits réservés.</span></p>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Temmiie. <span data-translate="footer.rights">Tous droits réservés.</span></p>
+                <div class="footer-links">
+                    <a href="#accueil">Accueil</a>
+                    <a href="#apropos">À propos</a>
+                    <a href="#galerie">Galerie</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
         </div>
     </footer>
 

@@ -1,0 +1,295 @@
+/* Responsive Styles for Mimoo Portfolio */
+
+/* Variables pour les breakpoints */
+:root {
+    --mobile-breakpoint: 480px;
+    --tablet-breakpoint: 768px;
+    --laptop-breakpoint: 1024px;
+    --desktop-breakpoint: 1200px;
+}
+
+/* ===== STYLES GÉNÉRAUX RESPONSIVE ===== */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 90%;
+        padding: 0 1.5rem;
+    }
+
+    section {
+        padding: 5rem 1.5rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    html {
+        font-size: 95%; /* Réduire légèrement la taille de base des polices */
+    }
+
+    .container {
+        max-width: 95%;
+        padding: 0 1rem;
+    }
+
+    section {
+        padding: 4rem 1rem;
+    }
+
+    /* Ajustements pour le hero */
+    section.hero .hero-content h1 {
+        font-size: 3.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.3rem;
+    }
+
+    /* Ajustements pour la galerie */
+    .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+/* ===== TABLETTE ===== */
+@media (max-width: 768px) {
+    html {
+        font-size: 90%;
+    }
+
+    /* Header et navigation */
+    header {
+        padding: 1rem;
+    }
+
+    /* Ajustement des animations d'émojis pour les tablettes */
+    .floating-creature {
+        font-size: 14px !important;
+        opacity: 0.4 !important;
+    }
+
+    /* Hero section */
+    section.hero .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+        padding: 0.8rem 2rem;
+    }
+
+    /* About section */
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-image {
+        margin: 0 auto 2rem;
+        max-width: 250px;
+    }
+
+    .about-text {
+        padding: 0;
+    }
+
+    /* Gallery section */
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    /* Contact section */
+    .contact-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .contact-form-wrapper,
+    .contact-info {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .contact-info {
+        margin-bottom: 2rem;
+    }
+
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .footer-links, .social-links {
+        justify-content: center;
+    }
+
+    /* 3D Viewer */
+    .model-container {
+        height: 50vh;
+    }
+
+    .model-viewer-ui {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 480px) {
+    html {
+        font-size: 85%;
+    }
+
+    /* Header et navigation */
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    /* Ajustement des animations d'émojis pour les mobiles */
+    .floating-creature {
+        font-size: 12px !important;
+        opacity: 0.3 !important;
+    }
+
+    /* Réduire le nombre d'émojis sur mobile */
+    .floating-creatures-container {
+        max-height: 70vh !important;
+        overflow: hidden !important;
+    }
+
+    /* Hero section */
+    .hero {
+        height: 90vh;
+    }
+
+    section.hero .hero-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .cta-button {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* About section */
+    .about {
+        padding: 4rem 1rem;
+    }
+
+    .profile-image {
+        max-width: 200px;
+    }
+
+    /* Gallery section */
+    .gallery {
+        padding: 4rem 1rem;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Contact section */
+    .contact {
+        padding: 4rem 1rem;
+    }
+
+    input, textarea {
+        padding: 0.8rem;
+    }
+
+    .submit-btn {
+        padding: 0.7rem 1.5rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 2rem 1rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    /* Lightbox */
+    .lightbox-content {
+        width: 95%;
+    }
+
+    /* 3D Viewer */
+    .model-container {
+        height: 40vh;
+    }
+
+    .model-viewer-btn {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+}
+
+/* ===== TRÈS PETITS ÉCRANS ===== */
+@media (max-width: 360px) {
+    html {
+        font-size: 80%;
+    }
+
+    section.hero .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+    .profile-image {
+        max-width: 180px;
+    }
+
+    /* Styles pour les filtres de galerie déjà définis dans gallery-filters.css */
+}
+
+/* ===== ORIENTATION PAYSAGE SUR MOBILE ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        padding: 6rem 0;
+    }
+
+    .profile-image {
+        max-width: 150px;
+    }
+
+    .model-container {
+        height: 80vh;
+    }
+}
+
+/* ===== ÉCRANS HAUTE RÉSOLUTION ===== */
+@media (min-width: 1600px) {
+    html {
+        font-size: 110%;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
