@@ -27,8 +27,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Préchargement de la police Poppins Bold pour le titre principal (LCP) -->
-    <!-- Chargement des polices Google Fonts sans paramètre de version -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2" crossorigin>
+    <!-- Chargement des polices Google Fonts sans bloquer le rendu -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <!-- Fallback pour les navigateurs qui ne supportent pas onload -->
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
@@ -77,12 +79,23 @@
         }
     </style>
 
-    <!-- Chargement différé du CSS complet -->
+    <!-- CSS critique pour le rendu initial -->
+    <style>
+        /* Styles critiques pour éviter les décalages de mise en page */
+        body, html { margin: 0; padding: 0; }
+        .hero { min-height: 100vh; position: relative; }
+        .gallery-item { position: relative; aspect-ratio: 1 / 1; overflow: hidden; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .profile-img { aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    </style>
+
+    <!-- Chargement différé du CSS non critique -->
     <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/accessibility.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="contact-styles.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="gallery-filters.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="nav-responsive.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="performance-optimizations.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="responsive.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="style.css">
@@ -90,22 +103,29 @@
         <link rel="stylesheet" href="contact-styles.css">
         <link rel="stylesheet" href="gallery-filters.css">
         <link rel="stylesheet" href="nav-responsive.css">
+        <link rel="stylesheet" href="performance-optimizations.css">
         <link rel="stylesheet" href="responsive.css">
     </noscript>
 
     <link rel="manifest" href="site.webmanifest">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/favicon.ico">
-    <!-- Chargement de Font Awesome avec version spécifique -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Chargement de Font Awesome avec version spécifique sans bloquer le rendu -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </noscript>
 
-    <!-- Chargement du viewer 3D simplifié -->
+    <!-- Chargement du viewer 3D temporairement désactivé -->
+    <!--
     <script defer src="js/3dviewer-simple.js"></script>
     <script>
     function loadThreeJsScripts() {
         return Promise.resolve();
     }
     </script>
+    -->
     <!-- Script de gestion des chemins de base et redirection -->
     <script>
         // Détecter le chemin de base pour GitHub Pages
@@ -307,82 +327,87 @@
                 <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all" role="tab" aria-selected="true" aria-controls="gallery-grid">Tout</button>
                 <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration" role="tab" aria-selected="false" aria-controls="gallery-grid">Illustration</button>
                 <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character" role="tab" aria-selected="false" aria-controls="gallery-grid">Character Design</button>
-                <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d" role="tab" aria-selected="false" aria-controls="gallery-grid">Modèles 3D</button>
+                <!-- Filtre 3D temporairement désactivé -->
+                <!-- <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d" role="tab" aria-selected="false" aria-controls="gallery-grid">Modèles 3D</button> -->
             </div>
             <div class="gallery-grid" id="gallery-grid" role="tabpanel">
                 <div class="gallery-item" data-category="illustration">
                     <img src="images/gallery/illustration1.webp"
                          alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
-                         title="Dragon arc-en-ciel par Mimoo">
+                         title="Dragon arc-en-ciel par Mimoo"
+                         width="400" height="400"
+                         loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration1.title">Dragon arc-en-ciel</h3>
                         <p data-translate="gallery.items.illustration1.description">Art digital - Création originale mêlant couleurs vibrantes et imagination</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
-                    <img src="images/gallery/character1.webp" alt="Character Design 1">
+                    <img src="images/gallery/character1.webp" alt="Character Design 1" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character1.title">Harley</h3>
                         <p data-translate="gallery.items.character1.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration2.webp" alt="Illustration 2">
+                    <img src="images/gallery/illustration2.webp" alt="Illustration 2" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration2.title">Dragon arc-en-ciel</h3>
                         <p data-translate="gallery.items.illustration2.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
-                    <img src="images/gallery/character2.webp" alt="Character Design 2">
+                    <img src="images/gallery/character2.webp" alt="Character Design 2" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character2.title">Chibi</h3>
                         <p data-translate="gallery.items.character2.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration3.webp" alt="Illustration 3">
+                    <img src="images/gallery/illustration3.webp" alt="Illustration 3" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration3.title">Ange et dragon</h3>
                         <p data-translate="gallery.items.illustration3.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
-                    <img src="images/gallery/character3.webp" alt="Character Design 3">
+                    <img src="images/gallery/character3.webp" alt="Character Design 3" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character3.title">Dragon Céleste</h3>
                         <p data-translate="gallery.items.character3.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="illustration">
-                    <img src="images/gallery/illustration4.webp" alt="Illustration 4">
+                    <img src="images/gallery/illustration4.webp" alt="Illustration 4" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration4.title">Endroit mystérieux</h3>
                         <p data-translate="gallery.items.illustration4.description">Art digital</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
-                    <img src="images/gallery/character4.webp" alt="Character Design 4">
+                    <img src="images/gallery/character4.webp" alt="Character Design 4" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character4.title">Personnage</h3>
                         <p data-translate="gallery.items.character4.description">Character design</p>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="character">
-                    <img src="images/gallery/character5.webp" alt="Character Design 5">
+                    <img src="images/gallery/character5.webp" alt="Character Design 5" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character5.title">Spider Wolf</h3>
                         <p data-translate="gallery.items.character5.description">Character design</p>
                     </div>
                 </div>
-                <!-- Modèles 3D -->
-                <div class="gallery-item" data-category="3d" data-type="3d" data-model-url="https://raw.githubusercontent.com/temmiiee/Mimoo-portfolio/main/models/theiere.obj">
-                    <img src="images/previews/theiere-preview.jpg" alt="Théière 3D">
+                <!-- Modèles 3D - Temporairement désactivé -->
+                <!--
+                <div class="gallery-item" data-category="3d" data-type="3d" data-model-url="">
+                    <img src="images/previews/theiere-preview.jpg" alt="Théière 3D" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.3d1.title">Théière 3D</h3>
                         <p data-translate="gallery.items.3d1.description">Modèle 3D interactif d'une théière</p>
                     </div>
                 </div>
+                -->
             </div>
         </div>
     </section>
@@ -464,6 +489,47 @@
         </div>
     </div>
 
-    <!-- L'initialisation d'AOS est maintenant gérée dans le script de chargement différé -->
+    <!-- Scripts optimisés pour éviter le blocage du rendu -->
+    <script defer src="js/image-optimizer.js"></script>
+    <script defer src="js/translations.js"></script>
+    <script defer src="js/language.js"></script>
+    <script defer src="js/script.js"></script>
+
+    <!-- Script pour optimiser les performances -->
+    <script>
+        // Enregistrer le service worker pour améliorer les performances
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré avec succès:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
+                    });
+            });
+        }
+
+        // Fonction pour précharger les images importantes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Précharger les images de la galerie visibles dans la fenêtre
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target.querySelector('img');
+                        if (img && img.dataset.src) {
+                            img.src = img.dataset.src;
+                            observer.unobserve(entry.target);
+                        }
+                    }
+                });
+            }, { rootMargin: '200px' });
+
+            // Observer les éléments de la galerie
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                observer.observe(item);
+            });
+        });
+    </script>
 </body>
 </html>
