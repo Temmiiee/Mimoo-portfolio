@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Préchargement de la police Poppins Bold pour le titre principal (LCP) -->
-    <!-- Chargement simplifié des polices Google Fonts -->
+    <!-- Chargement des polices Google Fonts sans paramètre de version -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Fallback pour les navigateurs qui ne supportent pas onload -->
     <noscript>
@@ -88,11 +88,8 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/favicon.ico">
-    <!-- Chargement simplifié de Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    </noscript>
+    <!-- Chargement de Font Awesome avec version spécifique -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Chargement du viewer 3D simplifié -->
     <script defer src="js/3dviewer-simple.js"></script>
@@ -143,13 +140,10 @@
         }
     </script>
 
-    <!-- Configuration pour la production -->
-    <script defer src="js/config.js"></script>
+    <!-- Scripts essentiels uniquement -->
     <script defer src="js/translations.js"></script>
     <script defer src="js/language.js"></script>
-    <script defer src="js/3dviewer-enhanced.js"></script>
     <script defer src="js/script.js"></script>
-    <script defer src="js/optimize-animations.js"></script>
     <script>
         // Script simplifié pour charger l'image de fond
         document.addEventListener('DOMContentLoaded', function() {
@@ -267,7 +261,6 @@
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image-container">
-                    <div class="flower-bed">🌸🌷🌼🌺</div>
                     <div class="about-image">
                         <img src="images/mimoo.webp" alt="Mimoo" class="profile-img" width="300" height="300" loading="lazy">
                     </div>

@@ -1,47 +1,11 @@
-// Définir une version pour forcer le rechargement des ressources
-const SITE_VERSION = '1.0.4';
+// Version du site (sans paramètre de version pour éviter les erreurs)
+const SITE_VERSION = '';
 
-// Fonction pour forcer le rechargement de toutes les ressources
+// Fonction simplifiée pour le chargement des ressources
 function refreshResources() {
-    // Forcer le rechargement des CSS
-    const links = document.getElementsByTagName('link');
-    for (let i = 0; i < links.length; i++) {
-        if (links[i].rel === 'stylesheet') {
-            const href = links[i].href.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
-            links[i].href = href;
-        }
-    }
-
-    // Forcer le rechargement des images
-    const images = document.getElementsByTagName('img');
-    for (let i = 0; i < images.length; i++) {
-        const src = images[i].src;
-        if (src.indexOf('data:') !== 0) { // Ne pas modifier les images en base64
-            images[i].src = src.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
-        }
-    }
-
-    // Forcer le rechargement des scripts
-    const scripts = document.getElementsByTagName('script');
-    for (let i = 0; i < scripts.length; i++) {
-        if (scripts[i].src) {
-            const src = scripts[i].src;
-            scripts[i].src = src.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
-        }
-    }
-
-    // Forcer le rechargement des images de fond
-    const elementsWithBgImage = document.querySelectorAll('[style*="background-image"]');
-    for (let i = 0; i < elementsWithBgImage.length; i++) {
-        const style = elementsWithBgImage[i].getAttribute('style');
-        if (style) {
-            const newStyle = style.replace(/url\(['"](.*?)['"]\)/g, (match, url) => {
-                if (url.indexOf('data:') === 0) return match; // Ne pas modifier les images en base64
-                return `url('${url.replace(/\?.*|$/, `?v=${SITE_VERSION}`)}')`;
-            });
-            elementsWithBgImage[i].setAttribute('style', newStyle);
-        }
-    }
+    // Cette fonction a été simplifiée pour éviter les problèmes de cache
+    // Les ressources sont maintenant chargées directement sans paramètres de version
+    return; // Ne rien faire
 }
 
 // Fonction pour initialiser toutes les fonctionnalités du site
@@ -177,7 +141,7 @@ function initializeSnail() {
     const snailContainer = document.createElement('div');
     snailContainer.className = 'snail-container';
     snailContainer.style.position = 'fixed';
-    snailContainer.style.top = '64px';
+    snailContainer.style.top = '62px';
     snailContainer.style.left = '20px';
     snailContainer.style.fontSize = '24px';
     snailContainer.style.zIndex = '9999';
@@ -390,8 +354,6 @@ function initializeGalleryFilters() {
 }
 
 function initializeLightbox() {
-    console.log('Initialisation de la lightbox...');
-
     // Sélectionner les éléments de la lightbox
     const lightbox = document.querySelector('.lightbox');
     const lightboxImg = document.querySelector('.lightbox img');
@@ -403,17 +365,11 @@ function initializeLightbox() {
 
     // Vérifier si les éléments existent
     if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxClose || !lightboxPrev || !lightboxNext || !modelContainer) {
-        console.error('Erreur: Éléments de la lightbox manquants');
         return;
     }
 
     // Sélectionner tous les éléments de la galerie
     const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
-    if (galleryItems.length === 0) {
-        console.warn('Aucun élément de galerie trouvé');
-    } else {
-        console.log(`${galleryItems.length} éléments de galerie trouvés`);
-    }
 
     let currentIndex = 0;
     let modelViewer = null;
@@ -515,7 +471,6 @@ function initializeLightbox() {
 
         // Ajouter un nouvel écouteur d'événement
         const clickListener = (e) => {
-            console.log(`Clic sur l'image ${index}`);
             e.preventDefault();
             showLightbox(index);
         };
@@ -611,8 +566,25 @@ function createFloatingCreatures() {
         return; // Ne pas créer de créatures sur les appareils mobiles ou à faible puissance
     }
 
-    // Version améliorée avec plus de créatures et de meilleures animations
-    const creatures = ['🦋', '🍃', '🌸', '🌿', '🍀', '🍁', '🌺', '🌻', '🌼', '🌷'];
+    // Émojis de fleurs, feuilles et papillons pour une animation aérienne
+    const creatures = [
+        '🦋', // Papillon
+        '🦋', // Papillon (doublé pour augmenter sa fréquence)
+        '🦋', // Papillon (triplé pour augmenter sa fréquence)
+        '🌸', // Fleur de cerisier
+        '🌸', // Fleur de cerisier (doublée)
+        '🌺', // Hibiscus
+        '🌼', // Fleur éclose
+        '🌷', // Tulipe
+        '🌻', // Tournesol
+        '🌹', // Rose
+        '🍃', // Feuille au vent
+        '🍃', // Feuille au vent (doublée)
+        '🍁', // Feuille d'érable
+        '🍂', // Feuille tombée
+        '🍂', // Feuille tombée (doublée)
+        '🍀'  // Trèfle
+    ];
 
     // Supprimer le conteneur existant s'il existe déjà
     const existingContainer = document.querySelector('.floating-creatures-container');
@@ -640,29 +612,41 @@ function createFloatingCreatures() {
 
         // Appliquer des styles CSS pour l'animation
         creature.style.position = 'absolute';
-        creature.style.fontSize = `${Math.floor(Math.random() * 10) + 25}px`; // Taille variable entre 25px et 35px
-        creature.style.opacity = '0'; // Commencer invisible
 
-        // Position verticale aléatoire
-        const topPosition = Math.random() * 80 + 10; // 10-90% verticalement
+        // Taille variable plus petite pour les émojis
+        creature.style.fontSize = `${Math.floor(Math.random() * 8) + 16}px`; // 16-24px
+        creature.style.opacity = '0.01'; // Commencer presque invisible
+
+        // Position verticale aléatoire avec plus de variation
+        const topPosition = Math.random() * 90 + 5; // 5-95% verticalement
         creature.style.top = `${topPosition}%`;
 
         // Position horizontale initiale (hors écran à gauche)
         creature.style.left = '-50px';
 
-        // Choisir une animation aléatoire
-        const animationType = Math.random() > 0.5 ? 'float-left-to-right' : 'float-with-sway';
+        // Vitesse variable pour un effet plus doux - plus lente pour des mouvements subtils
+        const speed = Math.random() * 0.5 + 0.8; // Facteur de vitesse entre 0.8 et 1.3 (plus lent)
 
-        // Durée et délai aléatoires
-        const duration = Math.random() * 10 + 20; // 20-30s
-        const delay = isInitial ? Math.random() * 15 : 0; // Délai initial pour les premières créatures
+        // Durée et délai aléatoires - durée plus longue pour des mouvements plus lents
+        const duration = (Math.random() * 15 + 25) / speed; // 25-40s, ajusté par la vitesse (beaucoup plus lent)
+        const delay = isInitial ? Math.random() * 8 : Math.random() * 3; // Délai initial ou entre les créatures
 
-        // Appliquer l'animation
+        // Choisir une animation avec rotation
+        const animationType = Math.random() > 0.4 ? 'flying-float' : 'flying-spin';
+
+        // Appliquer l'animation avec une fonction d'accélération douce pour un mouvement naturel
         creature.style.animation = `${animationType} ${duration}s ease-in-out ${delay}s forwards`;
 
-        // Ajouter des effets visuels
-        creature.style.filter = 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2))';
-        creature.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+        // Ajouter des effets visuels très légers et aériens
+        creature.style.filter = 'drop-shadow(0 1px 2px rgba(255, 255, 255, 0.2)) blur(0.3px)';
+        creature.style.textShadow = '0 1px 2px rgba(255, 255, 255, 0.2)';
+
+        // Ajouter une rotation aléatoire initiale plus douce
+        const initialRotation = Math.random() * 180 - 90; // Entre -90 et 90 degrés
+        creature.style.transform = `rotate(${initialRotation}deg)`;
+
+        // Ajouter une légère transparence initiale
+        creature.style.opacity = '0.01'; // Presque invisible au début
 
         // Ajouter au conteneur
         container.appendChild(creature);
@@ -675,38 +659,71 @@ function createFloatingCreatures() {
         }, (duration + delay) * 1000);
     };
 
-    // Créer les créatures initiales
-    for (let i = 0; i < 8; i++) {
+    // Créer les créatures initiales (nombre modéré pour un effet équilibré)
+    for (let i = 0; i < 4; i++) {
         createCreature(true);
     }
 
-    // Ajouter une règle CSS pour l'animation
+    // Ajouter une règle CSS pour les animations
     if (!document.getElementById('floating-creatures-style')) {
         const style = document.createElement('style');
         style.id = 'floating-creatures-style';
         style.textContent = `
-            @keyframes float {
-                0% { transform: translate(0, 0) rotate(0deg); }
-                25% { transform: translate(10px, 10px) rotate(5deg); }
-                50% { transform: translate(0, 20px) rotate(0deg); }
-                75% { transform: translate(-10px, 10px) rotate(-5deg); }
-                100% { transform: translate(0, 0) rotate(0deg); }
+            /* Animation douce avec mouvements légers et variations d'opacité */
+            @keyframes flying-float {
+                0% { transform: translateX(-50px) translateY(0) rotate(0deg); opacity: 0; }
+                10% { transform: translateX(10vw) translateY(-10px) rotate(20deg); opacity: 0.2; }
+                20% { transform: translateX(20vw) translateY(8px) rotate(40deg); opacity: 0.4; }
+                30% { transform: translateX(30vw) translateY(-12px) rotate(60deg); opacity: 0.3; }
+                40% { transform: translateX(40vw) translateY(6px) rotate(80deg); opacity: 0.5; }
+                50% { transform: translateX(50vw) translateY(-8px) rotate(100deg); opacity: 0.2; }
+                60% { transform: translateX(60vw) translateY(10px) rotate(120deg); opacity: 0.4; }
+                70% { transform: translateX(70vw) translateY(-6px) rotate(140deg); opacity: 0.3; }
+                80% { transform: translateX(80vw) translateY(4px) rotate(160deg); opacity: 0.5; }
+                90% { transform: translateX(90vw) translateY(-2px) rotate(180deg); opacity: 0.2; }
+                100% { transform: translateX(calc(100vw + 50px)) translateY(0) rotate(200deg); opacity: 0; }
             }
 
+            /* Animation avec légères rotations et variations d'opacité */
+            @keyframes flying-spin {
+                0% { transform: translateX(-50px) translateY(0) rotate(0deg); opacity: 0; }
+                10% { transform: translateX(10vw) translateY(-15px) rotate(30deg); opacity: 0.3; }
+                20% { transform: translateX(20vw) translateY(12px) rotate(60deg); opacity: 0.2; }
+                30% { transform: translateX(30vw) translateY(-10px) rotate(90deg); opacity: 0.4; }
+                40% { transform: translateX(40vw) translateY(8px) rotate(120deg); opacity: 0.3; }
+                50% { transform: translateX(50vw) translateY(-12px) rotate(150deg); opacity: 0.5; }
+                60% { transform: translateX(60vw) translateY(10px) rotate(180deg); opacity: 0.2; }
+                70% { transform: translateX(70vw) translateY(-8px) rotate(210deg); opacity: 0.4; }
+                80% { transform: translateX(80vw) translateY(6px) rotate(240deg); opacity: 0.3; }
+                90% { transform: translateX(90vw) translateY(-4px) rotate(270deg); opacity: 0.5; }
+                100% { transform: translateX(calc(100vw + 50px)) translateY(0) rotate(300deg); opacity: 0; }
+            }
+
+            /* Style de base pour les créatures flottantes avec transitions douces */
             .floating-creature {
                 opacity: 0;
-                transition: opacity 1s ease;
+                transition: opacity 1.5s ease-in-out;
+                will-change: transform, opacity;
+                backface-visibility: hidden;
+                transform-origin: center center;
+                filter: blur(0.4px);
+                animation-timing-function: ease-in-out !important;
+            }
+
+            /* Masquer les créatures quand la lightbox est active */
+            body.lightbox-active .floating-creature {
+                display: none !important;
             }
         `;
         document.head.appendChild(style);
     }
 
-    // Créer de nouvelles créatures périodiquement
+    // Créer de nouvelles créatures périodiquement avec un intervalle plus long
     setInterval(() => {
-        // Limiter le nombre de créatures simultanées pour éviter les problèmes de performance
-        if (container.children.length < 12) { // Augmenter la limite pour plus d'animation
+        // Limiter le nombre de créatures simultanées
+        if (container.children.length < 6) { // Limite plus basse pour un effet plus subtil
             createCreature(false);
         }
-    }, 3000); // Créer une nouvelle créature toutes les 3 secondes
+    }, 4000); // Créer une nouvelle créature toutes les 4 secondes
 }
 
