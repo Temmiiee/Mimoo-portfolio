@@ -13,19 +13,19 @@ window.translations = {
         },
         about: {
             title: "À propos de moi",
-            description: "Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques.",
+            description: "Je suis Mimoo, une artiste passionnée par la nature, le digital et la création de personnages fantastiques. Diplômée en animation 2D/3D, je combine différentes techniques pour donner vie à mon univers.",
             techniques: {
                 digital: {
                     title: "Art Digital",
-                    description: "Création d'œuvres uniques sur ordinateur et tablette"
+                    description: "Création d'œuvres originales sur ordinateur et tablette"
                 },
                 illustration: {
                     title: "Illustration",
-                    description: "Illustrations personnalisées et créatives"
+                    description: "Illustrations colorées et expressives"
                 },
                 character: {
                     title: "Character Design",
-                    description: "Conception de personnages originaux"
+                    description: "Création de personnages originaux et stylisés"
                 }
             }
         },
@@ -77,19 +77,15 @@ window.translations = {
                 "3d1": {
                     title: "Théière 3D",
                     description: "Modèle 3D interactif d'une théière"
-                },
-                "3d2": {
-                    title: "Armoire 3D",
-                    description: "Modèle 3D interactif d'une armoire"
                 }
             }
         },
         contact: {
-            title: "Contactez-moi",
+            title: "Contact",
             form: {
-                name: "Votre nom",
-                email: "Votre email",
-                message: "Votre message",
+                name: "Nom",
+                email: "Email",
+                message: "Message",
                 send: "Envoyer"
             },
             social: {
@@ -114,19 +110,19 @@ window.translations = {
         },
         about: {
             title: "About me",
-            description: "I'm Mimoo, a 21-year-old artist who loves nature and animals. With a degree in 2D/3D animation, I explore various techniques to create unique artworks.",
+            description: "I'm Mimoo, an artist passionate about nature, digital art, and creating fantastic characters. With a degree in 2D/3D animation, I combine different techniques to bring my universe to life.",
             techniques: {
                 digital: {
                     title: "Digital Art",
-                    description: "Creating unique works on computer and tablet"
+                    description: "Creating original works on computer and tablet"
                 },
                 illustration: {
                     title: "Illustration",
-                    description: "Custom and creative illustrations"
+                    description: "Colorful and expressive illustrations"
                 },
                 character: {
                     title: "Character Design",
-                    description: "Original character conception"
+                    description: "Creating original and stylized characters"
                 }
             }
         },
@@ -176,21 +172,17 @@ window.translations = {
                     description: "Character design"
                 },
                 "3d1": {
-                    title: "Tea-Pot 3D",
-                    description: "Interactive 3D tea-pot model"
-                },
-                "3d2": {
-                    title: "3D Cabinet",
-                    description: "Interactive 3D cabinet model"
+                    title: "3D Teapot",
+                    description: "Interactive 3D teapot model"
                 }
             }
         },
         contact: {
-            title: "Contact Me",
+            title: "Contact",
             form: {
-                name: "Your name",
-                email: "Your email",
-                message: "Your message",
+                name: "Name",
+                email: "Email",
+                message: "Message",
                 send: "Send"
             },
             social: {

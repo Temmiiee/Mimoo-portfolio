@@ -1,11 +1,65 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Définir une version pour forcer le rechargement des ressources
+const SITE_VERSION = '1.0.2';
+
+// Fonction pour forcer le rechargement des ressources CSS
+function refreshCSS() {
+    const links = document.getElementsByTagName('link');
+    for (let i = 0; i < links.length; i++) {
+        if (links[i].rel === 'stylesheet') {
+            const href = links[i].href.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
+            links[i].href = href;
+        }
+    }
+}
+
+// Fonction pour initialiser toutes les fonctionnalités du site
+function initializeSite() {
+    // Initialiser les fonctionnalités essentielles immédiatement
     initializeNavigation();
     initializeGalleryFilters();
     initializeLightbox();
-    initializeAOS();
+
+    // Initialiser l'escargot et les créatures flottantes immédiatement
     initializeSnail();
-    initializeHoverEffects();
     createFloatingCreatures();
+
+    // Initialiser les autres fonctionnalités décoratives avec un délai
+    setTimeout(() => {
+        initializeHoverEffects();
+
+        // Ajouter une classe au body pour indiquer que tout est chargé
+        document.body.classList.add('animations-loaded');
+    }, 300);
+}
+
+// Gérer le chargement initial de la page
+document.addEventListener('DOMContentLoaded', () => {
+    // Forcer le rechargement des CSS pour éviter les problèmes de cache
+    refreshCSS();
+
+    // Initialiser le site
+    initializeSite();
+
+    // Stocker la version actuelle dans sessionStorage
+    sessionStorage.setItem('siteVersion', SITE_VERSION);
+});
+
+// Gérer les rechargements de page (F5)
+window.addEventListener('pageshow', (event) => {
+    // Vérifier si la page est chargée depuis le cache
+    if (event.persisted) {
+        // Vérifier si la version a changé
+        const cachedVersion = sessionStorage.getItem('siteVersion');
+        if (cachedVersion !== SITE_VERSION) {
+            // Forcer un rechargement complet si la version a changé
+            window.location.reload(true);
+        } else {
+            // Réinitialiser l'état du site
+            document.body.classList.remove('animations-loaded');
+            refreshCSS();
+            initializeSite();
+        }
+    }
 });
 
 function initializeNavigation() {
@@ -60,63 +114,128 @@ function initializeNavigation() {
 }
 
 function initializeSnail() {
-    const snail = document.querySelector('.snail');
-    if (!snail) {
-        console.error("Snail element not found!");
-        return;
+    // Vérifier si l'utilisateur préfère réduire les animations
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        return; // Ne pas initialiser l'escargot si l'utilisateur préfère réduire les animations
     }
 
+    // Supprimer l'escargot existant s'il existe
+    const existingContainer = document.querySelector('.snail-container');
+    if (existingContainer) {
+        existingContainer.remove();
+    }
+
+    // Créer le conteneur de l'escargot (pour l'animation de déplacement)
+    const container = document.createElement('div');
+    container.className = 'snail-container';
+
+    // Créer l'escargot lui-même (pour l'animation de saut)
+    const snail = document.createElement('div');
+    snail.className = 'snail';
+    snail.textContent = '🐌'; // Emoji escargot
+    snail.setAttribute('aria-label', 'Escargot interactif');
+    snail.setAttribute('role', 'button');
+    snail.setAttribute('tabindex', '0');
+
+    // Ajouter l'escargot au conteneur, puis le conteneur au body
+    container.appendChild(snail);
+    document.body.appendChild(container);
+
+    // Gérer le clic sur l'escargot
     snail.addEventListener('click', () => {
         if (!snail.classList.contains('jumping')) {
             snail.classList.add('jumping');
-            setTimeout(() => snail.classList.remove('jumping'), 500);
+
+            // Retirer la classe jumping après l'animation
+            setTimeout(() => {
+                snail.classList.remove('jumping');
+            }, 500);
         }
     });
+
+    // Gérer l'interaction au clavier
+    snail.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            snail.click();
+        }
+    });
+
+    // Fonction pour faire sauter l'escargot
+    const jumpSnail = () => {
+        if (!snail.classList.contains('jumping')) {
+            snail.classList.add('jumping');
+
+            // Retirer la classe jumping après l'animation
+            setTimeout(() => {
+                snail.classList.remove('jumping');
+            }, 500);
+        }
+    };
+
+    // Faire sauter l'escargot après un court délai pour attirer l'attention
+    setTimeout(jumpSnail, 1500);
+
+    // Faire sauter l'escargot périodiquement
+    setInterval(jumpSnail, 8000); // Toutes les 8 secondes
 }
 
 function initializeHoverEffects() {
-    const ctaButtons = document.querySelectorAll('.cta-button');
-    ctaButtons.forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            button.style.transform = 'translateY(-2px)';
-            button.style.boxShadow = '0 5px 15px rgba(85, 113, 83, 0.3)';
-        });
+    // Vérifier si l'utilisateur préfère réduire les animations
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        return; // Ne pas initialiser les effets de survol si l'utilisateur préfère réduire les animations
+    }
 
-        button.addEventListener('mouseleave', () => {
-            button.style.transform = 'translateY(0)';
-            button.style.boxShadow = 'none';
-        });
-    });
+    // Utiliser des classes CSS plutôt que des styles inline pour de meilleures performances
+    const style = document.createElement('style');
+    style.textContent = `
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 74, 45, 0.3);
+        }
 
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    galleryItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            item.style.transform = 'translateY(-5px)';
-        });
-
-        item.addEventListener('mouseleave', () => {
-            item.style.transform = 'translateY(0)';
-        });
-    });
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 function initializeGalleryFilters() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-item');
+    const galleryRegion = document.getElementById('gallery-items');
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Retirer la classe active de tous les boutons
-            filterBtns.forEach(b => b.classList.remove('active'));
-            // Ajouter la classe active au bouton cliqué
+            // Mettre à jour les attributs ARIA et les classes
+            filterBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-pressed', 'false');
+            });
+
             btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
 
             const filter = btn.getAttribute('data-filter');
+            const filterName = btn.textContent.trim();
+
+            // Annoncer le changement de filtre pour les lecteurs d'écran
+            galleryRegion.setAttribute('aria-label', `Galerie filtrée par ${filterName}`);
+
+            // Compter les éléments visibles pour l'accessibilité
+            let visibleCount = 0;
 
             galleryItems.forEach(item => {
                 const category = item.getAttribute('data-category');
                 if (filter === 'all' || category === filter) {
                     item.style.display = '';
+                    item.setAttribute('aria-hidden', 'false');
+                    item.setAttribute('tabindex', '0');
+                    visibleCount++;
+
                     setTimeout(() => {
                         item.style.opacity = '1';
                         item.style.transform = 'scale(1)';
@@ -124,16 +243,44 @@ function initializeGalleryFilters() {
                 } else {
                     item.style.opacity = '0';
                     item.style.transform = 'scale(0.8)';
+                    item.setAttribute('aria-hidden', 'true');
+                    item.setAttribute('tabindex', '-1');
+
                     setTimeout(() => {
                         item.style.display = 'none';
                     }, 300);
                 }
             });
+
+            // Mettre à jour le message d'accessibilité
+            const statusMessage = `${visibleCount} éléments affichés dans la galerie`;
+
+            // Créer ou mettre à jour un élément pour les lecteurs d'écran
+            let statusElement = document.getElementById('gallery-status');
+            if (!statusElement) {
+                statusElement = document.createElement('div');
+                statusElement.id = 'gallery-status';
+                statusElement.className = 'sr-only';
+                statusElement.setAttribute('aria-live', 'polite');
+                galleryRegion.appendChild(statusElement);
+            }
+            statusElement.textContent = statusMessage;
+        });
+
+        // Ajouter la gestion du clavier pour l'accessibilité
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+            }
         });
     });
 }
 
 function initializeLightbox() {
+    console.log('Initialisation de la lightbox...');
+
+    // Sélectionner les éléments de la lightbox
     const lightbox = document.querySelector('.lightbox');
     const lightboxImg = document.querySelector('.lightbox img');
     const lightboxTitle = document.querySelector('.lightbox-title');
@@ -141,7 +288,21 @@ function initializeLightbox() {
     const lightboxPrev = document.querySelector('.lightbox-prev');
     const lightboxNext = document.querySelector('.lightbox-next');
     const modelContainer = document.getElementById('model-container');
+
+    // Vérifier si les éléments existent
+    if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxClose || !lightboxPrev || !lightboxNext || !modelContainer) {
+        console.error('Erreur: Éléments de la lightbox manquants');
+        return;
+    }
+
+    // Sélectionner tous les éléments de la galerie
     const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+    if (galleryItems.length === 0) {
+        console.warn('Aucun élément de galerie trouvé');
+    } else {
+        console.log(`${galleryItems.length} éléments de galerie trouvés`);
+    }
+
     let currentIndex = 0;
     let modelViewer = null;
 
@@ -168,33 +329,46 @@ function initializeLightbox() {
             loadingIndicator.innerHTML = '<div class="spinner"></div><span>Chargement des scripts 3D...</span>';
             modelContainer.appendChild(loadingIndicator);
 
-            // Charger les scripts Three.js à la demande
-            loadThreeJsScripts().then(() => {
-                // Supprimer l'indicateur de chargement initial
-                if (modelContainer.contains(loadingIndicator)) {
-                    modelContainer.removeChild(loadingIndicator);
-                }
+            // Charger les scripts 3D à la demande
+            if (typeof load3DScripts === 'function') {
+                load3DScripts();
+            }
 
-                // Initialiser le visualisateur 3D amélioré si nécessaire
-                if (!modelViewer) {
-                    modelViewer = new EnhancedModelViewer(modelContainer);
-                }
+            // Vérifier périodiquement si Three.js et le visualisateur sont chargés
+            const checkInterval = setInterval(() => {
+                if (typeof THREE !== 'undefined' && typeof THREE.OBJLoader !== 'undefined' && typeof EnhancedModelViewer !== 'undefined') {
+                    clearInterval(checkInterval);
 
-                // Initialiser la scène et charger le modèle
-                setTimeout(() => {
-                    // Délai pour s'assurer que le conteneur est visible et a les bonnes dimensions
-                    modelViewer.init();
-                    modelViewer.loadModel(modelPath);
+                    // Supprimer l'indicateur de chargement initial
+                    if (modelContainer.contains(loadingIndicator)) {
+                        modelContainer.removeChild(loadingIndicator);
+                    }
 
-                    // Forcer un redimensionnement après l'initialisation
+                    // Initialiser le visualisateur 3D
+                    if (!modelViewer) {
+                        modelViewer = new EnhancedModelViewer(modelContainer);
+                    }
+
+                    // Initialiser la scène et charger le modèle
                     setTimeout(() => {
-                        if (modelViewer) modelViewer.onWindowResize();
-                    }, 100);
-                }, 50);
-            }).catch(error => {
-                console.error('Erreur lors du chargement des scripts Three.js:', error);
-                loadingIndicator.innerHTML = '<span class="error">Erreur lors du chargement des scripts 3D</span>';
-            });
+                        modelViewer.init();
+                        modelViewer.loadModel(modelPath);
+
+                        // Forcer un redimensionnement après l'initialisation
+                        setTimeout(() => {
+                            if (modelViewer) modelViewer.onWindowResize();
+                        }, 100);
+                    }, 50);
+                }
+            }, 200);
+
+            // Arrêter la vérification après 10 secondes pour éviter une boucle infinie
+            setTimeout(() => {
+                clearInterval(checkInterval);
+                if (!(typeof THREE !== 'undefined' && typeof EnhancedModelViewer !== 'undefined')) {
+                    loadingIndicator.innerHTML = '<span class="error">Erreur lors du chargement des scripts 3D</span>';
+                }
+            }, 10000);
         } else {
             // Afficher l'image normale
             lightboxImg.style.display = 'block';
@@ -221,10 +395,27 @@ function initializeLightbox() {
 
     // Ouvrir la lightbox au clic sur une image
     galleryItems.forEach((item, index) => {
-        item.addEventListener('click', (e) => {
+        // Vérifier si l'écouteur d'événement existe déjà
+        const existingListener = item._lightboxClickListener;
+        if (existingListener) {
+            item.removeEventListener('click', existingListener);
+        }
+
+        // Ajouter un nouvel écouteur d'événement
+        const clickListener = (e) => {
+            console.log(`Clic sur l'image ${index}`);
             e.preventDefault();
             showLightbox(index);
-        });
+        };
+
+        // Stocker l'écouteur d'événement pour pouvoir le supprimer plus tard si nécessaire
+        item._lightboxClickListener = clickListener;
+
+        // Ajouter l'écouteur d'événement
+        item.addEventListener('click', clickListener);
+
+        // Ajouter un style de curseur pour indiquer que l'image est cliquable
+        item.style.cursor = 'pointer';
     });
 
     // Fermer la lightbox
@@ -252,51 +443,36 @@ function initializeLightbox() {
         if (currentIndex < galleryItems.length - 1) showLightbox(currentIndex + 1);
     });
 
-    // Navigation au clavier
+    // Ajouter la gestion des événements clavier pour la lightbox
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
 
-        switch(e.key) {
+        switch (e.key) {
             case 'Escape':
-                lightbox.classList.remove('active');
-                document.body.classList.remove('lightbox-active');
-
-                // Nettoyer le visualisateur 3D si nécessaire
-                if (modelViewer) {
-                    modelViewer.dispose();
-                    modelViewer = null;
-                }
-
-                // Réinitialiser l'affichage
-                modelContainer.classList.remove('active');
-                document.querySelector('.lightbox-content').classList.remove('model-view');
+                lightboxClose.click();
                 break;
             case 'ArrowLeft':
-                if (currentIndex > 0) showLightbox(currentIndex - 1);
+                if (currentIndex > 0) {
+                    showLightbox(currentIndex - 1);
+                }
                 break;
             case 'ArrowRight':
-                if (currentIndex < galleryItems.length - 1) showLightbox(currentIndex + 1);
+                if (currentIndex < galleryItems.length - 1) {
+                    showLightbox(currentIndex + 1);
+                }
                 break;
         }
     });
 
-    // Fermer en cliquant en dehors de l'image
+    // Fermer la lightbox en cliquant en dehors du contenu
     lightbox.addEventListener('click', (e) => {
+        // Vérifier si le clic est sur la lightbox elle-même et non sur son contenu
         if (e.target === lightbox) {
-            lightbox.classList.remove('active');
-            document.body.classList.remove('lightbox-active');
-
-            // Nettoyer le visualisateur 3D si nécessaire
-            if (modelViewer) {
-                modelViewer.dispose();
-                modelViewer = null;
-            }
-
-            // Réinitialiser l'affichage
-            modelContainer.classList.remove('active');
-            document.querySelector('.lightbox-content').classList.remove('model-view');
+            lightboxClose.click();
         }
     });
+
+
 }
 
 function initializeAOS() {
@@ -312,111 +488,113 @@ function initializeAOS() {
 }
 
 function createFloatingCreatures() {
-    // Vérifier si GSAP est disponible
-    if (typeof gsap === 'undefined') {
-        // GSAP n'est pas encore chargé, chargement dynamique
-
-        // Charger GSAP dynamiquement
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js';
-        script.onload = function() {
-            // GSAP chargé avec succès, initialisation des créatures
-            initFloatingCreatures();
-        };
-        script.onerror = function() {
-            // Erreur silencieuse lors du chargement de GSAP
-        };
-        document.head.appendChild(script);
-        return;
+    // Vérifier si l'utilisateur préfère réduire les animations
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        return; // Ne pas créer de créatures si l'utilisateur préfère réduire les animations
     }
 
-    // Si GSAP est déjà disponible, initialiser directement
-    initFloatingCreatures();
+    // Vérifier si l'appareil est mobile ou à faible puissance
+    if (window.innerWidth < 768 || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)) {
+        return; // Ne pas créer de créatures sur les appareils mobiles ou à faible puissance
+    }
 
-    // Fonction d'initialisation des créatures flottantes
-    function initFloatingCreatures() {
-        const creatures = ['🦋', '🍃', '🌸'];
-        const container = document.body;
+    // Version améliorée avec plus de créatures et de meilleures animations
+    const creatures = ['🦋', '🍃', '🌸', '🌿', '🍀', '🍁', '🌺', '🌻', '🌼', '🌷'];
 
-        function getRandomBetween(min, max) {
-            return Math.random() * (max - min) + min;
-        }
+    // Supprimer le conteneur existant s'il existe déjà
+    const existingContainer = document.querySelector('.floating-creatures-container');
+    if (existingContainer) {
+        existingContainer.remove();
+    }
 
-        function createCreature() {
-            const creature = document.createElement('div');
-            creature.className = 'floating-creature';
-            creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
+    const container = document.createElement('div');
+    container.className = 'floating-creatures-container';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none';
+    container.style.zIndex = '9500';
+    container.style.overflow = 'hidden';
+    document.body.appendChild(container);
 
-            // Taille aléatoire entre 16px et 32px
-            const randomSize = getRandomBetween(16, 32);
-            creature.style.fontSize = `${randomSize}px`;
+    // Créer des créatures qui traversent l'écran de gauche à droite
+    const createCreature = (isInitial = false) => {
+        const creature = document.createElement('div');
+        creature.className = 'floating-creature';
+        creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
 
-            // Opacité maximale aléatoire entre 0.4 et 0.9
-            const maxOpacity = getRandomBetween(0.4, 0.9);
+        // Appliquer des styles CSS pour l'animation
+        creature.style.position = 'absolute';
+        creature.style.fontSize = `${Math.floor(Math.random() * 10) + 25}px`; // Taille variable entre 25px et 35px
+        creature.style.opacity = '0'; // Commencer invisible
 
-            // Position initiale
-            creature.style.left = '-30px';
-            creature.style.top = Math.random() * (window.innerHeight - 150) + 50 + 'px';
-            creature.style.opacity = '0';
+        // Position verticale aléatoire
+        const topPosition = Math.random() * 80 + 10; // 10-90% verticalement
+        creature.style.top = `${topPosition}%`;
 
-            container.appendChild(creature);
+        // Position horizontale initiale (hors écran à gauche)
+        creature.style.left = '-50px';
 
-            try {
-                // Création d'une timeline GSAP plus fluide
-                const timeline = gsap.timeline({
-                    onComplete: () => {
-                        container.removeChild(creature);
-                        setTimeout(createCreature, Math.random() * 2000 + 3000);
-                    }
-                });
+        // Choisir une animation aléatoire
+        const animationType = Math.random() > 0.5 ? 'float-left-to-right' : 'float-with-sway';
 
-                // Animation principale
-                timeline
-                    .to(creature, {
-                        opacity: maxOpacity,
-                        duration: 0.8,
-                        ease: "power1.in"
-                    })
-                    .to(creature, {
-                        left: window.innerWidth + 30 + 'px',
-                        top: '+=' + (Math.random() * 60 - 30) + 'px',
-                        rotation: Math.random() * 360,
-                        duration: getRandomBetween(8, 15), // Vitesse aléatoire
-                        ease: "power1.inOut"
-                    }, "-=0.8")
-                    .to(creature, {
-                        opacity: 0,
-                        duration: 0.8,
-                        ease: "power1.out"
-                    }, "-=2");
+        // Durée et délai aléatoires
+        const duration = Math.random() * 10 + 20; // 20-30s
+        const delay = isInitial ? Math.random() * 15 : 0; // Délai initial pour les premières créatures
 
-                // Animation de flottement avec amplitude aléatoire
-                gsap.to(creature, {
-                    y: `+=${getRandomBetween(10, 20)}`,
-                    duration: getRandomBetween(1, 2),
-                    yoyo: true,
-                    repeat: -1,
-                    ease: "sine.inOut"
-                });
+        // Appliquer l'animation
+        creature.style.animation = `${animationType} ${duration}s ease-in-out ${delay}s forwards`;
 
-                // Animation de rotation avec vitesse aléatoire
-                gsap.to(creature, {
-                    rotation: "+=45",
-                    duration: getRandomBetween(2, 4),
-                    yoyo: true,
-                    repeat: -1,
-                    ease: "none"
-                });
-            } catch (error) {
-                // Erreur silencieuse lors de l'animation
+        // Ajouter des effets visuels
+        creature.style.filter = 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2))';
+        creature.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+
+        // Ajouter au conteneur
+        container.appendChild(creature);
+
+        // Supprimer la créature après la fin de l'animation
+        setTimeout(() => {
+            if (container.contains(creature)) {
                 container.removeChild(creature);
             }
-        }
+        }, (duration + delay) * 1000);
+    };
 
-        // Créer plusieurs émojis initialement avec un délai aléatoire
-        for (let i = 0; i < 5; i++) {
-            setTimeout(createCreature, getRandomBetween(0, 3000));
-        }
+    // Créer les créatures initiales
+    for (let i = 0; i < 8; i++) {
+        createCreature(true);
     }
+
+    // Ajouter une règle CSS pour l'animation
+    if (!document.getElementById('floating-creatures-style')) {
+        const style = document.createElement('style');
+        style.id = 'floating-creatures-style';
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(10px, 10px) rotate(5deg); }
+                50% { transform: translate(0, 20px) rotate(0deg); }
+                75% { transform: translate(-10px, 10px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+
+            .floating-creature {
+                opacity: 0;
+                transition: opacity 1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Créer de nouvelles créatures périodiquement
+    setInterval(() => {
+        // Limiter le nombre de créatures simultanées pour éviter les problèmes de performance
+        if (container.children.length < 12) { // Augmenter la limite pour plus d'animation
+            createCreature(false);
+        }
+    }, 3000); // Créer une nouvelle créature toutes les 3 secondes
 }
 

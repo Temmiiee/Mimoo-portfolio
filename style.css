@@ -134,6 +134,7 @@ nav {
     display: flex;
     gap: 2rem;
     list-style: none;
+    padding-left: 15px;
 }
 
 nav a {
@@ -834,29 +835,6 @@ section.hero .hero-content h1 {
     overflow: hidden;
 }
 
-.lightbox-prev:hover,
-.lightbox-next:hover {
-    opacity: 1;
-    transform: scale(1.1);
-    background: var(--accent-color);
-}
-
-.lightbox-prev::before,
-.lightbox-next::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: translateX(-100%);
-    transition: 0.5s;
-}
-
-.lightbox-prev:hover::before,
-.lightbox-next:hover::before {
-    transform: translateX(100%);
-}
-
 .lightbox-prev i,
 .lightbox-next i {
     font-size: 24px;
@@ -1346,7 +1324,6 @@ footer {
     font-size: 24px;
     z-index: 9999;
     cursor: pointer;
-    /* La vitesse par défaut (desktop) est plus lente : 90s au lieu de 50s */
     animation: crawlRight 90s linear infinite;
     user-select: none;
     pointer-events: auto;
@@ -1386,26 +1363,23 @@ body.lightbox-active .snail {
     }
 }
 
+/* Classe pour le saut sans interrompre le crawl */
 .snail.jumping {
-    /* La durée de l'animation crawlRight doit correspondre à celle définie ci-dessus */
-    animation: crawlRight 90s linear infinite, jump 0.5s ease;
-}
-
-@media (max-width: 768px) {
-    .snail.jumping {
-        animation: crawlRight 50s linear infinite, jump 0.5s ease;
-    }
+    animation-name: jump;
+    animation-duration: 0.5s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
 }
 
 @keyframes jump {
     0% {
-        top: 63px;
+        transform: translateY(0);
     }
     50% {
-        top: 53px;
+        transform: translateY(-10px);
     }
     100% {
-        top: 63px;
+        transform: translateY(0);
     }
 }
 

@@ -1,0 +1,95 @@
+/**
+ * Styles spécifiques pour l'animation de l'escargot
+ */
+
+/* Conteneur de l'escargot - gère le déplacement horizontal */
+.snail-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10000;
+    animation: crawlRight 30s linear infinite;
+    pointer-events: none; /* Pour que les clics passent à travers */
+}
+
+/* L'escargot lui-même - gère le saut vertical */
+.snail {
+    font-size: 40px;
+    cursor: pointer;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+    pointer-events: auto; /* Pour que l'escargot soit cliquable */
+    transition: transform 0.2s ease;
+}
+
+.snail:hover {
+    transform: scale(1.2);
+}
+
+/* Animation de saut */
+.snail.jumping {
+    animation: jump 0.5s ease;
+}
+
+/* Animation de déplacement horizontal */
+@keyframes crawlRight {
+    0% {
+        left: 20px;
+        transform: scaleX(1);
+    }
+    45% {
+        left: calc(100% - 60px);
+        transform: scaleX(1);
+    }
+    50% {
+        left: calc(100% - 60px);
+        transform: scaleX(-1);
+    }
+    95% {
+        left: 20px;
+        transform: scaleX(-1);
+    }
+    100% {
+        left: 20px;
+        transform: scaleX(1);
+    }
+}
+
+/* Animation de saut vertical */
+@keyframes jump {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Adaptation pour les petits écrans */
+@media (max-width: 768px) {
+    @keyframes crawlRight {
+        0% {
+            left: 10px;
+            transform: scaleX(1);
+        }
+        45% {
+            left: calc(100% - 50px);
+            transform: scaleX(1);
+        }
+        50% {
+            left: calc(100% - 50px);
+            transform: scaleX(-1);
+        }
+        95% {
+            left: 10px;
+            transform: scaleX(-1);
+        }
+        100% {
+            left: 10px;
+            transform: scaleX(1);
+        }
+    }
+}

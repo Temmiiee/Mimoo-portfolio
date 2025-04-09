@@ -24,7 +24,6 @@ const ASSETS_TO_CACHE = [
     BASE_PATH + 'images/mimoo.webp',
     BASE_PATH + 'images/favicon.ico',
     BASE_PATH + 'images/background.webp',
-    BASE_PATH + 'images/background.jpg',
     BASE_PATH + 'site.webmanifest'
 ];
 

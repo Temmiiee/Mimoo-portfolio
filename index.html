@@ -1,313 +1,126 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mimoo - Digital Artist & Illustrator</title>
-    <meta name="author" content="Mimoo">
-    <meta name="keywords" content="art digital, illustration, character design, artiste, portfolio, Mimoo, dessin numérique, artiste français, création digitale, design de personnages, illustration fantastique, art contemporain">
-    <meta name="description" content="Découvrez l'univers créatif de Mimoo, artiste digitale spécialisée en illustration et character design. Portfolio artistique présentant des créations uniques mêlant nature, fantaisie et techniques numériques.">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="googlebot" content="index, follow">
-    <meta name="theme-color" content="#557153">
-    <meta name="google-site-verification" content="xWZ3srF_x6WJStH_mNOiAKNShKbhl7I6R73bECe6KN0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mimoo - Portfolio d'art digital</title>
+  <meta name="description" content="Portfolio de Mimoo, artiste digitale : illustration, character design, et créations fantastiques." />
+  <meta name="author" content="Mimoo" />
+  <meta name="theme-color" content="#2D4A2D" />
 
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Mimoo - Artiste Digitale | Illustration & Character Design">
-    <meta property="og:description" content="Explorez un univers artistique unique où nature et digital se rencontrent. Portfolio d'illustrations et designs de personnages par Mimoo.">
-    <meta property="og:image" content="https://temmiiee.github.io/Art-Portfolio-Template/images/og-image.jpg">
-    <meta property="og:image:alt" content="Œuvre digitale par Mimoo">
-    <meta property="og:site_name" content="Portfolio de Mimoo">
-    <meta property="og:locale" content="fr_FR">
-    <meta property="og:locale:alternate" content="en_GB">
+  <!-- Contrôle du cache -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:creator" content="@mimoo_art">
-    <meta name="twitter:title" content="Mimoo - Art Digital & Character Design">
-    <meta name="twitter:description" content="Découvrez mes créations digitales uniques : illustrations, designs de personnages et univers fantastiques.">
-    <meta name="twitter:image" content="https://temmiiee.github.io/Art-Portfolio-Template/images/og-image.jpg">
+  <!-- Open Graph / Réseaux sociaux -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Mimoo - Portfolio" />
+  <meta property="og:description" content="Découvrez l'univers créatif de Mimoo, artiste digitale passionnée de nature et de fantasy." />
+  <meta property="og:image" content="images/og-image.jpg" />
+  <meta property="og:site_name" content="Mimoo Portfolio" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Préchargement de la police Poppins Bold pour le titre principal (LCP) -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" as="style" fetchpriority="high">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap">
-    <!-- Chargement différé des autres variantes de police -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <!-- Fallback pour les navigateurs qui ne supportent pas onload -->
-    <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    </noscript>
-    <!-- Styles de secours pour éviter le FOUT -->
-    <style>
-        /* Police de secours en attendant le chargement de Poppins */
-        @font-face {
-            font-family: 'Poppins Fallback';
-            size-adjust: 105%;
-            ascent-override: 95%;
-            src: local('Arial');
-        }
+  <!-- Polices Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
 
-        /* Utiliser la police de secours si Poppins n'est pas encore chargée */
-        body {
-            font-family: 'Poppins', 'Poppins Fallback', sans-serif;
-        }
-    </style>
-    <!-- Préchargement des ressources critiques -->
-    <link rel="preload" href="images/background.webp" as="image" fetchpriority="high">
-    <link rel="preload" href="images/mimoo.webp" as="image" fetchpriority="low">
-    <!-- Styles critiques inline pour un chargement rapide -->
-    <style>
-        /* Styles de la section hero */
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            overflow: hidden;
-            background-color: #333; /* Couleur de fond par défaut en attendant l'image */
-        }
+  <!-- Styles avec paramètre de version pour éviter les problèmes de cache -->
+  <link rel="stylesheet" href="style.css?v=1.0.2" />
+  <link rel="stylesheet" href="css/unified-styles.css?v=1.0.2" />
+  <link rel="stylesheet" href="css/fixes.css?v=1.0.2" />
+  <link rel="stylesheet" href="css/accessibility-menu.css?v=1.0.2" />
+  <link rel="stylesheet" href="css/lightbox.css?v=1.0.2" />
+  <link rel="stylesheet" href="css/snail.css?v=1.0.2" />
+  <link rel="icon" type="image/png" href="images/favicon.ico" />
+  <link rel="manifest" href="site.webmanifest" />
 
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .hero-background img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            filter: brightness(0.7);
-        }
-    </style>
-    <!-- Chargement différé du CSS complet -->
-    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="css/accessibility.css" media="print" onload="this.media='all'">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/favicon.ico">
-    <!-- Chargement différé de Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    </noscript>
-
-    <script>
-    // Fonction pour charger Three.js à la demande
-    function loadThreeJsScripts() {
-        return Promise.resolve();
-    }
-    </script>
-    <!-- GSAP et AOS seront chargés de manière différée via JavaScript -->
-    <!-- Script de gestion des chemins de base et redirection -->
-    <script>
-        // Détecter le chemin de base pour GitHub Pages
-        function getBasePath() {
-            const host = window.location.hostname;
-
-            // Si nous sommes sur GitHub Pages (temmiiee.github.io)
-            if (host.includes('github.io')) {
-                return '/Mimoo-portfolio/';
-            }
-
-            // Par défaut, retourner la racine
-            return '/';
-        }
-
-        // Définir une variable globale pour le chemin de base
-        window.basePath = getBasePath();
-    </script>
-    <script src="js/redirect-optimized.js" defer></script>
-    <script src="js/load-resources.js"></script>
-
-    <!-- Enregistrement du service worker pour le cache -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // Utiliser le chemin de base pour l'enregistrement du service worker
-                const swPath = window.basePath + 'service-worker.js';
-                navigator.serviceWorker.register(swPath)
-                    .then(function(registration) {
-                        // Service Worker enregistré avec succès
-                    })
-                    .catch(function(error) {
-                        // Erreur silencieuse lors de l'enregistrement du Service Worker
-                    });
-            });
-        }
-    </script>
-
-    <!-- Configuration pour la production -->
-    <script defer src="js/config.js"></script>
-    <script defer src="js/translations.js"></script>
-    <script defer src="js/language.js"></script>
-    <script defer src="js/3dviewer-enhanced.js"></script>
-    <script defer src="js/script.js"></script>
-    <script defer src="js/optimize-animations.js"></script>
-    <!-- Chargement optimisé d'AOS (Animate On Scroll) -->
-    <script>
-    // Fonction pour charger AOS uniquement lorsque l'utilisateur fait défiler la page
-    function loadAOS() {
-        // Vérifier si AOS est déjà chargé
-        if (window.isAOSLoaded) return;
-
-        // Charger la feuille de style AOS
-        var link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css';
-        document.head.appendChild(link);
-
-        // Charger le script AOS
-        var aosScript = document.createElement('script');
-        aosScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js';
-        aosScript.onload = function() {
-            if (typeof AOS !== 'undefined') {
-                AOS.init({
-                    duration: 1000,
-                    once: true,
-                    offset: 100,
-                    disable: 'mobile' // Désactiver sur mobile pour de meilleures performances
-                });
-                window.isAOSLoaded = true;
-            }
-        };
-        document.head.appendChild(aosScript);
-    }
-
-    // Charger AOS uniquement lorsque l'utilisateur fait défiler la page
-    var scrollHandler = function() {
-        loadAOS();
-        // Supprimer l'écouteur d'événement après le chargement
-        window.removeEventListener('scroll', scrollHandler);
-    };
-
-    // Ajouter un écouteur d'événement pour le défilement
-    window.addEventListener('scroll', scrollHandler, { passive: true });
-
-    // Charger AOS après un délai si l'utilisateur ne fait pas défiler
-    setTimeout(loadAOS, 5000);
-
-    // Définir une variable globale pour indiquer si AOS est chargé
-    window.isAOSLoaded = false;
-    </script>
-    <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Mimoo",
-    "url": "https://temmiiee.github.io/Art-Portfolio-Template/",
-    "image": "https://temmiiee.github.io/Art-Portfolio-Template/images/mimoo.webp",
-    "sameAs": [
-        "https://instagram.com/_mimoou",
-        "https://twitter.com/mimoo_art",
-        "https://vgen.co/Mimoo"
-    ],
-    "jobTitle": "Digital Artist",
-    "description": "Artiste digitale spécialisée en illustration et character design",
-    "knowsAbout": ["Digital Art", "Character Design", "Illustration"]
-}
-</script>
-    <link rel="canonical" href="https://temmiiee.github.io/Mimoo-portfolio/" />
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://temmiiee.github.io/Mimoo-portfolio/sitemap.xml" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
+
 <body>
-    <div class="snail">🐌</div>
+  <a href="#main-content" class="skip-to-content">Aller au contenu principal</a>
+  <!-- L'escargot est maintenant créé dynamiquement par JavaScript -->
 
-    <nav>
-        <div class="logo">
-            <span class="logo-text">M</span>
-            <span class="logo-text">i</span>
-            <span class="logo-text">m</span>
-            <span class="logo-text">o</span>
-            <span class="logo-text">o</span>
-        </div>
-        <div class="language-selector" role="group" aria-label="Sélection de la langue">
-            <button class="lang-btn" data-lang="fr" aria-label="Français" aria-pressed="true">FR</button>
-            <button class="lang-btn" data-lang="en" aria-label="English" aria-pressed="false">EN</button>
-        </div>
-        <button class="hamburger" aria-label="Menu de navigation" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <ul class="nav-links">
-            <li><a href="#accueil" data-translate="nav.home">Accueil</a></li>
-            <li><a href="#apropos" data-translate="nav.about">À propos</a></li>
-            <li><a href="#galerie" data-translate="nav.gallery">Galerie</a></li>
-            <li><a href="#contact" data-translate="nav.contact">Contact</a></li>
-        </ul>
-    </nav>
+  <nav role="navigation" aria-label="Menu principal">
+    <div class="logo">
+      <span class="logo-text">M</span>
+      <span class="logo-text">i</span>
+      <span class="logo-text">m</span>
+      <span class="logo-text">o</span>
+      <span class="logo-text">o</span>
+    </div>
+    <button class="hamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="#accueil" data-translate="nav.home">Accueil</a></li>
+      <li><a href="#apropos" data-translate="nav.about">À propos</a></li>
+      <li><a href="#galerie" data-translate="nav.gallery">Galerie</a></li>
+      <li><a href="#contact" data-translate="nav.contact">Contact</a></li>
+    </ul>
+    <div class="language-selector">
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </nav>
 
+  <main id="main-content">
     <section id="accueil" class="hero">
-        <div class="hero-background">
-            <picture>
-                <source srcset="images/background.webp" type="image/webp">
-                <img src="images/background.jpg"
-                     alt="Fond artistique"
-                     width="1814"
-                     height="1080"
-                     fetchpriority="high"
-                     decoding="sync" />
-            </picture>
-        </div>
-        <div class="hero-content">
-            <h1 data-translate="hero.title" id="main-title">Art Digital & Illustration</h1>
-            <p data-translate="hero.subtitle" class="hero-subtitle">Bienvenue dans mon univers créatif</p>
-            <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
-        </div>
+      <div class="hero-background">
+        <img src="images/background.webp" alt="Fond artistique" width="1814" height="1080" loading="eager" />
+      </div>
+      <div class="hero-content">
+        <h1 data-translate="hero.title">Art Digital & Illustration</h1>
+        <p data-translate="hero.subtitle">Bienvenue dans mon univers créatif</p>
+        <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
+      </div>
     </section>
 
     <section id="apropos" class="about">
-        <div class="container">
-            <h2 data-translate="about.title">À propos de moi</h2>
-            <div class="about-content">
-                <div class="about-image">
-                    <img src="images/mimoo.webp" alt="Mimoo" class="profile-img" width="300" height="300" loading="lazy">
-                </div>
-                <div class="about-text">
-                    <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
-                    <div class="techniques">
-                        <div class="technique">
-                            <i class="fas fa-desktop"></i>
-                            <h3 data-translate="about.techniques.digital.title">Art Digital</h3>
-                            <p data-translate="about.techniques.digital.description">Création d'œuvres uniques sur ordinateur et tablette</p>
-                        </div>
-                        <div class="technique">
-                            <i class="fas fa-paint-brush"></i>
-                            <h3 data-translate="about.techniques.illustration.title">Illustration</h3>
-                            <p data-translate="about.techniques.illustration.description">Illustrations personnalisées et créatives</p>
-                        </div>
-                        <div class="technique">
-                            <i class="fas fa-pencil-alt"></i>
-                            <h3 data-translate="about.techniques.character.title">Character Design</h3>
-                            <p data-translate="about.techniques.character.description">Conception de personnages originaux</p>
-                        </div>
-                    </div>
-                </div>
+      <div class="container">
+        <h2 data-translate="about.title">À propos de moi</h2>
+        <div class="about-content">
+          <div class="about-image">
+            <img src="images/mimoo.webp" alt="Portrait de Mimoo" width="300" height="300" loading="lazy" />
+          </div>
+          <div class="about-text">
+            <p data-translate="about.description">Je suis Mimoo, une artiste passionnée par la nature, le digital et la création de personnages fantastiques. Diplômée en animation 2D/3D, je combine différentes techniques pour donner vie à mon univers.</p>
+            <div class="techniques">
+              <div class="technique">
+                <i class="fas fa-desktop" aria-hidden="true"></i>
+                <h3 data-translate="about.techniques.digital.title">Art Digital</h3>
+                <p data-translate="about.techniques.digital.description">Création d'œuvres originales sur ordinateur et tablette</p>
+              </div>
+              <div class="technique">
+                <i class="fas fa-paint-brush" aria-hidden="true"></i>
+                <h3 data-translate="about.techniques.illustration.title">Illustration</h3>
+                <p data-translate="about.techniques.illustration.description">Illustrations colorées et expressives</p>
+              </div>
+              <div class="technique">
+                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                <h3 data-translate="about.techniques.character.title">Character Design</h3>
+                <p data-translate="about.techniques.character.description">Création de personnages originaux et stylisés</p>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <section id="galerie" class="gallery">
-        <div class="container">
-            <h2 data-translate="gallery.title">Galerie</h2>
-            <div class="gallery-filters">
-                <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all">Tout</button>
-                <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration">Illustration</button>
-                <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character">Character Design</button>
-                <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d">Modèles 3D</button>
-            </div>
-            <div class="gallery-grid">
-                <div class="gallery-item" data-category="illustration">
+      <div class="container">
+        <h2 data-translate="gallery.title">Galerie</h2>
+        <div class="gallery-filters" role="tablist" aria-label="Filtres de la galerie">
+          <button class="filter-btn active" data-filter="all" data-translate="gallery.filters.all" aria-pressed="true">Tout</button>
+          <button class="filter-btn" data-filter="illustration" data-translate="gallery.filters.illustration" aria-pressed="false">Illustration</button>
+          <button class="filter-btn" data-filter="character" data-translate="gallery.filters.character" aria-pressed="false">Character Design</button>
+          <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d" aria-pressed="false">Modèles 3D</button>
+        </div>
+        <div id="gallery-items" class="gallery-grid" role="region" aria-live="polite">
+                <div class="gallery-item" data-category="illustration" role="button" tabindex="0" aria-label="Voir l'illustration Dragon arc-en-ciel">
                     <img src="images/gallery/illustration1.webp"
                          alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
                          title="Dragon arc-en-ciel par Mimoo">
@@ -380,79 +193,102 @@
                         <p data-translate="gallery.items.3d1.description">Modèle 3D interactif d'une théière</p>
                     </div>
                 </div>
-            </div>
         </div>
+      </div>
     </section>
 
     <section id="contact" class="contact">
-        <div class="container">
-            <h2 data-translate="contact.title">Contactez-moi</h2>
-            <div class="contact-content">
-                <div class="contact-form-wrapper">
-                    <form id="contact-form" action="https://formspree.io/f/mvgkonpd" method="POST">
-                        <div class="form-group">
-                            <label for="name" data-translate="contact.form.name">Votre nom</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email" data-translate="contact.form.email">Votre email</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message" data-translate="contact.form.message">Votre message</label>
-                            <textarea id="message" name="message" required></textarea>
-                        </div>
-                        <button type="submit" class="cta-button" data-translate="contact.form.send">
-                            <i class="fas fa-paper-plane"></i> Envoyer
-                        </button>
-                    </form>
-                </div>
-                <div class="contact-info">
-                    <h3 data-translate="contact.social.title">Retrouvez-moi sur</h3>
-                    <div class="social-links">
-                        <a href="https://instagram.com/_mimoou" target="_blank" class="social-link">
-                            <i class="fab fa-instagram"></i>
-                            <span>Instagram</span>
-                        </a>
-                        <a href="https://twitter.com/mimoo_art" target="_blank" class="social-link">
-                            <i class="fab fa-twitter"></i>
-                            <span>Twitter</span>
-                        </a>
-                        <a href="https://vgen.co/Mimoo" target="_blank" class="social-link">
-                            <i class="fas fa-palette"></i>
-                            <span>VGen</span>
-                        </a>
-                    </div>
-                </div>
+      <div class="container">
+        <h2 data-translate="contact.title">Contact</h2>
+        <div class="contact-content">
+          <div class="contact-form-wrapper">
+            <form action="https://formspree.io/f/mvgkonpd" method="POST" id="contact-form">
+              <div class="form-group">
+                <label for="name" data-translate="contact.form.name">Nom</label>
+                <input type="text" id="name" name="name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="email" data-translate="contact.form.email">Email</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+
+              <div class="form-group">
+                <label for="message" data-translate="contact.form.message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+              </div>
+
+              <button type="submit" class="cta-button" data-translate="contact.form.send">Envoyer</button>
+            </form>
+          </div>
+
+          <div class="contact-info">
+            <h3 data-translate="contact.social.title">Retrouvez-moi sur</h3>
+            <div class="social-links">
+              <a href="https://instagram.com/_mimoou" class="social-link" target="_blank" rel="noopener">
+                <i class="fab fa-instagram" aria-hidden="true"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="https://twitter.com/mimoo_art" class="social-link" target="_blank" rel="noopener">
+                <i class="fab fa-twitter" aria-hidden="true"></i>
+                <span>Twitter</span>
+              </a>
+              <a href="https://vgen.co/Mimoo" class="social-link" target="_blank" rel="noopener">
+                <i class="fas fa-palette" aria-hidden="true"></i>
+                <span>VGen</span>
+              </a>
             </div>
+          </div>
         </div>
+      </div>
     </section>
+  </main>
 
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2025 Temmiie. <span data-translate="footer.rights">Tous droits réservés.</span></p>
-        </div>
-    </footer>
-
-    <!-- Container pour les animations Three.js -->
-    <div id="canvas-container"></div>
-
-    <!-- Lightbox pour l'affichage en plein écran -->
-    <div class="lightbox">
-        <div class="lightbox-content">
-            <button class="lightbox-close" aria-label="Fermer">×</button>
-            <img src="" alt="Image en plein écran" class="lightbox-image">
-            <div id="model-container" class="model-container"></div>
-            <div class="lightbox-info">
-                <h3 class="lightbox-title"></h3>
-            </div>
-            <div class="lightbox-navigation">
-                <button class="lightbox-prev" aria-label="Image précédente"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-                <button class="lightbox-next" aria-label="Image suivante"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-            </div>
-        </div>
+  <!-- Lightbox pour afficher les images en grand format -->
+  <div class="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Fermer la lightbox">&times;</button>
+      <button class="lightbox-prev" aria-label="Image précédente">&lt;</button>
+      <button class="lightbox-next" aria-label="Image suivante">&gt;</button>
+      <img src="" alt="" />
+      <div id="model-container"></div>
+      <h3 class="lightbox-title"></h3>
     </div>
+  </div>
 
-    <!-- L'initialisation d'AOS est maintenant gérée dans le script de chargement différé -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Mimoo. <span data-translate="footer.rights">Tous droits réservés.</span></p>
+    </div>
+  </footer>
+
+  <!-- Enregistrement du Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js?v=1.0.1')
+          .then(registration => {
+            console.log('Service Worker enregistré avec succès:', registration.scope);
+          })
+          .catch(error => {
+            console.error('Erreur lors de l\'enregistrement du Service Worker:', error);
+          });
+      });
+    }
+  </script>
+
+  <!-- Scripts avec paramètre de version pour éviter les problèmes de cache -->
+  <!-- Chargement des traductions en premier -->
+  <script defer src="js/translations.js?v=1.0.2"></script>
+
+  <!-- Autres scripts -->
+  <script defer src="js/language.js?v=1.0.2"></script>
+  <script defer src="js/config.js?v=1.0.2"></script>
+  <script defer src="js/accessibility-manager.js?v=1.0.2"></script>
+  <script defer src="js/accessibility-preferences-fixed.js?v=1.0.2"></script>
+  <script defer src="js/optimize-animations.js?v=1.0.2"></script>
+  <script defer src="js/redirect-optimized.js?v=1.0.2"></script>
+  <script defer src="js/script.js?v=1.0.2"></script>
+  <script defer src="js/3dviewer.js?v=1.0.2"></script>
 </body>
 </html>

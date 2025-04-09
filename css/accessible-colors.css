@@ -1,0 +1,192 @@
+/**
+ * Accessible Colors for Mimoo Portfolio
+ * This file overrides the default colors with more accessible alternatives
+ * that meet WCAG 2.1 AA standards for contrast
+ */
+
+:root {
+    /* Original colors for reference */
+    /* --primary-color: #557153;    /* Vert forêt */
+    /* --secondary-color: #7D8F69;  /* Vert mousse */
+    /* --accent-color: #A9AF7E;     /* Vert sauge */
+    /* --light-color: #E6E5A3;      /* Jaune pâle naturel */
+    /* --bg-color: #FEFAE0;         /* Beige clair */
+    /* --text-color: #2C3639;       /* Gris foncé */
+    
+    /* New accessible colors */
+    --primary-color: #2D4A2D;      /* Vert forêt plus foncé pour un meilleur contraste */
+    --secondary-color: #3D5C39;    /* Vert mousse plus foncé */
+    --accent-color: #5C7248;       /* Vert sauge plus foncé */
+    --light-color: #D6D58F;        /* Jaune pâle plus contrasté */
+    --bg-color: #FEFAE0;           /* Beige clair (inchangé) */
+    --text-color: #222222;         /* Presque noir pour un meilleur contraste */
+    --overlay-color: rgba(45, 74, 45, 0.8); /* Version transparente du nouveau primary-color */
+    --dark-color: #222222;         /* Presque noir */
+}
+
+/* Amélioration du contraste pour les liens de navigation */
+nav a {
+    color: #2D4A2D; /* Vert plus foncé pour un meilleur contraste */
+    font-weight: 700; /* Plus épais pour améliorer la lisibilité */
+}
+
+nav a:hover {
+    color: #1A2E1A; /* Encore plus foncé au survol */
+}
+
+/* Amélioration du contraste pour les boutons de langue */
+.lang-btn {
+    border: 2px solid #2D4A2D; /* Bordure plus visible */
+    color: #2D4A2D; /* Texte plus contrasté */
+    font-weight: 700;
+}
+
+.lang-btn.active {
+    background: #2D4A2D; /* Fond plus foncé */
+    color: white;
+}
+
+/* Amélioration du contraste pour les boutons de filtre */
+.filter-btn {
+    border: 2px solid #2D4A2D;
+    color: #2D4A2D;
+    font-weight: 700;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: #2D4A2D;
+    color: white;
+}
+
+/* Amélioration du contraste pour le bouton CTA */
+.cta-button {
+    background: #D6D58F; /* Fond plus contrasté */
+    color: #1A2E1A; /* Texte presque noir pour un contraste maximal */
+    font-weight: 700;
+    border: 2px solid #1A2E1A; /* Bordure pour améliorer la visibilité */
+}
+
+.cta-button:hover {
+    background: #C4C37D; /* Version plus foncée au survol */
+    color: #1A2E1A;
+    box-shadow: 0 5px 15px rgba(45, 74, 45, 0.4);
+}
+
+/* Amélioration du contraste pour les overlays de la galerie */
+.gallery-item::after {
+    background: rgba(45, 74, 45, 0.7); /* Overlay plus opaque */
+}
+
+.gallery-item .overlay {
+    background-color: rgba(0, 0, 0, 0.8); /* Fond presque noir pour un meilleur contraste */
+}
+
+.gallery-item .overlay h3,
+.gallery-item .overlay p {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); /* Ombre pour améliorer la lisibilité */
+}
+
+/* Amélioration du contraste pour les icônes et éléments décoratifs */
+.hamburger span {
+    background-color: #2D4A2D; /* Plus foncé pour un meilleur contraste */
+    height: 3px; /* Plus épais pour une meilleure visibilité */
+}
+
+/* Amélioration du contraste pour le footer */
+footer {
+    background-color: #2D4A2D; /* Fond plus foncé */
+    color: white;
+}
+
+footer a {
+    color: white;
+    text-decoration: underline; /* Soulignement pour une meilleure accessibilité */
+}
+
+/* Amélioration du contraste pour les formulaires */
+input, textarea, select {
+    border: 2px solid #2D4A2D;
+    color: #222222;
+}
+
+label {
+    color: #222222;
+    font-weight: 700;
+}
+
+::placeholder {
+    color: #666666;
+    opacity: 1;
+}
+
+/* Amélioration du contraste pour les messages d'erreur et de succès */
+.error-message {
+    background-color: #D32F2F; /* Rouge plus foncé */
+    color: white;
+    font-weight: 700;
+}
+
+.success-message {
+    background-color: #2E7D32; /* Vert plus foncé */
+    color: white;
+    font-weight: 700;
+}
+
+/* Amélioration du contraste pour la lightbox */
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
+    background-color: #2D4A2D;
+    color: white;
+}
+
+/* Amélioration du contraste pour les éléments de la section "about" */
+.about h2, .about h3 {
+    color: #222222;
+}
+
+.technique {
+    border: 2px solid #2D4A2D;
+}
+
+/* Amélioration du contraste pour les liens sociaux */
+.social-link {
+    background-color: #2D4A2D;
+    color: white;
+}
+
+.social-link:hover {
+    background-color: #1A2E1A;
+}
+
+/* Styles pour le mode contraste élevé */
+@media (prefers-contrast: more) {
+    :root {
+        --primary-color: #1A2E1A;
+        --secondary-color: #1A2E1A;
+        --accent-color: #2D4A2D;
+        --light-color: #FFFFFF;
+        --bg-color: #FFFFFF;
+        --text-color: #000000;
+        --overlay-color: rgba(0, 0, 0, 0.9);
+        --dark-color: #000000;
+    }
+    
+    body, p, h1, h2, h3, h4, h5, h6, span, div {
+        color: #000000;
+    }
+    
+    a, button, .btn, .filter-btn, .lang-btn, .cta-button {
+        border: 2px solid #000000;
+    }
+    
+    input, textarea, select {
+        border: 2px solid #000000;
+    }
+    
+    .hero-background img {
+        filter: brightness(0.3);
+    }
+}
