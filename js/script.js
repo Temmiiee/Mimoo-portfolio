@@ -53,7 +53,7 @@ function initializeNavigation() {
         hamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
         document.querySelector('.nav-overlay').classList.toggle('active');
-        
+
         // Bloquer le défilement du body quand le menu est ouvert
         if (hamburger.classList.contains('active')) {
             body.style.overflow = 'hidden';
@@ -227,7 +227,7 @@ function initializeLightbox() {
         const img = item.querySelector('img');
         const overlay = item.querySelector('.overlay');
         const title = overlay.querySelector('h3').textContent;
-        
+
         // Modèle 3D temporairement désactivé
         // const is3DModel = item.getAttribute('data-type') === '3d';
         // const modelPath = item.getAttribute('data-model-url') || item.getAttribute('data-model-path');
@@ -347,29 +347,29 @@ function initializeLightbox() {
 function initializeHoverEffects() {
     // Ajouter des effets de survol pour les éléments de la galerie
     const galleryItems = document.querySelectorAll('.gallery-item');
-    
+
     galleryItems.forEach(item => {
         const overlay = item.querySelector('.overlay');
-        
+
         if (!overlay) return;
-        
+
         item.addEventListener('mouseenter', () => {
             overlay.style.opacity = '1';
         });
-        
+
         item.addEventListener('mouseleave', () => {
             overlay.style.opacity = '0';
         });
     });
-    
+
     // Ajouter des effets de survol pour les liens sociaux
     const socialLinks = document.querySelectorAll('.social-link');
-    
+
     socialLinks.forEach(link => {
         link.addEventListener('mouseenter', () => {
             link.style.transform = 'translateY(-3px)';
         });
-        
+
         link.addEventListener('mouseleave', () => {
             link.style.transform = '';
         });
@@ -378,74 +378,90 @@ function initializeHoverEffects() {
 
 // Fonction pour initialiser l'escargot
 function initializeSnail() {
-    const snail = document.querySelector('.escargot');
-    if (!snail) return;
+    const snailContainer = document.querySelector('.snail-container');
+    const snail = document.querySelector('.snail');
+    if (!snail || !snailContainer) return;
 
-    // Position initiale
-    let position = 0;
-    const speed = 1;
-    const container = document.querySelector('.hero');
-    const containerWidth = container ? container.offsetWidth : window.innerWidth;
-    
-    // Définir la taille de l'escargot en fonction de la taille de l'écran
-    function updateSnailSize() {
-        const windowHeight = window.innerHeight;
-        const snailSize = Math.max(30, Math.min(50, windowHeight * 0.05));
-        snail.style.width = `${snailSize}px`;
-        snail.style.height = `${snailSize}px`;
-    }
-    
-    // Mettre à jour la taille initiale
-    updateSnailSize();
-    
-    // Mettre à jour la taille lors du redimensionnement
-    window.addEventListener('resize', updateSnailSize);
+    // Adapter la vitesse de l'escargot en fonction de la taille de l'écran
+    function updateSnailSpeed() {
+        const windowWidth = window.innerWidth;
+        let duration;
 
-    // Animation de l'escargot
-    function animateSnail() {
-        position += speed;
-        
-        // Réinitialiser la position si l'escargot sort de l'écran
-        if (position > containerWidth) {
-            position = -50;
+        // Définir la durée de l'animation en fonction de la largeur de l'écran
+        if (windowWidth < 768) {
+            duration = '30s'; // Plus rapide sur petit écran
+        } else if (windowWidth > 1600) {
+            duration = '50s'; // Plus lent sur grand écran
+        } else {
+            // Interpolation linéaire entre 30s et 50s
+            const factor = (windowWidth - 768) / (1600 - 768);
+            const seconds = Math.round(30 + factor * 20);
+            duration = `${seconds}s`;
         }
-        
-        snail.style.left = `${position}px`;
-        
-        // Faire sauter l'escargot aléatoirement
-        if (Math.random() < 0.005) {
-            jump();
-        }
-        
-        requestAnimationFrame(animateSnail);
+
+        // Appliquer la durée à l'animation
+        snail.style.animationDuration = duration;
     }
-    
+
+    // Mettre à jour la vitesse initiale
+    updateSnailSpeed();
+
+    // Mettre à jour la vitesse lors du redimensionnement
+    window.addEventListener('resize', updateSnailSpeed);
+
+    // Variable pour suivre si l'escargot est en train de sauter
+    let isJumping = false;
+
     // Fonction pour faire sauter l'escargot
     function jump() {
-        snail.classList.add('jump');
-        
-        // Retirer la classe après l'animation
+        if (isJumping) return; // Éviter les sauts multiples
+        isJumping = true;
+
+        // Créer un élément de style temporaire pour l'animation de saut
+        const style = document.createElement('style');
+        const jumpId = `jump-${Date.now()}`; // ID unique pour l'animation
+
+        style.textContent = `
+            @keyframes ${jumpId} {
+                0% { transform: translateY(0) translateZ(0); }
+                50% { transform: translateY(-15px) translateZ(0); }
+                100% { transform: translateY(0) translateZ(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Sauvegarder l'animation originale
+        const originalAnimation = snail.style.animation;
+
+        // Appliquer l'animation de saut tout en préservant l'animation horizontale
+        snail.style.animation = `${originalAnimation}, ${jumpId} 0.5s ease-in-out`;
+
+        // Nettoyer après l'animation
         setTimeout(() => {
-            snail.classList.remove('jump');
+            // Restaurer l'animation originale
+            snail.style.animation = originalAnimation;
+            // Supprimer le style temporaire
+            document.head.removeChild(style);
+            // Réinitialiser l'état
+            isJumping = false;
         }, 500);
     }
-    
-    // Démarrer l'animation
-    animateSnail();
-    
+
     // Faire sauter l'escargot au clic
     snail.addEventListener('click', () => {
         jump();
     });
-    
-    // Ajouter des attributs ARIA pour l'accessibilité
-    snail.setAttribute('role', 'button');
-    snail.setAttribute('aria-label', 'Faire sauter l\'escargot');
-    snail.setAttribute('tabindex', '0');
-    
+
+    // Faire sauter l'escargot aléatoirement (moins fréquemment)
+    setInterval(() => {
+        if (Math.random() < 0.05 && !isJumping) { // 5% de chance toutes les 5 secondes
+            jump();
+        }
+    }, 5000);
+
     // Permettre l'activation au clavier
     snail.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if ((e.key === 'Enter' || e.key === ' ') && !isJumping) {
             e.preventDefault();
             jump();
         }
@@ -456,69 +472,73 @@ function initializeSnail() {
 function createFloatingCreatures() {
     const container = document.querySelector('.hero');
     if (!container) return;
-    
-    // Emojis de nature
-    const creatures = ['🦋', '🐝', '🌸', '🍃', '🌿', '🍂', '🌱', '🦢', '🐌', '🐞'];
-    
-    // Créer plusieurs créatures
-    for (let i = 0; i < 10; i++) {
+
+    const creatures = ['🦋', '🌸', '🍃', '🌿', '🍂'];
+
+    // Créer plusieurs créatures avec un délai plus court
+    for (let i = 0; i < 8; i++) { // Réduire le nombre d'émojis à l'écran
         setTimeout(() => {
             createCreature();
-        }, i * 2000); // Créer une nouvelle créature toutes les 2 secondes
+        }, i * 1000); // Créer une nouvelle créature toutes les secondes
     }
-    
+
     function createCreature() {
         const creature = document.createElement('div');
         creature.className = 'floating-creature';
-        
+
         // Choisir un emoji aléatoire
         const emoji = creatures[Math.floor(Math.random() * creatures.length)];
         creature.textContent = emoji;
-        
-        // Positionner aléatoirement en bas de l'écran
-        const startX = -50;
-        const startY = Math.random() * (container.offsetHeight - 100) + 50;
-        
-        // Appliquer des styles
+
+        // Positionner aléatoirement sur toute la hauteur de la bannière
+        const startX = -30;
+        const startY = Math.random() * (container.offsetHeight - 30);
+
+        // Appliquer des styles plus discrets
         creature.style.left = `${startX}px`;
         creature.style.top = `${startY}px`;
-        creature.style.opacity = '0.7';
-        creature.style.fontSize = `${Math.random() * 20 + 10}px`;
-        
+        creature.style.opacity = '0.4'; // Opacité réduite pour être plus discret
+        creature.style.fontSize = `${Math.random() * 10 + 10}px`; // Taille réduite (10-20px)
+        creature.style.textShadow = '0 0 2px rgba(255, 255, 255, 0.3)'; // Ombre plus légère
+        creature.style.zIndex = '3';
+
         // Ajouter au conteneur
         container.appendChild(creature);
-        
-        // Animation de flottement
-        const duration = Math.random() * 15000 + 10000; // 10-25 secondes
-        
+
+        // Animation plus rapide
+        const duration = Math.random() * 6000 + 8000;
+
         // Animation avec requestAnimationFrame pour de meilleures performances
         const startTime = performance.now();
-        const endX = container.offsetWidth + 100;
-        
+        const endX = container.offsetWidth + 30;
+
         function animate(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = elapsed / duration;
-            
+
             if (progress < 1) {
-                // Mouvement horizontal
+                // Mouvement horizontal rapide
                 const currentX = startX + (endX - startX) * progress;
-                
-                // Mouvement vertical ondulant
-                const wave = Math.sin(progress * 5) * 30;
+
+                // Mouvement vertical très léger
+                const wave = Math.sin(progress * 4) * 10; // Ondulation plus légère
                 const currentY = startY + wave;
-                
-                creature.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                
+
+                // Rotation légère
+                const rotation = Math.sin(progress * 3) * 15;
+
+                creature.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+
                 requestAnimationFrame(animate);
             } else {
                 // Animation terminée, supprimer l'élément
                 container.removeChild(creature);
-                
+
                 // Créer une nouvelle créature pour remplacer celle-ci
-                setTimeout(createCreature, Math.random() * 2000);
+                setTimeout(createCreature, Math.random() * 800);
             }
         }
-        
+
         requestAnimationFrame(animate);
     }
 }
@@ -531,7 +551,7 @@ function handleRedirects() {
     // Obtenir le chemin actuel
     const path = window.location.pathname;
     const basePath = window.basePath || '/';
-    
+
     // Si nous sommes sur une page qui n'existe pas, rediriger vers la page d'accueil
     if (path !== basePath && path !== basePath + 'index.html' && !document.querySelector('main')) {
         window.location.href = basePath;

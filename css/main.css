@@ -1,0 +1,25 @@
+/**
+ * main.css - Fichier CSS principal pour Mimoo Portfolio
+ * Ce fichier importe tous les autres fichiers CSS dans le bon ordre
+ */
+
+/* Variables */
+@import 'variables.css';
+
+/* Base */
+@import 'base.css';
+
+/* Composants */
+@import 'components.css';
+
+/* Mise en page */
+@import 'layout.css';
+
+/* Animations */
+@import 'animations.css';
+
+/* Escargot */
+@import 'snail.css';
+
+/* Utilitaires (à charger en dernier pour pouvoir surcharger les autres styles) */
+@import 'utilities.css';

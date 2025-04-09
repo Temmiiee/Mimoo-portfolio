@@ -17,7 +17,9 @@ class LanguageManager {
 
     updateLanguageButtons() {
         document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === this.currentLang);
+            const isActive = btn.dataset.lang === this.currentLang;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', isActive);
         });
     }
 

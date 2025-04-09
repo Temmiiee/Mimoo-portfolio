@@ -89,22 +89,10 @@
         .profile-img { aspect-ratio: 1 / 1; object-fit: cover; display: block; }
     </style>
 
-    <!-- Chargement différé du CSS non critique -->
-    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="css/accessibility.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="contact-styles.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="gallery-filters.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="nav-responsive.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="performance-optimizations.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="responsive.css" media="print" onload="this.media='all'">
+    <!-- Chargement différé du CSS unifié -->
+    <link rel="stylesheet" href="css/main.css" media="print" onload="this.media='all'">
     <noscript>
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="css/accessibility.css">
-        <link rel="stylesheet" href="contact-styles.css">
-        <link rel="stylesheet" href="gallery-filters.css">
-        <link rel="stylesheet" href="nav-responsive.css">
-        <link rel="stylesheet" href="performance-optimizations.css">
-        <link rel="stylesheet" href="responsive.css">
+        <link rel="stylesheet" href="css/main.css">
     </noscript>
 
     <link rel="manifest" href="site.webmanifest">
@@ -257,6 +245,11 @@
             <span class="logo-text">m</span>
             <span class="logo-text">o</span>
             <span class="logo-text">o</span>
+            <span class="logo-emoji">🌿</span>
+        </div>
+        <!-- Escargot animé dans la barre de navigation -->
+        <div class="snail-container">
+            <div class="snail" role="button" aria-label="Faire sauter l'escargot" tabindex="0">🐌</div>
         </div>
         <div class="language-selector" role="group" aria-label="Sélection de la langue">
             <button class="lang-btn" data-lang="fr" aria-label="Français" aria-pressed="true">FR</button>
@@ -285,6 +278,7 @@
                 <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
             </div>
         </div>
+
     </section>
 
     <section id="apropos" class="about">
@@ -473,18 +467,19 @@
     <!-- Container pour les animations Three.js -->
     <div id="canvas-container"></div>
 
+
+
     <!-- Lightbox pour l'affichage en plein écran -->
     <div class="lightbox">
         <div class="lightbox-content">
             <button class="lightbox-close" aria-label="Fermer">×</button>
-            <img src="" alt="Image en plein écran" class="lightbox-image">
-            <div id="model-container" class="model-container"></div>
-            <div class="lightbox-info">
-                <h3 class="lightbox-title"></h3>
-            </div>
             <div class="lightbox-navigation">
                 <button class="lightbox-prev" aria-label="Image précédente"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
                 <button class="lightbox-next" aria-label="Image suivante"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            </div>
+            <img src="" alt="Image en plein écran" class="lightbox-image">
+            <div class="lightbox-info">
+                <h3 class="lightbox-title"></h3>
             </div>
         </div>
     </div>
