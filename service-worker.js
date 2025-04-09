@@ -3,7 +3,8 @@
  * Met en cache les ressources statiques pour améliorer les performances
  */
 
-const CACHE_NAME = 'mimoo-portfolio-cache-v1';
+const CACHE_NAME = 'mimoo-portfolio-cache-v3';
+const VERSION = '1.0.4';
 // Détecter le chemin de base pour GitHub Pages
 const BASE_PATH = self.location.pathname.includes('/Mimoo-portfolio/') ? '/Mimoo-portfolio/' : '/';
 
@@ -16,7 +17,7 @@ const ASSETS_TO_CACHE = [
     BASE_PATH + 'js/config.js',
     BASE_PATH + 'js/translations.js',
     BASE_PATH + 'js/language.js',
-    BASE_PATH + 'js/3dviewer-enhanced.js',
+    BASE_PATH + 'js/3dviewer-simple.js',
     BASE_PATH + 'js/redirect-optimized.js',
     BASE_PATH + 'js/load-resources.js',
     BASE_PATH + 'js/optimize-animations.js',
@@ -65,6 +66,33 @@ self.addEventListener('fetch', event => {
         return;
     }
 
+    // Stratégie spéciale pour les images et les polices - toujours aller au réseau d'abord
+    if (event.request.url.includes('background.webp') ||
+        event.request.url.includes('.webp') ||
+        event.request.url.includes('.jpg') ||
+        event.request.url.includes('.png') ||
+        event.request.url.includes('fonts.googleapis.com') ||
+        event.request.url.includes('fonts.gstatic.com') ||
+        event.request.url.includes('cdnjs.cloudflare.com')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    // Mettre à jour le cache avec la nouvelle réponse
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                    return response;
+                })
+                .catch(() => {
+                    // En cas d'échec, essayer le cache
+                    return caches.match(event.request);
+                })
+        );
+        return;
+    }
+
+    // Pour les autres ressources, stratégie cache-first
     event.respondWith(
         caches.match(event.request)
             .then(response => {
@@ -101,7 +129,7 @@ self.addEventListener('fetch', event => {
                     .catch(error => {
                         // En cas d'erreur réseau, essayer de servir la page d'accueil pour les requêtes de navigation
                         if (event.request.mode === 'navigate') {
-                            return caches.match('/');
+                            return caches.match(BASE_PATH);
                         }
 
                         throw error;

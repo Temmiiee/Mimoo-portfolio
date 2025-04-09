@@ -134,7 +134,6 @@ nav {
     display: flex;
     gap: 2rem;
     list-style: none;
-    padding-left: 15px;
 }
 
 nav a {
@@ -260,23 +259,15 @@ nav a:hover {
     overflow: hidden;
 }
 
-/* Classe renommée pour correspondre à la structure HTML */
-.hero-background {
+.background-image {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    z-index: -1;
-}
-
-.hero-background img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    filter: brightness(0.7);
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.8);
 }
 
 .overlay {
@@ -372,32 +363,58 @@ section.hero .hero-content h1 {
 
 .about-content {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.about-image-container {
+    position: relative;
+    flex: 0 0 40%;
+    display: flex;
+    justify-content: center;
+}
+
+.flower-bed {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 2rem;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 5px;
 }
 
 .about-image {
     text-align: center;
     line-height: 0;
-    margin-bottom: -150px;
+    position: relative;
+    z-index: 2;
 }
 
 .profile-img {
-    max-width: 400px;
+    max-width: 350px;
     width: auto;
     height: auto;
     border-radius: 0;
     object-fit: contain;
     display: block;
     margin: 0 auto;
-    transform: translateX(15%) translateY(-27%);
 }
 
 .about-text {
-    text-align: center;
+    text-align: left;
+    flex: 1;
     max-width: 800px;
-    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .about-text {
+        text-align: center;
+        margin: 0 auto;
+    }
 }
 
 .techniques {
@@ -429,9 +446,23 @@ section.hero .hero-content h1 {
         padding: 4rem 1.5rem;
     }
 
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .about-image-container {
+        flex: 0 0 100%;
+        margin-bottom: 2rem;
+    }
+
     .profile-img {
-        max-width: 350px;
-        max-height: 400px;
+        max-width: 280px;
+        max-height: 280px;
+    }
+
+    .flower-bed {
+        font-size: 1.5rem;
     }
 }
 
@@ -446,8 +477,13 @@ section.hero .hero-content h1 {
     }
 
     .profile-img {
-        max-width: 280px;
-        max-height: 330px;
+        max-width: 220px;
+        max-height: 220px;
+    }
+
+    .flower-bed {
+        font-size: 1.2rem;
+        letter-spacing: 3px;
     }
 
     .technique {
@@ -835,6 +871,29 @@ section.hero .hero-content h1 {
     overflow: hidden;
 }
 
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    background: var(--accent-color);
+}
+
+.lightbox-prev::before,
+.lightbox-next::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: 0.5s;
+}
+
+.lightbox-prev:hover::before,
+.lightbox-next:hover::before {
+    transform: translateX(100%);
+}
+
 .lightbox-prev i,
 .lightbox-next i {
     font-size: 24px;
@@ -1014,7 +1073,7 @@ textarea {
     display: flex;
     align-items: center;
     gap: 1rem;
-    text-decoration: none;
+    text-decoration: none !important;
     color: var(--text-color);
     font-size: 1.1rem;
     padding: 1rem;
@@ -1022,6 +1081,25 @@ textarea {
     transition: all 0.3s ease;
     background: white;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Animation décalée pour chaque lien social */
+.social-links a:nth-child(1) { animation-delay: 0.1s; }
+.social-links a:nth-child(2) { animation-delay: 0.3s; }
+.social-links a:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .social-link i {
@@ -1092,7 +1170,7 @@ textarea {
 
 /* Footer */
 footer {
-    background: var(--primary-color);
+    background: rgba(254, 250, 224, 0.95);
     color: white;
     padding: 2rem;
     text-align: center;
@@ -1317,73 +1395,64 @@ footer {
     }
 }
 
-.snail {
-    position: fixed;
-    top: 64px;
-    left: 20px;
-    font-size: 24px;
-    z-index: 9999;
-    cursor: pointer;
-    animation: crawlRight 90s linear infinite;
-    user-select: none;
-    pointer-events: auto;
-    display: block;
-    opacity: 1;
-}
-
-/* Sur mobile, on garde la vitesse actuelle */
-@media (max-width: 768px) {
-    .snail {
-        animation: crawlRight 50s linear infinite;
-    }
-}
-
 /* Quand la lightbox est active, on cache les animations */
 body.lightbox-active .floating-creature,
+body.lightbox-active .snail-container,
 body.lightbox-active .snail {
     display: none !important;
 }
 
-@keyframes crawlRight {
-    0%, 100% {
-        left: 0;
-        transform: scaleX(1);
-    }
-    49.99% {
-        left: calc(100% - 40px);
-        transform: scaleX(1);
-    }
-    50% {
-        left: calc(100% - 40px);
-        transform: scaleX(-1);
-    }
-    99.99% {
-        left: 0;
-        transform: scaleX(-1);
-    }
+/* Supprimer les bordures de focus sur l'escargot */
+.snail:focus, .snail:active, .snail:focus-visible,
+.snail-container:focus, .snail-container:active, .snail-container:focus-visible {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-/* Classe pour le saut sans interrompre le crawl */
-.snail.jumping {
-    animation-name: jump;
-    animation-duration: 0.5s;
-    animation-timing-function: ease;
-    animation-fill-mode: forwards;
+/* Supprimer tout ce bloc de code */
+.share-buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-@keyframes jump {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0);
-    }
+.gallery-item:hover .share-buttons {
+    opacity: 1;
 }
 
+.share-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.share-btn:hover {
+    transform: scale(1.1);
+    background: var(--accent-color);
+}
+
+.share-btn i {
+    font-size: 1.2rem;
+}
+
+.share-btn.facebook { background: #3b5998; }
+.share-btn.twitter { background: #1da1f2; }
+.share-btn.pinterest { background: #bd081c; }
 
 /* Styles additionnels pour les titres et sections */
 /* Définir une taille uniforme pour tous les h1, qu'ils soient dans une section ou non */

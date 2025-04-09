@@ -1,13 +1,45 @@
 // Définir une version pour forcer le rechargement des ressources
-const SITE_VERSION = '1.0.2';
+const SITE_VERSION = '1.0.4';
 
-// Fonction pour forcer le rechargement des ressources CSS
-function refreshCSS() {
+// Fonction pour forcer le rechargement de toutes les ressources
+function refreshResources() {
+    // Forcer le rechargement des CSS
     const links = document.getElementsByTagName('link');
     for (let i = 0; i < links.length; i++) {
         if (links[i].rel === 'stylesheet') {
             const href = links[i].href.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
             links[i].href = href;
+        }
+    }
+
+    // Forcer le rechargement des images
+    const images = document.getElementsByTagName('img');
+    for (let i = 0; i < images.length; i++) {
+        const src = images[i].src;
+        if (src.indexOf('data:') !== 0) { // Ne pas modifier les images en base64
+            images[i].src = src.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
+        }
+    }
+
+    // Forcer le rechargement des scripts
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; i++) {
+        if (scripts[i].src) {
+            const src = scripts[i].src;
+            scripts[i].src = src.replace(/\?.*|$/, `?v=${SITE_VERSION}`);
+        }
+    }
+
+    // Forcer le rechargement des images de fond
+    const elementsWithBgImage = document.querySelectorAll('[style*="background-image"]');
+    for (let i = 0; i < elementsWithBgImage.length; i++) {
+        const style = elementsWithBgImage[i].getAttribute('style');
+        if (style) {
+            const newStyle = style.replace(/url\(['"](.*?)['"]\)/g, (match, url) => {
+                if (url.indexOf('data:') === 0) return match; // Ne pas modifier les images en base64
+                return `url('${url.replace(/\?.*|$/, `?v=${SITE_VERSION}`)}')`;
+            });
+            elementsWithBgImage[i].setAttribute('style', newStyle);
         }
     }
 }
@@ -34,30 +66,47 @@ function initializeSite() {
 
 // Gérer le chargement initial de la page
 document.addEventListener('DOMContentLoaded', () => {
-    // Forcer le rechargement des CSS pour éviter les problèmes de cache
-    refreshCSS();
+    // Forcer le rechargement de toutes les ressources pour éviter les problèmes de cache
+    refreshResources();
 
     // Initialiser le site
     initializeSite();
 
     // Stocker la version actuelle dans sessionStorage
     sessionStorage.setItem('siteVersion', SITE_VERSION);
+
+    // Ajouter un attribut de version au body pour faciliter le débogage
+    document.body.setAttribute('data-version', SITE_VERSION);
 });
 
-// Gérer les rechargements de page (F5)
+// Gérer les rechargements de page (F5) et les retours en arrière
 window.addEventListener('pageshow', (event) => {
     // Vérifier si la page est chargée depuis le cache
     if (event.persisted) {
+        console.log('Page chargée depuis le cache');
         // Vérifier si la version a changé
         const cachedVersion = sessionStorage.getItem('siteVersion');
         if (cachedVersion !== SITE_VERSION) {
+            console.log(`Version différente: cache=${cachedVersion}, actuelle=${SITE_VERSION}`);
             // Forcer un rechargement complet si la version a changé
             window.location.reload(true);
         } else {
+            console.log('Même version, réinitialisation du site');
             // Réinitialiser l'état du site
             document.body.classList.remove('animations-loaded');
-            refreshCSS();
+            refreshResources();
             initializeSite();
+        }
+    } else {
+        // Même pour les chargements normaux, vérifier si l'image de fond est bien chargée
+        const heroSection = document.getElementById('accueil');
+        if (heroSection && heroSection.style.backgroundImage) {
+            // Forcer le rechargement de l'image de fond
+            const bgImage = heroSection.style.backgroundImage;
+            if (bgImage.indexOf('background.webp') > -1 && bgImage.indexOf('?v=') === -1) {
+                heroSection.style.backgroundImage = bgImage.replace(/url\(['"](.*?)['"]\)/g,
+                    (_, url) => `url('${url.replace(/\?.*|$/, `?v=${SITE_VERSION}`)}')`);
+            }
         }
     }
 });
@@ -120,65 +169,128 @@ function initializeSnail() {
         return; // Ne pas initialiser l'escargot si l'utilisateur préfère réduire les animations
     }
 
-    // Supprimer l'escargot existant s'il existe
-    const existingContainer = document.querySelector('.snail-container');
-    if (existingContainer) {
-        existingContainer.remove();
-    }
+    // Supprimer tous les escargots existants s'ils existent
+    const existingSnails = document.querySelectorAll('.snail, .snail-container, .snail-static, .snail-jumping');
+    existingSnails.forEach(snail => snail.remove());
 
-    // Créer le conteneur de l'escargot (pour l'animation de déplacement)
-    const container = document.createElement('div');
-    container.className = 'snail-container';
+    // Créer un conteneur pour l'escargot
+    const snailContainer = document.createElement('div');
+    snailContainer.className = 'snail-container';
+    snailContainer.style.position = 'fixed';
+    snailContainer.style.top = '64px';
+    snailContainer.style.left = '20px';
+    snailContainer.style.fontSize = '24px';
+    snailContainer.style.zIndex = '9999';
+    snailContainer.style.cursor = 'pointer';
+    snailContainer.style.userSelect = 'none';
+    snailContainer.style.pointerEvents = 'auto';
+    snailContainer.style.outline = 'none';
+    snailContainer.style.border = 'none';
+    snailContainer.style.boxShadow = 'none';
+    snailContainer.style.webkitTapHighlightColor = 'transparent';
+    snailContainer.style.animation = 'crawlRight 90s linear infinite';
 
-    // Créer l'escargot lui-même (pour l'animation de saut)
+    // Créer l'escargot lui-même
     const snail = document.createElement('div');
     snail.className = 'snail';
     snail.textContent = '🐌'; // Emoji escargot
-    snail.setAttribute('aria-label', 'Escargot interactif');
-    snail.setAttribute('role', 'button');
-    snail.setAttribute('tabindex', '0');
+    snail.style.display = 'block';
+    snail.style.outline = 'none';
+    snail.style.border = 'none';
+    snail.style.boxShadow = 'none';
 
-    // Ajouter l'escargot au conteneur, puis le conteneur au body
-    container.appendChild(snail);
-    document.body.appendChild(container);
+    // Ajouter l'escargot au conteneur
+    snailContainer.appendChild(snail);
 
-    // Gérer le clic sur l'escargot
-    snail.addEventListener('click', () => {
-        if (!snail.classList.contains('jumping')) {
-            snail.classList.add('jumping');
+    // Ajouter le conteneur au body
+    document.body.appendChild(snailContainer);
 
-            // Retirer la classe jumping après l'animation
-            setTimeout(() => {
-                snail.classList.remove('jumping');
-            }, 500);
-        }
-    });
+    // Ajouter les attributs d'accessibilité
+    snailContainer.setAttribute('aria-label', 'Escargot interactif');
+    snailContainer.setAttribute('role', 'button');
+    snailContainer.setAttribute('tabindex', '0');
 
-    // Gérer l'interaction au clavier
-    snail.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            snail.click();
-        }
-    });
+    // Variable pour suivre si l'escargot est en train de sauter
+    let isJumping = false;
 
     // Fonction pour faire sauter l'escargot
     const jumpSnail = () => {
-        if (!snail.classList.contains('jumping')) {
-            snail.classList.add('jumping');
+        if (!isJumping) {
+            isJumping = true;
 
-            // Retirer la classe jumping après l'animation
+            // Appliquer l'animation de saut à l'escargot lui-même
+            snail.style.animation = 'jumpUp 0.5s ease-out';
+
+            // Réinitialiser après l'animation
             setTimeout(() => {
-                snail.classList.remove('jumping');
+                snail.style.animation = '';
+                isJumping = false;
             }, 500);
         }
     };
+
+    // Gérer le clic sur l'escargot et son conteneur
+    snail.addEventListener('click', jumpSnail);
+    snailContainer.addEventListener('click', jumpSnail);
+
+    // Gérer l'interaction au clavier
+    snailContainer.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            jumpSnail();
+        }
+    });
 
     // Faire sauter l'escargot après un court délai pour attirer l'attention
     setTimeout(jumpSnail, 1500);
 
     // Faire sauter l'escargot périodiquement
     setInterval(jumpSnail, 8000); // Toutes les 8 secondes
+
+    // Ajouter les styles d'animation
+    if (!document.getElementById('snail-animation-style')) {
+        const style = document.createElement('style');
+        style.id = 'snail-animation-style';
+        style.textContent = `
+            @keyframes jumpUp {
+                0% { transform: translateY(0); }
+                50% { transform: translateY(-20px); }
+                100% { transform: translateY(0); }
+            }
+
+            @keyframes crawlRight {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(calc(100vw - 50px)); }
+            }
+
+            .snail-container:focus, .snail-container:active, .snail-container:focus-visible,
+            .snail:focus, .snail:active, .snail:focus-visible {
+                outline: none !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Ajouter un écouteur d'événement pour réinitialiser l'animation lorsque l'escargot atteint le bord
+    const checkSnailPosition = () => {
+        if (!snailContainer) return;
+        const rect = snailContainer.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+
+        // Si l'escargot est presque au bord droit de l'écran
+        if (rect.right >= viewportWidth - 10) {
+            // Réinitialiser la position à gauche
+            snailContainer.style.animation = 'none';
+            snailContainer.style.left = '20px';
+            snailContainer.offsetHeight; // Forcer un reflow
+            snailContainer.style.animation = 'crawlRight 90s linear infinite';
+        }
+    };
+
+    // Vérifier la position toutes les secondes
+    setInterval(checkSnailPosition, 1000);
 }
 
 function initializeHoverEffects() {
