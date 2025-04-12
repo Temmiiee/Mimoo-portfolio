@@ -30,48 +30,34 @@ function initializeSite() {
 
 // Fonction pour initialiser la navigation
 function initializeNavigation() {
-    const nav = document.querySelector('nav');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    const navOverlay = document.querySelector('.nav-overlay');
-    const body = document.body;
 
     // Vérifier si les éléments existent
-    if (!nav || !hamburger || !navLinks) {
+    if (!hamburger || !navLinks) {
+        console.error('Elements de navigation manquants');
         return;
     }
 
-    // Créer un overlay pour fermer le menu en cliquant à l'extérieur
-    if (!navOverlay) {
-        const overlay = document.createElement('div');
-        overlay.className = 'nav-overlay';
-        document.body.appendChild(overlay);
-    }
+    console.log('Navigation: éléments trouvés');
 
-    // Fonction pour ouvrir/fermer le menu mobile
+    // Fonction simple pour ouvrir/fermer le menu mobile
     function toggleMenu() {
+        console.log('Toggle menu appelé');
         hamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
-        document.querySelector('.nav-overlay').classList.toggle('active');
-
-        // Bloquer le défilement du body quand le menu est ouvert
-        if (hamburger.classList.contains('active')) {
-            body.style.overflow = 'hidden';
-        } else {
-            body.style.overflow = '';
-        }
 
         // Mettre à jour l'état ARIA
         const isExpanded = hamburger.classList.contains('active');
         hamburger.setAttribute('aria-expanded', isExpanded);
-        navLinks.setAttribute('aria-hidden', !isExpanded);
     }
 
     // Gestionnaire d'événements pour le bouton hamburger
-    hamburger.addEventListener('click', toggleMenu);
-
-    // Gestionnaire d'événements pour l'overlay
-    document.querySelector('.nav-overlay').addEventListener('click', toggleMenu);
+    hamburger.addEventListener('click', function(e) {
+        console.log('Hamburger cliqué');
+        e.preventDefault();
+        toggleMenu();
+    });
 
     // Fermer le menu quand on clique sur un lien
     navLinks.querySelectorAll('a').forEach(link => {
@@ -93,9 +79,9 @@ function initializeNavigation() {
     hamburger.setAttribute('aria-label', 'Menu principal');
     hamburger.setAttribute('aria-expanded', 'false');
     hamburger.setAttribute('aria-controls', 'nav-links');
-    navLinks.setAttribute('aria-labelledby', 'hamburger');
-    navLinks.setAttribute('aria-hidden', 'true');
     navLinks.id = 'nav-links';
+
+    console.log('Navigation initialisée');
 }
 
 // Fonction pour initialiser les filtres de la galerie
