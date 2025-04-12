@@ -58,13 +58,6 @@
     justify-content: center;
 }
 
-/* Optimize profile image to prevent layout shifts */
-.profile-img {
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-}
-
 /* Optimize font loading */
 @font-face {
     font-family: 'Poppins';
