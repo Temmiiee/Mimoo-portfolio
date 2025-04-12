@@ -7,7 +7,7 @@ window.translations = {
             contact: "Contact"
         },
         hero: {
-            title: "Art Digital & Illustration",
+            title: "Portfolio Art & Nature",
             subtitle: "Bienvenue dans mon univers créatif",
             cta: "Voir mes créations"
         },
@@ -104,7 +104,7 @@ window.translations = {
             contact: "Contact"
         },
         hero: {
-            title: "Digital Art & Illustration",
+            title: "Art & Nature Portfolio",
             subtitle: "Welcome to my creative universe",
             cta: "See my work"
         },

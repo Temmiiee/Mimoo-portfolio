@@ -118,12 +118,10 @@ function initializeGalleryFilters() {
             // Mettre à jour les classes et attributs ARIA des boutons
             filterButtons.forEach(b => {
                 b.classList.remove('active');
-                b.setAttribute('aria-selected', 'false');
                 b.setAttribute('aria-pressed', 'false');
             });
 
             btn.classList.add('active');
-            btn.setAttribute('aria-selected', 'true');
             btn.setAttribute('aria-pressed', 'true');
 
             const filter = btn.getAttribute('data-filter');
@@ -219,7 +217,6 @@ function initializeLightbox() {
 
     // Variables pour suivre l'état de la lightbox
     let currentIndex = 0;
-    let modelViewer = null;
 
     function showLightbox(index) {
         currentIndex = index;

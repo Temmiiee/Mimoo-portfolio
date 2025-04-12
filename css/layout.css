@@ -304,4 +304,35 @@ footer {
     .gallery-filters {
         justify-content: center;
     }
+
+    .contact-form-wrapper,
+    .contact-info {
+        min-width: 100%;
+        padding: var(--spacing-md);
+    }
+
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+}
+
+/* Ajustements spécifiques pour les très petits écrans */
+@media (max-width: 400px) {
+    .contact-container {
+        gap: var(--spacing-md);
+    }
+
+    .contact-form-wrapper,
+    .contact-info {
+        padding: var(--spacing-sm);
+    }
+
+    input, textarea {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .cta-button {
+        width: 100%;
+        padding: var(--spacing-sm);
+    }
 }

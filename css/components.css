@@ -449,6 +449,7 @@ nav {
 /* Liens sociaux */
 .social-links {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--spacing-md);
     margin-top: var(--spacing-md);
 }
@@ -464,6 +465,9 @@ nav {
     text-decoration: none;
     transition: all var(--transition-base);
     box-shadow: var(--box-shadow-sm);
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
 }
 
 .social-link:hover {
@@ -476,4 +480,28 @@ nav {
 
 .social-link i {
     font-size: 1.2rem;
+}
+
+/* Ajustements pour les petits écrans */
+@media (max-width: 480px) {
+    .social-links {
+        gap: var(--spacing-sm);
+    }
+
+    .social-link {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 400px) {
+    .social-links {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .social-link {
+        width: 100%;
+        justify-content: flex-start;
+    }
 }
