@@ -102,10 +102,74 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/favicon.ico">
-    <!-- Chargement de Font Awesome avec version spécifique sans bloquer le rendu -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/solid.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/brands.min.css">
+    <!-- Remplacer la section Font Awesome dans le head -->
+    <style>
+    @font-face {
+        font-family: 'Font Awesome 6 Free';
+        font-style: normal;
+        font-weight: 900;
+        font-display: block;
+        src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2") format("woff2");
+    }
+
+    @font-face {
+        font-family: 'Font Awesome 6 Brands';
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2") format("woff2");
+    }
+
+    /* Icônes solid (fas) */
+    .fa-chevron-right:before { content: "\f054"; }
+    .fa-chevron-left:before { content: "\f053"; }
+    .fa-desktop:before { content: "\f108"; }
+    .fa-paint-brush:before { content: "\f1fc"; }
+    .fa-pencil-alt:before { content: "\f303"; }
+    .fa-palette:before { content: "\f53f"; }
+
+    /* Icônes brands (fab) */
+    .fa-instagram:before { content: "\f16d"; }
+    .fa-twitter:before { content: "\f099"; }
+
+    /* Styles de base pour les icônes */
+    .fas {
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+    }
+
+    .fab {
+        font-family: 'Font Awesome 6 Brands';
+        font-weight: 400;
+    }
+
+    .fas, .fab {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
+    }
+    </style>
+
+    <!-- Charger uniquement les icônes nécessaires -->
+    <style>
+    @font-face {
+        font-family: 'Font Awesome 6 Free';
+        font-style: normal;
+        font-weight: 900;
+        font-display: block;
+        src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2") format("woff2");
+    }
+
+    /* Définir uniquement les classes utilisées */
+    .fa-instagram:before { content: "\f16d"; }
+    .fa-twitter:before { content: "\f099"; }
+    .fa-desktop:before { content: "\f108"; }
+    .fa-paint-brush:before { content: "\f1fc"; }
+    </style>
 
     <!-- Chargement du viewer 3D temporairement désactivé -->
     <!--
@@ -281,8 +345,16 @@
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image-container">
-                    <div class="about-image animate fade-left">
-                        <img src="images/mimoo.webp" alt="Mimoo" class="profile-img" loading="lazy">
+                    <div class="about-image animate fade-left" style="display: flex; justify-content: center; align-items: center;">
+                        <img 
+                            src="images/mimoo.webp" 
+                            alt="Mimoo" 
+                            class="profile-img" 
+                            loading="lazy"
+                            width="200"
+                            height="200"
+                            style="margin: auto;"
+                        >
                     </div>
                 </div>
                 <div class="about-text animate fade-right">
@@ -472,7 +544,13 @@
                 <button class="lightbox-prev" aria-label="Image précédente"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
                 <button class="lightbox-next" aria-label="Image suivante"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
             </div>
-            <img src="" alt="Image en plein écran" class="lightbox-image" width="100%" height="auto">
+            <img 
+                src="" 
+                alt="Image en plein écran" 
+                class="lightbox-image" 
+                width="800"
+                height="600"
+            >
             <div class="lightbox-info">
                 <h3 class="lightbox-title"></h3>
             </div>

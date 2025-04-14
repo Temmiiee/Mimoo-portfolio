@@ -150,3 +150,41 @@ nav {
         font-size: 1rem;
     }
 }
+
+.profile-img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    width: 200px;
+    height: 200px;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+}
+
+/* Styles pour les icônes */
+.fas, .fab {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Tailles d'icônes si nécessaire */
+.fa-lg {
+    font-size: 1.33333em;
+    line-height: 0.75em;
+    vertical-align: -.0667em;
+}
+
+/* Animation pour les icônes si nécessaire */
+.fa-spin {
+    animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
