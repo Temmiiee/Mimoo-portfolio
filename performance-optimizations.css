@@ -27,33 +27,33 @@
 }
 
 /* Prevent layout shifts for hero section */
-.hero-content-wrapper {
+.hero-content {
     position: relative;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 800px; /* Limiter la largeur de la section */
 }
 
 /* Optimize animations for better performance */
 .floating-creature {
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    will-change: transform; /* Uniquement pour la transformation */
+    transform: translateZ(0); /* Optimisation pour le GPU */
 }
 
 .logo-text {
-    will-change: transform;
-    transform: translateZ(0);
+    will-change: transform; /* Uniquement pour la transformation */
+    transform: translateZ(0); /* Optimisation pour le GPU */
 }
 
 /* Optimize hero section to prevent layout shifts */
 .hero {
-    min-height: 100vh;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
 }
 
 /* Optimiser le chargement des polices */

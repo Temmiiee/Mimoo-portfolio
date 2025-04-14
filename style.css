@@ -244,11 +244,11 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-    height: 100vh;
     position: relative;
     display: flex;
     align-items: center;
     overflow: hidden;
+    min-height: 100vh;
 }
 
 .background-image {
@@ -972,176 +972,163 @@ section.hero .hero-content h1 {
 .contact {
     padding: 6rem 2rem;
     background: var(--bg-color);
-    position: relative;
-    overflow: hidden;
 }
 
-.contact::before {
-    content: '🍃';
-    position: absolute;
-    top: 2rem;
-    left: 2rem;
-    font-size: 3rem;
-    opacity: 0.2;
-    animation: float 3s ease-in-out infinite;
-}
-
-.contact h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    color: var(--primary-color);
-}
-
-.contact-content {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 4rem;
+.contact-container {
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    gap: 4rem;
+    align-items: flex-start;
 }
 
 .contact-form-wrapper {
+    flex: 1;
     background: white;
-    padding: 2rem;
+    padding: 2.5rem;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-    font-weight: 500;
-}
-
-input,
-textarea {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid #eee;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #f8f8f8;
-}
-
-input:focus,
-textarea:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    background: white;
-}
-
-textarea {
-    height: 150px;
-    resize: vertical;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .contact-info {
-    padding: 2rem;
+    flex: 0 0 35%;
+    background: var(--primary-color);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
-.contact-info h3 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.social-links {
+.contact-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.social-link {
+.form-group {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-decoration: none !important;
-    color: var(--text-color);
-    font-size: 1.1rem;
-    padding: 1rem;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    background: white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    animation: fadeInUp 0.5s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-/* Animation décalée pour chaque lien social */
-.social-links a:nth-child(1) { animation-delay: 0.1s; }
-.social-links a:nth-child(2) { animation-delay: 0.3s; }
-.social-links a:nth-child(3) { animation-delay: 0.5s; }
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.social-link i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    transition: all 0.3s ease;
-}
-
-.social-link:hover {
-    transform: translateY(-3px);
-    background: var(--primary-color);
-    color: white;
-}
-
-.social-link:hover i {
-    color: white;
-}
-
-.cta-button {
-    display: inline-flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.5rem;
-    padding: 1rem 2rem;
-    background: var(--primary-color);
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.8rem 1rem;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+.submit-btn {
+    background: var(--accent-color);
     color: white;
+    padding: 1rem;
     border: none;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.cta-button:hover {
+.submit-btn:hover {
+    background: var(--primary-color);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(85, 113, 83, 0.3);
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
+.contact-info h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.contact-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contact-detail-item i {
+    font-size: 1.2rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-3px);
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .contact-container {
+        gap: 3rem;
+    }
+
+    .contact-info {
+        flex: 0 0 40%;
+    }
+}
+
 @media (max-width: 768px) {
-    .contact-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+    .contact {
+        padding: 4rem 1.5rem;
+    }
+
+    .contact-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .contact-info {
+        width: 100%;
+        order: -1;
+    }
+
+    .contact-form-wrapper {
+        width: 100%;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact {
+        padding: 3rem 1rem;
     }
 
     .contact-form-wrapper,
@@ -1149,12 +1136,23 @@ textarea {
         padding: 1.5rem;
     }
 
-    .social-links {
-        gap: 1rem;
+    .contact-info h3 {
+        font-size: 1.5rem;
     }
 
-    .social-link {
+    .form-group input,
+    .form-group textarea {
+        padding: 0.7rem;
+    }
+
+    .submit-btn {
         padding: 0.8rem;
+    }
+
+    .social-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
     }
 }
 
