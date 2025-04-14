@@ -1,5 +1,8 @@
-// Version du site (sans paramètre de version pour éviter les erreurs)
-const SITE_VERSION = '';
+(function() {
+    if (window.SITE_VERSION) return; // Éviter la redéclaration
+
+    window.SITE_VERSION = '1.0.0';
+})();
 
 // Fonction simplifiée pour le chargement des ressources
 function refreshResources() {
@@ -18,6 +21,30 @@ function initializeSite() {
     // Initialiser l'escargot et les créatures flottantes immédiatement
     initializeSnail();
     createFloatingCreatures();
+
+    // Fixer la hauteur du hero-content-wrapper
+    const heroWrapper = document.querySelector('.hero-content-wrapper');
+    if (heroWrapper) {
+        // Définir une hauteur minimale fixe
+        heroWrapper.style.minHeight = '300px';
+        // Empêcher les changements de taille brusques
+        heroWrapper.style.transition = 'height 0.3s ease-in-out';
+    }
+
+    // Observer les changements de contenu dans hero-content-wrapper
+    const observer = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            const height = entry.contentRect.height;
+            // Si la hauteur est inférieure à 300px, la forcer à 300px
+            if (height < 300) {
+                entry.target.style.height = '300px';
+            }
+        }
+    });
+
+    if (heroWrapper) {
+        observer.observe(heroWrapper);
+    }
 
     // Initialiser les autres fonctionnalités décoratives avec un délai
     setTimeout(() => {
@@ -39,11 +66,8 @@ function initializeNavigation() {
         return;
     }
 
-    console.log('Navigation: éléments trouvés');
-
     // Fonction simple pour ouvrir/fermer le menu mobile
     function toggleMenu() {
-        console.log('Toggle menu appelé');
         hamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
 
@@ -54,7 +78,6 @@ function initializeNavigation() {
 
     // Gestionnaire d'événements pour le bouton hamburger
     hamburger.addEventListener('click', function(e) {
-        console.log('Hamburger cliqué');
         e.preventDefault();
         toggleMenu();
     });
@@ -80,250 +103,101 @@ function initializeNavigation() {
     hamburger.setAttribute('aria-expanded', 'false');
     hamburger.setAttribute('aria-controls', 'nav-links');
     navLinks.id = 'nav-links';
-
-    console.log('Navigation initialisée');
 }
 
 // Fonction pour initialiser les filtres de la galerie
 function initializeGalleryFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-item');
-    const galleryRegion = document.getElementById('gallery-grid');
 
-    // Vérifier si les éléments existent
-    if (!filterButtons.length || !galleryItems.length || !galleryRegion) {
-        return;
-    }
-
-    // Ajouter des attributs ARIA pour l'accessibilité
-    galleryRegion.setAttribute('aria-live', 'polite');
-
-    // Ajouter des gestionnaires d'événements pour les boutons de filtre
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Mettre à jour les classes et attributs ARIA des boutons
-            filterButtons.forEach(b => {
-                b.classList.remove('active');
-                b.setAttribute('aria-pressed', 'false');
-            });
-
+            // Retirer la classe active de tous les boutons
+            filterButtons.forEach(b => b.classList.remove('active'));
+            // Ajouter la classe active au bouton cliqué
             btn.classList.add('active');
-            btn.setAttribute('aria-pressed', 'true');
 
             const filter = btn.getAttribute('data-filter');
-            const filterName = btn.textContent.trim();
-
-            // Annoncer le changement de filtre pour les lecteurs d'écran
-            galleryRegion.setAttribute('aria-label', `Galerie filtrée par ${filterName}`);
-
-            // Compter les éléments visibles pour l'accessibilité
-            let visibleCount = 0;
 
             galleryItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                if (filter === 'all' || category === filter) {
-                    item.style.display = '';
-                    item.setAttribute('aria-hidden', 'false');
-                    item.setAttribute('tabindex', '0');
-                    visibleCount++;
-
-                    setTimeout(() => {
-                        item.style.opacity = '1';
-                        item.style.transform = 'scale(1)';
-                    }, 10);
+                if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                    item.style.display = 'block';
                 } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.8)';
-                    item.setAttribute('aria-hidden', 'true');
-                    item.setAttribute('tabindex', '-1');
-
-                    setTimeout(() => {
-                        item.style.display = 'none';
-                    }, 300);
+                    item.style.display = 'none';
                 }
             });
-
-            // Mettre à jour le message d'accessibilité
-            const statusMessage = `${visibleCount} éléments affichés dans la galerie`;
-
-            // Créer ou mettre à jour un élément pour les lecteurs d'écran
-            let statusElement = document.getElementById('gallery-status');
-            if (!statusElement) {
-                statusElement = document.createElement('div');
-                statusElement.id = 'gallery-status';
-                statusElement.className = 'sr-only';
-                statusElement.setAttribute('aria-live', 'polite');
-                galleryRegion.appendChild(statusElement);
-            }
-            statusElement.textContent = statusMessage;
         });
     });
 
-    // Activer le filtre par défaut (Tout)
+    // Activer le filtre "all" par défaut
     const defaultFilter = document.querySelector('.filter-btn[data-filter="all"]');
     if (defaultFilter) {
         defaultFilter.click();
     }
-
-    // Ajouter un gestionnaire d'événements pour réinitialiser les filtres lors du redimensionnement
-    window.addEventListener('resize', () => {
-        // Réinitialiser les filtres si la fenêtre est redimensionnée
-        if (window.innerWidth !== window.lastWidth) {
-            window.lastWidth = window.innerWidth;
-            // Attendre un peu pour éviter les déclenchements multiples
-            clearTimeout(window.resizeTimer);
-            window.resizeTimer = setTimeout(() => {
-                defaultFilter.click();
-            }, 250);
-        }
-    });
 }
 
+// Fonction pour initialiser la lightbox
 function initializeLightbox() {
-    // Sélectionner les éléments de la lightbox
+    const galleryItems = document.querySelectorAll('.gallery-item');
     const lightbox = document.querySelector('.lightbox');
-    const lightboxImg = document.querySelector('.lightbox img');
-    const lightboxTitle = document.querySelector('.lightbox-title');
+    const lightboxImg = document.querySelector('.lightbox-image');
     const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxTitle = document.querySelector('.lightbox-title');
     const lightboxPrev = document.querySelector('.lightbox-prev');
     const lightboxNext = document.querySelector('.lightbox-next');
-    // Modèle 3D temporairement désactivé
-    // const modelContainer = document.getElementById('model-container');
-
-    // Vérifier si les éléments existent
-    if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxClose || !lightboxPrev || !lightboxNext) {
-        return;
-    }
-
-    // Sélectionner tous les éléments de la galerie
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    if (!galleryItems.length) {
-        return;
-    }
-
-    // Variables pour suivre l'état de la lightbox
     let currentIndex = 0;
 
-    function showLightbox(index) {
-        currentIndex = index;
+    function showImage(index) {
         const item = galleryItems[index];
         const img = item.querySelector('img');
-        const overlay = item.querySelector('.overlay');
-        const title = overlay.querySelector('h3').textContent;
-
-        // Modèle 3D temporairement désactivé
-        // const is3DModel = item.getAttribute('data-type') === '3d';
-        // const modelPath = item.getAttribute('data-model-url') || item.getAttribute('data-model-path');
-
-        // Afficher l'image dans la lightbox
-        lightboxImg.style.display = '';
+        const title = item.querySelector('.overlay h3').textContent;
+        
         lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt || title;
+        lightboxImg.alt = img.alt;
         lightboxTitle.textContent = title;
-
-        // Afficher la lightbox
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Mettre à jour les boutons de navigation
-        updateNavButtons();
-
-        // Annoncer l'ouverture de la lightbox pour les lecteurs d'écran
-        const statusElement = document.getElementById('lightbox-status') || document.createElement('div');
-        statusElement.id = 'lightbox-status';
-        statusElement.className = 'sr-only';
-        statusElement.setAttribute('aria-live', 'assertive');
-        statusElement.textContent = `Image ${currentIndex + 1} sur ${galleryItems.length} : ${title}`;
-        if (!document.getElementById('lightbox-status')) {
-            lightbox.appendChild(statusElement);
-        }
-
-        // Mettre le focus sur la lightbox pour l'accessibilité
-        lightbox.focus();
+        currentIndex = index;
     }
 
-    function hideLightbox() {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
-
-        // Modèle 3D temporairement désactivé
-        // if (modelViewer) {
-        //     modelViewer.dispose();
-        //     modelViewer = null;
-        // }
-        // modelContainer.classList.remove('active');
-        // document.querySelector('.lightbox-content').classList.remove('model-view');
-
-        // Annoncer la fermeture de la lightbox pour les lecteurs d'écran
-        const statusElement = document.getElementById('lightbox-status');
-        if (statusElement) {
-            statusElement.textContent = 'Lightbox fermée';
-        }
-    }
-
-    function showPrevImage() {
-        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
-        showLightbox(currentIndex);
-    }
-
-    function showNextImage() {
-        currentIndex = (currentIndex + 1) % galleryItems.length;
-        showLightbox(currentIndex);
-    }
-
-    function updateNavButtons() {
-        // Mettre à jour les attributs ARIA pour l'accessibilité
-        lightboxPrev.setAttribute('aria-label', `Image précédente (${currentIndex} sur ${galleryItems.length})`);
-        lightboxNext.setAttribute('aria-label', `Image suivante (${currentIndex + 2} sur ${galleryItems.length})`);
-    }
-
-    // Ajouter des gestionnaires d'événements pour les éléments de la galerie
     galleryItems.forEach((item, index) => {
         item.addEventListener('click', () => {
-            showLightbox(index);
-        });
-
-        // Ajouter la navigation au clavier pour l'accessibilité
-        item.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                showLightbox(index);
-            }
+            showImage(index);
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
     });
 
-    // Ajouter des gestionnaires d'événements pour les boutons de la lightbox
-    lightboxClose.addEventListener('click', hideLightbox);
-    lightboxPrev.addEventListener('click', showPrevImage);
-    lightboxNext.addEventListener('click', showNextImage);
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    });
 
-    // Ajouter la navigation au clavier pour la lightbox
-    lightbox.addEventListener('keydown', (e) => {
-        switch (e.key) {
-            case 'Escape':
-                hideLightbox();
-                break;
-            case 'ArrowLeft':
-                showPrevImage();
-                break;
-            case 'ArrowRight':
-                showNextImage();
-                break;
+    lightboxPrev.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            showImage(currentIndex - 1);
         }
     });
 
-    // Fermer la lightbox en cliquant en dehors de l'image
+    lightboxNext.addEventListener('click', () => {
+        if (currentIndex < galleryItems.length - 1) {
+            showImage(currentIndex + 1);
+        }
+    });
+
+    // Fermer avec la touche Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Fermer en cliquant en dehors de l'image
     lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) {
-            hideLightbox();
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
         }
     });
-
-    // Ajouter des attributs ARIA pour l'accessibilité
-    lightbox.setAttribute('role', 'dialog');
-    lightbox.setAttribute('aria-modal', 'true');
-    lightbox.setAttribute('aria-label', 'Visionneuse d\'images');
-    lightbox.setAttribute('tabindex', '-1');
 }
 
 // Fonction pour initialiser les effets de survol
@@ -457,77 +331,115 @@ function createFloatingCreatures() {
     if (!container) return;
 
     const creatures = ['🦋', '🌸', '🍃', '🌿', '🍂'];
-
-    // Créer plusieurs créatures avec un délai plus court
-    for (let i = 0; i < 8; i++) { // Réduire le nombre d'émojis à l'écran
-        setTimeout(() => {
-            createCreature();
-        }, i * 1000); // Créer une nouvelle créature toutes les secondes
-    }
+    let activeCreatures = 0;
+    const maxCreatures = 8;
 
     function createCreature() {
+        if (activeCreatures >= maxCreatures) return;
+
         const creature = document.createElement('div');
         creature.className = 'floating-creature';
-
+        
         // Choisir un emoji aléatoire
         const emoji = creatures[Math.floor(Math.random() * creatures.length)];
         creature.textContent = emoji;
 
-        // Positionner aléatoirement sur toute la hauteur de la bannière
-        const startX = -30;
+        // Position initiale (à gauche de l'écran)
         const startY = Math.random() * (container.offsetHeight - 30);
+        
+        // Styles initiaux
+        Object.assign(creature.style, {
+            position: 'absolute',
+            left: '-30px',
+            top: `${startY}px`,
+            opacity: '0.6',
+            fontSize: `${Math.random() * 8 + 12}px`, // Taille entre 12px et 20px
+            pointerEvents: 'none',
+            zIndex: '1'
+        });
 
-        // Appliquer des styles plus discrets
-        creature.style.left = `${startX}px`;
-        creature.style.top = `${startY}px`;
-        creature.style.opacity = '0.4'; // Opacité réduite pour être plus discret
-        creature.style.fontSize = `${Math.random() * 10 + 10}px`; // Taille réduite (10-20px)
-        creature.style.textShadow = '0 0 2px rgba(255, 255, 255, 0.3)'; // Ombre plus légère
-        creature.style.zIndex = '3';
-
-        // Ajouter au conteneur
         container.appendChild(creature);
+        activeCreatures++;
 
-        // Animation plus rapide
-        const duration = Math.random() * 6000 + 8000;
-
-        // Animation avec requestAnimationFrame pour de meilleures performances
+        // Animation de déplacement
+        const duration = Math.random() * 8000 + 12000; // Entre 12 et 20 secondes
         const startTime = performance.now();
-        const endX = container.offsetWidth + 30;
+        const endX = container.offsetWidth + 50; // Dépasse légèrement à droite
 
         function animate(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = elapsed / duration;
 
             if (progress < 1) {
-                // Mouvement horizontal rapide
-                const currentX = startX + (endX - startX) * progress;
-
-                // Mouvement vertical très léger
-                const wave = Math.sin(progress * 4) * 10; // Ondulation plus légère
+                // Mouvement horizontal
+                const currentX = (-30) + (endX * progress);
+                
+                // Mouvement vertical ondulant
+                const wave = Math.sin(progress * Math.PI * 4) * 20;
                 const currentY = startY + wave;
 
-                // Rotation légère
-                const rotation = Math.sin(progress * 3) * 15;
+                // Rotation douce
+                const rotation = Math.sin(progress * Math.PI * 2) * 10;
 
                 creature.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
-
                 requestAnimationFrame(animate);
             } else {
-                // Animation terminée, supprimer l'élément
                 container.removeChild(creature);
-
-                // Créer une nouvelle créature pour remplacer celle-ci
-                setTimeout(createCreature, Math.random() * 800);
+                activeCreatures--;
+                // Créer une nouvelle créature
+                setTimeout(createCreature, Math.random() * 1000);
             }
         }
 
         requestAnimationFrame(animate);
     }
+
+    // Création initiale des créatures
+    for (let i = 0; i < maxCreatures; i++) {
+        setTimeout(createCreature, i * 800);
+    }
 }
 
-// Initialiser le site au chargement du DOM
-document.addEventListener('DOMContentLoaded', initializeSite);
+// Fonction pour gérer les animations au scroll
+function initScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.animate');
+    
+    // Vérifier si l'utilisateur préfère réduire les animations
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+        // Désactiver toutes les animations
+        animatedElements.forEach(element => {
+            element.classList.remove('animate');
+            element.style.opacity = '1';
+            element.style.visibility = 'visible';
+        });
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                // Optionnel : arrêter d'observer l'élément une fois animé
+                // observer.unobserve(entry.target);
+            } else {
+                // Réinitialiser l'animation quand l'élément sort du viewport
+                entry.target.classList.remove('in-view');
+            }
+        });
+    }, {
+        threshold: 0.15, // Déclencher quand 15% de l'élément est visible
+        rootMargin: '50px' // Marge de déclenchement
+    });
+
+    animatedElements.forEach(element => {
+        observer.observe(element);
+    });
+}
+
+// Initialiser les animations au chargement du DOM
+document.addEventListener('DOMContentLoaded', initScrollAnimations);
 
 // Fonction pour gérer les redirections
 function handleRedirects() {

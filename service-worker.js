@@ -5,63 +5,20 @@
 
 const CACHE_NAME = 'mimoo-portfolio-cache-v4';
 const VERSION = '1.0.5';
-// Détecter le chemin de base pour GitHub Pages
-const BASE_PATH = self.location.pathname.includes('/Mimoo-portfolio/') ? '/Mimoo-portfolio/' : '/';
 
-const ASSETS_TO_CACHE = [
-    BASE_PATH,
-    BASE_PATH + 'index.html',
-    BASE_PATH + 'style.css',
-    BASE_PATH + 'css/accessibility.css',
-    BASE_PATH + 'contact-styles.css',
-    BASE_PATH + 'gallery-filters.css',
-    BASE_PATH + 'nav-responsive.css',
-    BASE_PATH + 'performance-optimizations.css',
-    BASE_PATH + 'responsive.css',
-    BASE_PATH + 'js/script.js',
-    BASE_PATH + 'js/translations.js',
-    BASE_PATH + 'js/language.js',
-    BASE_PATH + 'js/3dviewer-simple.js',
-    BASE_PATH + 'js/image-optimizer.js',
-    BASE_PATH + 'images/mimoo.webp',
-    BASE_PATH + 'images/favicon.ico',
-    BASE_PATH + 'images/background.webp',
-    BASE_PATH + 'site.webmanifest',
-    // Images de la galerie
-    BASE_PATH + 'images/gallery/illustration1.webp',
-    BASE_PATH + 'images/gallery/illustration2.webp',
-    BASE_PATH + 'images/gallery/illustration3.webp',
-    BASE_PATH + 'images/gallery/illustration4.webp',
-    BASE_PATH + 'images/gallery/character1.webp',
-    BASE_PATH + 'images/gallery/character2.webp',
-    BASE_PATH + 'images/gallery/character3.webp',
-    BASE_PATH + 'images/gallery/character4.webp',
-    BASE_PATH + 'images/gallery/character5.webp',
-    BASE_PATH + 'images/previews/theiere-preview.jpg'
-];
-
-// Installation du service worker
 self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                // Cache ouvert
-                return cache.addAll(ASSETS_TO_CACHE);
-            })
-    );
+    self.skipWaiting(); // Évite les messages de désinscription
 });
 
-// Activation du service worker
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.filter(cacheName => {
-                    return cacheName !== CACHE_NAME;
-                }).map(cacheName => {
-                    return caches.delete(cacheName);
-                })
+                cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
+                    .map(cacheName => caches.delete(cacheName))
             );
+        }).catch(() => {
+            // Silencieusement échouer
         })
     );
 });

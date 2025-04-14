@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Préchargement de la police Poppins Bold pour le titre principal (LCP) -->
-    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2" as="font" type="font/woff2" crossorigin="anonymous" fetchpriority="high">
     <!-- Chargement des polices Google Fonts sans bloquer le rendu -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -55,7 +55,6 @@
         /* Styles de la section hero */
         .hero {
             position: relative;
-            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -63,6 +62,12 @@
             color: white;
             overflow: hidden;
             background-color: #333; /* Couleur de fond par défaut en attendant l'image */
+        }
+
+        /* Styles pour le h1 */
+        .hero h1 {
+            font-size: 4rem;
+            margin-block: 0.67em;
         }
 
         /* Les styles pour l'image de fond sont maintenant directement dans la balise section */
@@ -140,13 +145,11 @@
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for (let registration of registrations) {
                     registration.unregister();
-                    console.log('Service Worker désinscrit');
                 }
                 // Vider le cache
                 caches.keys().then(function(cacheNames) {
                     return Promise.all(
                         cacheNames.map(function(cacheName) {
-                            console.log('Cache supprimé:', cacheName);
                             return caches.delete(cacheName);
                         })
                     );
@@ -173,30 +176,25 @@
     <script>
     // Fonction pour charger AOS uniquement lorsque l'utilisateur fait défiler la page
     function loadAOS() {
-        // Vérifier si AOS est déjà chargé
-        if (window.isAOSLoaded) return;
-
-        // Charger la feuille de style AOS
-        var link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css';
-        document.head.appendChild(link);
-
-        // Charger le script AOS
-        var aosScript = document.createElement('script');
-        aosScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js';
-        aosScript.onload = function() {
-            if (typeof AOS !== 'undefined') {
-                AOS.init({
-                    duration: 1000,
-                    once: true,
-                    offset: 100,
-                    disable: 'mobile' // Désactiver sur mobile pour de meilleures performances
-                });
-                window.isAOSLoaded = true;
-            }
-        };
-        document.head.appendChild(aosScript);
+        if (window.innerWidth > 768) { // Charger uniquement sur desktop
+            var aosScript = document.createElement('script');
+            aosScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js';
+            aosScript.onerror = function() {
+                // Silencieusement échouer si le CDN est inaccessible
+                console.debug('AOS non chargé - mode dégradé actif');
+            };
+            aosScript.onload = function() {
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 1000,
+                        once: true,
+                        offset: 100,
+                        disable: 'mobile'
+                    });
+                }
+            };
+            document.head.appendChild(aosScript);
+        }
     }
 
     // Charger AOS uniquement lorsque l'utilisateur fait défiler la page
@@ -269,9 +267,9 @@
 
     <section id="accueil" class="hero" style="background-color: #333; background-size: cover; background-position: center; background-repeat: no-repeat; position: relative;">
         <!-- Overlay pour assombrir l'image -->
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 0;"></div>
+        <div class="hero-overlay"></div>
         <div class="hero-content-wrapper">
-            <div class="hero-content" style="position: relative; z-index: 1;">
+            <div class="hero-content">
                 <h1 data-translate="hero.title" id="main-title">Portfolio Art & Nature</h1>
                 <p data-translate="hero.subtitle" class="hero-subtitle">Bienvenue dans mon univers créatif</p>
                 <a href="#galerie" class="cta-button" data-translate="hero.cta">Voir mes créations</a>
@@ -285,24 +283,24 @@
             <h2 data-translate="about.title">À propos de moi</h2>
             <div class="about-content">
                 <div class="about-image-container">
-                    <div class="about-image">
+                    <div class="about-image animate fade-left">
                         <img src="images/mimoo.webp" alt="Mimoo" class="profile-img" loading="lazy">
                     </div>
                 </div>
-                <div class="about-text">
-                    <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux. Diplômée en animation 2D/3D, j'explore diverses techniques pour créer des œuvres uniques. Mon parcours m'a permis de développer des compétences variées, allant du dessin traditionnel à la création sur ordinateur et tablette, en passant par l'animation de personnages.</p>
+                <div class="about-text animate fade-right">
+                    <p data-translate="about.description">Je suis Mimoo, une artiste de 21 ans qui adore la nature et les animaux...</p>
                     <div class="techniques">
-                        <div class="technique">
+                        <div class="technique animate fade-up">
                             <i class="fas fa-desktop"></i>
                             <h3 data-translate="about.techniques.digital.title">Art Digital</h3>
                             <p data-translate="about.techniques.digital.description">Création d'œuvres uniques sur ordinateur et tablette</p>
                         </div>
-                        <div class="technique">
+                        <div class="technique animate fade-up delay-100">
                             <i class="fas fa-paint-brush"></i>
                             <h3 data-translate="about.techniques.illustration.title">Illustration</h3>
                             <p data-translate="about.techniques.illustration.description">Illustrations personnalisées et créatives</p>
                         </div>
-                        <div class="technique">
+                        <div class="technique animate fade-up delay-200">
                             <i class="fas fa-pencil-alt"></i>
                             <h3 data-translate="about.techniques.character.title">Character Design</h3>
                             <p data-translate="about.techniques.character.description">Conception de personnages originaux</p>
@@ -324,7 +322,7 @@
                 <!-- <button class="filter-btn" data-filter="3d" data-translate="gallery.filters.3d" aria-pressed="false" aria-controls="gallery-grid">Modèles 3D</button> -->
             </div>
             <div class="gallery-grid" id="gallery-grid">
-                <div class="gallery-item" data-category="illustration">
+                <div class="gallery-item animate fade-up" data-category="illustration">
                     <img src="images/gallery/illustration1.webp"
                          alt="Dragon arc-en-ciel - Illustration digitale fantastique par Mimoo"
                          title="Dragon arc-en-ciel par Mimoo"
@@ -332,59 +330,59 @@
                          loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration1.title">Dragon arc-en-ciel</h3>
-                        <p data-translate="gallery.items.illustration1.description">Art digital - Création originale mêlant couleurs vibrantes et imagination</p>
+                        <p data-translate="gallery.items.illustration1.description">Art digital</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="character">
+                <div class="gallery-item animate fade-up delay-100" data-category="character">
                     <img src="images/gallery/character1.webp" alt="Character Design 1" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character1.title">Harley</h3>
                         <p data-translate="gallery.items.character1.description">Character design</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="illustration">
+                <div class="gallery-item animate fade-up delay-200" data-category="illustration">
                     <img src="images/gallery/illustration2.webp" alt="Illustration 2" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration2.title">Dragon arc-en-ciel</h3>
                         <p data-translate="gallery.items.illustration2.description">Art digital</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="character">
+                <div class="gallery-item animate fade-up delay-100" data-category="character">
                     <img src="images/gallery/character2.webp" alt="Character Design 2" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character2.title">Chibi</h3>
                         <p data-translate="gallery.items.character2.description">Character design</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="illustration">
+                <div class="gallery-item animate fade-up delay-200" data-category="illustration">
                     <img src="images/gallery/illustration3.webp" alt="Illustration 3" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration3.title">Ange et dragon</h3>
                         <p data-translate="gallery.items.illustration3.description">Art digital</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="character">
+                <div class="gallery-item animate fade-up delay-100" data-category="character">
                     <img src="images/gallery/character3.webp" alt="Character Design 3" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character3.title">Dragon Céleste</h3>
                         <p data-translate="gallery.items.character3.description">Character design</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="illustration">
+                <div class="gallery-item animate fade-up delay-200" data-category="illustration">
                     <img src="images/gallery/illustration4.webp" alt="Illustration 4" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.illustration4.title">Endroit mystérieux</h3>
                         <p data-translate="gallery.items.illustration4.description">Art digital</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="character">
+                <div class="gallery-item animate fade-up delay-100" data-category="character">
                     <img src="images/gallery/character4.webp" alt="Character Design 4" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character4.title">Personnage</h3>
                         <p data-translate="gallery.items.character4.description">Character design</p>
                     </div>
                 </div>
-                <div class="gallery-item" data-category="character">
+                <div class="gallery-item animate fade-up delay-200" data-category="character">
                     <img src="images/gallery/character5.webp" alt="Character Design 5" width="400" height="400" loading="lazy">
                     <div class="overlay">
                         <h3 data-translate="gallery.items.character5.title">Spider Wolf</h3>
@@ -409,7 +407,7 @@
         <div class="container">
             <h2 data-translate="contact.title">Contactez-moi</h2>
             <div class="contact-container">
-                <div class="contact-form-wrapper">
+                <div class="contact-form-wrapper animate fade-left">
                     <form id="contact-form" action="https://formspree.io/f/mvgkonpd" method="POST">
                         <div class="form-group">
                             <label for="name" data-translate="contact.form.name">Votre nom</label>
@@ -428,7 +426,7 @@
                         </button>
                     </form>
                 </div>
-                <div class="contact-info">
+                <div class="contact-info animate fade-right">
                     <h3 data-translate="contact.social.title">Retrouvez-moi sur</h3>
                     <div class="social-links">
                         <a href="https://instagram.com/_mimoou" target="_blank" class="social-link">
@@ -483,47 +481,245 @@
         </div>
     </div>
 
-    <!-- Scripts optimisés pour éviter le blocage du rendu -->
-    <script defer src="js/image-optimizer.js"></script>
-    <script defer src="js/translations.js"></script>
-    <script defer src="js/language.js"></script>
-    <script defer src="js/script.js"></script>
-
-    <!-- Script pour optimiser les performances -->
+    <!-- Scripts essentiels -->
     <script>
-        // Enregistrer le service worker pour améliorer les performances
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker enregistré avec succès:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
+        // Configuration globale
+        window.SITE_VERSION = '1.0.0';
+        
+        // Détection du chemin de base
+        window.basePath = (function() {
+            return window.location.hostname.includes('github.io') ? '/Mimoo-portfolio/' : '/';
+        })();
+
+        // Fonction pour initialiser toutes les fonctionnalités du site
+        function initializeSite() {
+            // Initialiser la navigation
+            function initializeNavigation() {
+                const hamburger = document.querySelector('.hamburger');
+                const navLinks = document.querySelector('.nav-links');
+
+                if (!hamburger || !navLinks) {
+                    console.error('Elements de navigation manquants');
+                    return;
+                }
+
+                function toggleMenu() {
+                    hamburger.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                    const isExpanded = hamburger.classList.contains('active');
+                    hamburger.setAttribute('aria-expanded', isExpanded);
+                }
+
+                hamburger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu();
+                });
+            }
+
+            // Initialiser les filtres de la galerie
+            function initializeGalleryFilters() {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                const galleryItems = document.querySelectorAll('.gallery-item');
+
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const filter = button.getAttribute('data-filter');
+                        
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+
+                        galleryItems.forEach(item => {
+                            if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                                item.style.display = 'block';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
                     });
-            });
+                });
+
+                // Activer le filtre "all" par défaut
+                const defaultFilter = document.querySelector('.filter-btn[data-filter="all"]');
+                if (defaultFilter) {
+                    defaultFilter.click();
+                }
+            }
+
+            // Initialiser la lightbox
+            function initializeLightbox() {
+                const lightbox = document.querySelector('.lightbox');
+                const lightboxImage = document.querySelector('.lightbox-image');
+                const lightboxClose = document.querySelector('.lightbox-close');
+                const lightboxTitle = document.querySelector('.lightbox-title');
+                const lightboxPrev = document.querySelector('.lightbox-prev');
+                const lightboxNext = document.querySelector('.lightbox-next');
+                const galleryItems = document.querySelectorAll('.gallery-item');
+                let currentIndex = 0;
+
+                function updateLightboxContent(index) {
+                    const items = Array.from(galleryItems);
+                    const item = items[index];
+                    const img = item.querySelector('img');
+                    const title = item.querySelector('h3');
+
+                    lightboxImage.src = img.src;
+                    lightboxTitle.textContent = title ? title.textContent : '';
+                    currentIndex = index;
+                }
+
+                galleryItems.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        updateLightboxContent(index);
+                        lightbox.style.display = 'flex';
+                    });
+                });
+
+                lightboxClose.addEventListener('click', () => {
+                    lightbox.style.display = 'none';
+                });
+
+                lightboxPrev.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                    updateLightboxContent(currentIndex);
+                });
+
+                lightboxNext.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % galleryItems.length;
+                    updateLightboxContent(currentIndex);
+                });
+
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        lightbox.style.display = 'none';
+                    }
+                });
+            }
+
+            // Initialiser les créatures flottantes
+            function createFloatingCreatures() {
+                const creatures = ['🦋', '🐝', '🐞'];
+                const container = document.body;
+
+                // Supprimer les anciennes créatures si elles existent
+                document.querySelectorAll('.floating-creature').forEach(el => el.remove());
+
+                for (let i = 0; i < 5; i++) {
+                    const creature = document.createElement('div');
+                    creature.className = 'floating-creature';
+                    creature.textContent = creatures[Math.floor(Math.random() * creatures.length)];
+                    creature.style.left = Math.random() * 100 + 'vw';
+                    creature.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    creature.style.animationDelay = (Math.random() * 5) + 's';
+                    container.appendChild(creature);
+                }
+            }
+
+            // Initialiser les effets de survol
+            function initializeHoverEffects() {
+                const elements = document.querySelectorAll('.animate');
+                elements.forEach(element => {
+                    element.classList.add('hover-ready');
+                });
+            }
+
+            // Initialiser les fonctionnalités essentielles immédiatement
+            initializeNavigation();
+            initializeGalleryFilters();
+            initializeLightbox();
+
+            // Initialiser les créatures flottantes immédiatement
+            createFloatingCreatures();
+
+            // Initialiser les autres fonctionnalités décoratives avec un délai
+            setTimeout(() => {
+                initializeHoverEffects();
+                document.body.classList.add('animations-loaded');
+            }, 300);
         }
 
-        // Fonction pour précharger les images importantes
+        // Attendre que les scripts externes soient chargés
+        function waitForDependencies(callback) {
+            const checkDependencies = () => {
+                if (window.translations && window.LanguageManager) {
+                    callback();
+                } else {
+                    setTimeout(checkDependencies, 100);
+                }
+            };
+            checkDependencies();
+        }
+
+        // Gestion des images et initialisation du site
         document.addEventListener('DOMContentLoaded', function() {
-            // Précharger les images de la galerie visibles dans la fenêtre
-            const observer = new IntersectionObserver((entries) => {
+            // Appliquer l'image de fond du hero
+            const heroSection = document.getElementById('accueil');
+            if (heroSection) {
+                heroSection.style.backgroundImage = "url('images/background.webp')";
+            }
+
+            // Optimisation des images de la galerie
+            const imageObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const img = entry.target.querySelector('img');
                         if (img && img.dataset.src) {
                             img.src = img.dataset.src;
-                            observer.unobserve(entry.target);
+                            imageObserver.unobserve(entry.target);
                         }
                     }
                 });
             }, { rootMargin: '200px' });
 
-            // Observer les éléments de la galerie
             document.querySelectorAll('.gallery-item').forEach(item => {
-                observer.observe(item);
+                imageObserver.observe(item);
+            });
+
+            // Attendre que les dépendances soient chargées avant d'initialiser
+            waitForDependencies(() => {
+                initializeSite();
+                if (window.LanguageManager) {
+                    window.LanguageManager.constructor();
+                }
             });
         });
+
+        // Gestion d'AOS
+        (function() {
+            let aosLoaded = false;
+
+            function loadAOS() {
+                if (aosLoaded || window.innerWidth <= 768) return;
+
+                const aosScript = document.createElement('script');
+                aosScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js';
+                
+                aosScript.onload = function() {
+                    if (typeof AOS !== 'undefined') {
+                        AOS.init({
+                            duration: 1000,
+                            once: true,
+                            offset: 100,
+                            disable: 'mobile'
+                        });
+                        aosLoaded = true;
+                    }
+                };
+
+                document.head.appendChild(aosScript);
+            }
+
+            window.addEventListener('scroll', function scrollHandler() {
+                loadAOS();
+                window.removeEventListener('scroll', scrollHandler);
+            }, { passive: true });
+
+            setTimeout(loadAOS, 5000);
+        })();
     </script>
+
+    <!-- Scripts différés -->
+    <script defer src="js/translations.js"></script>
+    <script defer src="js/language.js"></script>
+    <script defer src="js/script.js"></script>
 </body>
 </html>

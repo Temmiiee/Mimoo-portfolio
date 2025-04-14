@@ -472,3 +472,28 @@ footer a {
     outline-offset: 3px !important;
     box-shadow: 0 0 0 3px rgba(45, 74, 45, 0.5) !important;
 }
+
+/* Styles pour le hero-content-wrapper */
+.hero-content-wrapper {
+    min-height: 300px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    transition: height 0.3s ease-in-out;
+}
+
+/* Styles pour les créatures flottantes */
+.floating-creature {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+}

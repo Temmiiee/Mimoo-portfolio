@@ -8,21 +8,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const prefersHighContrast = window.matchMedia('(prefers-contrast: more)').matches;
     if (prefersHighContrast) {
         document.documentElement.classList.add('high-contrast');
-        console.log('Mode contraste élevé activé');
     }
 
     // Détecter si l'utilisateur préfère réduire les animations
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
         document.documentElement.classList.add('reduced-motion');
-        console.log('Mode animations réduites activé');
     }
 
     // Détecter si l'utilisateur utilise un thème sombre
     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (prefersDarkMode) {
         document.documentElement.classList.add('dark-theme');
-        console.log('Mode sombre activé');
     }
 
     // Ajouter un bouton d'accessibilité dans le coin inférieur droit

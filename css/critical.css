@@ -46,7 +46,6 @@ body {
 /* Styles de la section hero */
 .hero {
     position: relative;
-    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,7 +72,6 @@ body {
 .hero-content {
     max-width: 800px;
     padding: 0 20px;
-    z-index: 1;
 }
 
 .hero-subtitle {
