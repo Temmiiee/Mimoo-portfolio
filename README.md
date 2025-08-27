@@ -2,6 +2,8 @@
 
 Un portfolio artistique moderne et interactif créé pour Mimoo, mettant en valeur ses créations digitales, illustrations et character designs.
 
+🔗 **Voir le projet en ligne : [Mimoo Portfolio](https://temmiiee.github.io/Mimoo-portfolio/)**
+
 ## 🎨 Caractéristiques
 
 - Design responsive et moderne
