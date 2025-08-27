@@ -11,18 +11,15 @@ Un portfolio artistique moderne et interactif créé pour Mimoo, mettant en vale
 - Lightbox pour la visualisation des œuvres
 - Animations fluides et effets visuels
 - Formulaire de contact intégré
-- Animations d'émojis interactives
-- Support multilingue (Français)
+- Support multilingue (Français/Anglais)
 
 ## 🚀 Technologies Utilisées
 
 - HTML5
 - CSS3
 - JavaScript (Vanilla)
-- Three.js
+- Three.js (pas de projet 3d à afficher pour le moment)
 - GSAP
-- AOS (Animate On Scroll)
-- Font Awesome
 
 ## 📝 License
 
@@ -41,5 +38,5 @@ Les images ne peuvent être utilisées, reproduites ou distribuées sans l'autor
 ## 📞 Contact
 
 Pour toute question concernant :
-- Le code source : Contactez Temmiie via GitHub
+- Le code source : mattheotermine104@gmail.com
 - Les œuvres d'art : Contactez Mimoo via ses réseaux sociaux
