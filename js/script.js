@@ -265,64 +265,6 @@ function initializeSnail() {
 
     // Mettre à jour la vitesse lors du redimensionnement
     window.addEventListener('resize', updateSnailSpeed);
-
-    // Variable pour suivre si l'escargot est en train de sauter
-    let isJumping = false;
-
-    // Fonction pour faire sauter l'escargot
-    function jump() {
-        if (isJumping) return; // Éviter les sauts multiples
-        isJumping = true;
-
-        // Créer un élément de style temporaire pour l'animation de saut
-        const style = document.createElement('style');
-        const jumpId = `jump-${Date.now()}`; // ID unique pour l'animation
-
-        style.textContent = `
-            @keyframes ${jumpId} {
-                0% { transform: translateY(0) translateZ(0); }
-                50% { transform: translateY(-15px) translateZ(0); }
-                100% { transform: translateY(0) translateZ(0); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Sauvegarder l'animation originale
-        const originalAnimation = snail.style.animation;
-
-        // Appliquer l'animation de saut tout en préservant l'animation horizontale
-        snail.style.animation = `${originalAnimation}, ${jumpId} 0.5s ease-in-out`;
-
-        // Nettoyer après l'animation
-        setTimeout(() => {
-            // Restaurer l'animation originale
-            snail.style.animation = originalAnimation;
-            // Supprimer le style temporaire
-            document.head.removeChild(style);
-            // Réinitialiser l'état
-            isJumping = false;
-        }, 500);
-    }
-
-    // Faire sauter l'escargot au clic
-    snail.addEventListener('click', () => {
-        jump();
-    });
-
-    // Faire sauter l'escargot aléatoirement (moins fréquemment)
-    setInterval(() => {
-        if (Math.random() < 0.05 && !isJumping) { // 5% de chance toutes les 5 secondes
-            jump();
-        }
-    }, 5000);
-
-    // Permettre l'activation au clavier
-    snail.addEventListener('keydown', (e) => {
-        if ((e.key === 'Enter' || e.key === ' ') && !isJumping) {
-            e.preventDefault();
-            jump();
-        }
-    });
 }
 
 // Fonction pour créer des créatures flottantes

@@ -173,7 +173,7 @@
 
     <!-- Chargement du viewer 3D temporairement désactivé -->
     <!--
-    <script defer src="js/3dviewer-simple.js"></script>
+    <script defer src="js/3dviewer.js"></script>
     <script>
     function loadThreeJsScripts() {
         return Promise.resolve();
@@ -308,7 +308,9 @@
         </div>
         <!-- Escargot animé dans la barre de navigation -->
         <div class="snail-container">
-            <div class="snail" role="button" aria-label="Faire sauter l'escargot" tabindex="0">🐌</div>
+            <div class="snail" aria-label="Faire sauter l'escargot" tabindex="0">
+                <img src="images/snail.png" alt="Escargot" width="32" height="32">
+            </div>
         </div>
         <div class="language-selector" role="group" aria-label="Sélection de la langue">
             <button class="lang-btn" data-lang="fr" aria-label="Français" aria-pressed="true">FR</button>
@@ -794,8 +796,6 @@
     </script>
 
     <!-- Scripts différés -->
-    <script defer src="js/translations.js"></script>
-    <script defer src="js/language.js"></script>
-    <script defer src="js/script.js"></script>
+    <!-- Scripts loaded above, removing duplicates -->
 </body>
 </html>
