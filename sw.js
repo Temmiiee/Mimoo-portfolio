@@ -11,13 +11,11 @@ const CACHE_NAME = `mimoo-portfolio-${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
-    '/style.css',
     '/css/unified-styles.css',
     '/css/fixes.css',
     '/css/accessibility-menu.css',
     '/js/translations.js',
     '/js/language.js',
-    '/js/config.js',
     '/js/accessibility-manager.js',
     '/js/accessibility-preferences.js',
     '/js/optimize-animations.js',
