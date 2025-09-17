@@ -21,7 +21,7 @@ const ASSETS_TO_CACHE = [
     '/js/accessibility-manager.js',
     '/js/accessibility-preferences.js',
     '/js/optimize-animations.js',
-    '/js/redirect-optimized.js',
+    '/js/redirect.js',
     '/js/script.js',
     '/js/3dviewer.js',
     '/images/favicon.ico',
