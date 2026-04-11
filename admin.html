@@ -173,7 +173,7 @@
             const password = document.getElementById('admin-password').value;
 
             try {
-                const backendUrl = CONFIG.BACKEND_UPLOAD_URL || 'http://localhost:3001';
+                const backendUrl = (window.CONFIG && window.CONFIG.BACKEND_UPLOAD_URL) || 'http://localhost:3001';
                 const response = await fetch(`${backendUrl}/api/auth`, {
                     method: 'POST',
                     headers: {

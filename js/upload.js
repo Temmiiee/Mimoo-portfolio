@@ -98,7 +98,7 @@ class ImageUploader {
             formData.append('file', file);
 
             // Use backend URL from config
-            const backendUrl = CONFIG.BACKEND_UPLOAD_URL || 'http://localhost:3001';
+            const backendUrl = (window.CONFIG && window.CONFIG.BACKEND_UPLOAD_URL) || 'http://localhost:3001';
             const uploadUrl = `${backendUrl}/api/upload`;
 
             const response = await fetch(uploadUrl, {
