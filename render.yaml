@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: mimoo-portfolio-backend
+    root_dir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: GETPRONTO_API_KEY
+        sync: false
+        # Set this in Render dashboard from GitHub Secrets
+      - key: FRONTEND_URL
+        value: https://temmiiee.github.io
+      - key: NODE_ENV
+        value: production

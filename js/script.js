@@ -11,31 +11,31 @@ function refreshResources() {
     return; // Ne rien faire
 }
 
-// Fonction pour initialiser toutes les fonctionnalités du site
+// Function to initialize all site features
 function initializeSite() {
-    // Initialiser les fonctionnalités essentielles immédiatement
+    // Initialize essential features immediately
     initializeNavigation();
     initializeGalleryFilters();
     initializeLightbox();
 
-    // Initialiser l'escargot et les créatures flottantes immédiatement
+    // Initialize snail and floating creatures immediately
     initializeSnail();
     createFloatingCreatures();
 
-    // Fixer la hauteur du hero-content-wrapper
+    // Set minimum height for hero-content-wrapper
     const heroWrapper = document.querySelector('.hero-content-wrapper');
     if (heroWrapper) {
-        // Définir une hauteur minimale fixe
+        // Set a fixed minimum height
         heroWrapper.style.minHeight = '300px';
-        // Empêcher les changements de taille brusques
+        // Prevent abrupt size changes
         heroWrapper.style.transition = 'height 0.3s ease-in-out';
     }
 
-    // Observer les changements de contenu dans hero-content-wrapper
+    // Observe content changes in hero-content-wrapper
     const observer = new ResizeObserver(entries => {
         for (let entry of entries) {
             const height = entry.contentRect.height;
-            // Si la hauteur est inférieure à 300px, la forcer à 300px
+            // If height is less than 300px, force it to 300px
             if (height < 300) {
                 entry.target.style.height = '300px';
             }
@@ -46,7 +46,7 @@ function initializeSite() {
         observer.observe(heroWrapper);
     }
 
-    // Initialiser les autres fonctionnalités décoratives avec un délai
+    // Initialize other decorative features with delay
     setTimeout(() => {
         initializeHoverEffects();
 

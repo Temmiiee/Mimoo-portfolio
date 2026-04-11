@@ -1,4 +1,5 @@
-// upload.js - Handle image uploads to getPronto (Admin page only)
+// upload.js - Handle image uploads via secure backend (Admin page only)
+// The backend securely handles GetPronto API authentication
 
 class ImageUploader {
     constructor() {
@@ -92,16 +93,18 @@ class ImageUploader {
         this.uploadButton.disabled = true;
 
         try {
-            // Using getPronto API structure
+            // Send to backend (backend handles GetPronto API securely)
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch('https://api.getpronto.io/v1/files/upload', {
+            // Use backend URL from config
+            const backendUrl = CONFIG.BACKEND_UPLOAD_URL || 'http://localhost:3001';
+            const uploadUrl = `${backendUrl}/api/upload`;
+
+            const response = await fetch(uploadUrl, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${CONFIG.GETPRONTO_API_KEY}`
-                },
                 body: formData
+                // No Authorization header - backend handles authentication!
             });
 
             if (!response.ok) {
@@ -109,6 +112,10 @@ class ImageUploader {
             }
 
             const result = await response.json();
+
+            if (result.error) {
+                throw new Error(result.error);
+            }
 
             if (result.data && result.data.url) {
                 this.addImageToGallery(result.data.url, file.name);

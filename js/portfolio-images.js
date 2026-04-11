@@ -58,8 +58,10 @@ class PortfolioImageManager {
         const galleryContainer = document.querySelector('.gallery-grid');
         if (!galleryContainer) return;
 
-        // Combine static and uploaded images
-        const allImages = [...this.images, ...this.uploadedImages];
+        // Priority: Show uploaded images if they exist, otherwise show default images
+        const allImages = this.uploadedImages.length > 0 
+            ? this.uploadedImages 
+            : this.images;
 
         // Clear existing content except filters
         const filters = galleryContainer.querySelector('.gallery-filters');
