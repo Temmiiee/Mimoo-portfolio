@@ -28,8 +28,6 @@
      * Main Initialization
      */
     function initializeSite() {
-        console.log('🚀 Mimoo Portfolio: Initializing system...');
-        
         setupNavigation();
         setupLanguage();
         setupSnail();

@@ -13,8 +13,6 @@ class PortfolioImageManager {
 
     async init() {
         if (!this.galleryGrid) return;
-        console.log('🖼️ Gallery: Initialization...');
-        
         await this.loadStaticImages();
         this.loadUploadedImages();
         this.renderGallery();
@@ -26,7 +24,6 @@ class PortfolioImageManager {
             if (response.ok) {
                 const data = await response.json();
                 this.staticImages = data.images || [];
-                console.log(`🖼️ Gallery: Loaded ${this.staticImages.length} images from JSON`);
             } else {
                 console.error('🖼️ Gallery: Failed to load portfolio-images.json');
             }
@@ -63,9 +60,6 @@ class PortfolioImageManager {
             ...this.staticImages,
             ...this.uploadedImages
         ].map(img => (typeof img === 'string' ? { url: img } : img));
-
-        console.log(`🖼️ Gallery: Rendering ${allItems.length} items`);
-        
         // Don't empty if we have nothing to show yet (wait for init)
         if (allItems.length === 0 && this.staticImages.length === 0) {
             // Check if we are still initializing

@@ -19,7 +19,6 @@
 
         // Called from HTML onclick
         switch: function(lang) {
-            console.log(`🌐 Language: User switch to "${lang}"`);
             if (!lang || !window.translations[lang]) return;
 
             this.currentLang = lang;
@@ -33,8 +32,6 @@
         },
 
         translatePage: function() {
-            console.log(`🌐 Language: Applying "${this.currentLang}"`);
-            
             // 1. Update Buttons
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 const isActive = btn.dataset.lang === this.currentLang;
