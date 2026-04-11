@@ -10,7 +10,7 @@ const CACHE_NAME = `mimoo-portfolio-${CACHE_VERSION}`;
 // Liste des fichiers à mettre en cache immédiatement
 const ASSETS_TO_CACHE = [
     '/',
-    '/index.html',
+    '/admin.html',
     '/css/unified-styles.css',
     '/css/fixes.css',
     '/css/accessibility-menu.css',

@@ -12,8 +12,15 @@ class ImageUploader {
     }
 
     init() {
-        // Check if user is admin
-        this.checkAdminAccess();
+        // Check if we're on the admin page
+        if (window.location.pathname.includes('admin.html')) {
+            // On admin page, assume authenticated after login
+            this.isAdmin = true;
+            this.initializeUploader();
+        } else {
+            // On main site, check admin access
+            this.checkAdminAccess();
+        }
     }
 
     checkAdminAccess() {

@@ -43,18 +43,41 @@ Le portfolio utilise un système dynamique pour charger les images depuis un fic
    - Ce fichier est ajouté à .gitignore pour la sécurité
 
 2. **Accès administrateur** :
-   - L'upload est protégé par un mot de passe administrateur
+   - L'upload est disponible sur une page séparée : `admin.html`
+   - Accessible via l'URL directe (non liée dans la navigation principale)
+   - Authentification par mot de passe requise
    - Changez le mot de passe dans `js/config.js` (variable `ADMIN_PASSWORD`)
 
-3. **Upload d'images par les utilisateurs** :
-   - Une section "Partagez vos créations" permet aux visiteurs d'uploader des images (après authentification admin)
+3. **Upload d'images** :
+   - Connectez-vous sur `/admin.html`
    - Les images sont automatiquement envoyées vers getPronto
-   - Elles s'affichent immédiatement dans la galerie
+   - Elles s'affichent immédiatement dans la galerie du portfolio
 
 4. **Sécurité** :
    - Validation des fichiers (type image, taille max 10MB)
    - Authentification admin requise
    - Clé API non exposée dans le code public
+
+### Variables d'environnement avec GitHub Pages
+
+GitHub Pages étant un hébergement statique, les variables d'environnement traditionnelles ne sont pas disponibles. Voici les solutions :
+
+#### Solution actuelle (recommandée)
+- **Fichier config.js** dans `.gitignore` : Les secrets restent locaux et ne sont pas committés
+- **Avantages** : Simple, sécurisé pour le développement
+- **Inconvénient** : Nécessite de gérer manuellement le fichier sur le serveur
+
+#### Alternatives avancées
+1. **GitHub Actions + Build** :
+   - Utiliser des secrets GitHub pour stocker les clés API
+   - Générer le fichier config.js lors du build
+   - Exemple de workflow GitHub Actions
+
+2. **Service externe** :
+   - Stocker les secrets dans un service comme Vercel, Netlify
+   - Injecter les variables lors du déploiement
+
+Pour votre usage actuel, la solution avec `config.js` dans `.gitignore` est parfaitement adaptée !
 
 ### Avantages de getPronto
 - Hébergement permanent des images
