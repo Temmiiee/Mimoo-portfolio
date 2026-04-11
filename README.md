@@ -39,16 +39,21 @@ Le portfolio utilise un système dynamique pour charger les images depuis un fic
 ### Utilisation de getPronto pour l'hébergement
 
 1. **Configuration de l'API** :
-   - Le fichier `js/config.js` contient votre clé API getPronto
+   - Le fichier `js/config.js` contient votre clé API getPronto et le mot de passe admin
    - Ce fichier est ajouté à .gitignore pour la sécurité
 
-2. **Upload d'images par les utilisateurs** :
-   - Une section "Partagez vos créations" permet aux visiteurs d'uploader des images
+2. **Accès administrateur** :
+   - L'upload est protégé par un mot de passe administrateur
+   - Changez le mot de passe dans `js/config.js` (variable `ADMIN_PASSWORD`)
+
+3. **Upload d'images par les utilisateurs** :
+   - Une section "Partagez vos créations" permet aux visiteurs d'uploader des images (après authentification admin)
    - Les images sont automatiquement envoyées vers getPronto
    - Elles s'affichent immédiatement dans la galerie
 
-3. **Sécurité** :
+4. **Sécurité** :
    - Validation des fichiers (type image, taille max 10MB)
+   - Authentification admin requise
    - Clé API non exposée dans le code public
 
 ### Avantages de getPronto

@@ -1,16 +1,44 @@
-// upload.js - Handle image uploads to getPronto
+// upload.js - Handle image uploads to getPronto (Admin only)
 
 class ImageUploader {
     constructor() {
-        this.uploadForm = document.getElementById('image-upload-form');
-        this.fileInput = document.getElementById('image-file');
-        this.uploadButton = document.getElementById('upload-button');
-        this.uploadStatus = document.getElementById('upload-status');
+        this.isAdmin = false;
+        this.uploadForm = null;
+        this.fileInput = null;
+        this.uploadButton = null;
+        this.uploadStatus = null;
 
         this.init();
     }
 
     init() {
+        // Check if user is admin
+        this.checkAdminAccess();
+    }
+
+    checkAdminAccess() {
+        // Simple admin authentication
+        const adminPassword = prompt('Mot de passe administrateur pour accéder à l\'upload:');
+        if (adminPassword === CONFIG.ADMIN_PASSWORD) {
+            this.isAdmin = true;
+            // Show upload section
+            const uploadSection = document.getElementById('upload');
+            if (uploadSection) {
+                uploadSection.style.display = 'block';
+            }
+            this.initializeUploader();
+        } else if (adminPassword !== null) { // Not cancelled
+            alert('Mot de passe incorrect. Accès refusé.');
+            // Keep upload section hidden
+        }
+    }
+
+    initializeUploader() {
+        this.uploadForm = document.getElementById('image-upload-form');
+        this.fileInput = document.getElementById('image-file');
+        this.uploadButton = document.getElementById('upload-button');
+        this.uploadStatus = document.getElementById('upload-status');
+
         if (this.uploadForm) {
             this.uploadForm.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -56,6 +84,11 @@ class ImageUploader {
     }
 
     async uploadImage() {
+        if (!this.isAdmin) {
+            this.showStatus('Accès non autorisé', 'error');
+            return;
+        }
+
         const file = this.fileInput.files[0];
         if (!file) {
             this.showStatus('Veuillez sélectionner une image', 'error');
@@ -78,11 +111,11 @@ class ImageUploader {
         this.uploadButton.disabled = true;
 
         try {
+            // Using getPronto API structure
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('folder', 'portfolio'); // Optional folder
 
-            const response = await fetch(CONFIG.GETPRONTO_UPLOAD_URL, {
+            const response = await fetch('https://api.getpronto.io/v1/files/upload', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${CONFIG.GETPRONTO_API_KEY}`
@@ -91,14 +124,13 @@ class ImageUploader {
             });
 
             if (!response.ok) {
-                throw new Error(`Upload failed: ${response.status}`);
+                throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
             }
 
             const result = await response.json();
-            const imageUrl = result.url || result.data?.url;
 
-            if (imageUrl) {
-                this.addImageToGallery(imageUrl, file.name);
+            if (result.data && result.data.url) {
+                this.addImageToGallery(result.data.url, file.name);
                 this.showStatus('Image ajoutée à la galerie avec succès!', 'success');
                 this.fileInput.value = ''; // Reset form
             } else {
