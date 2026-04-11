@@ -20,8 +20,9 @@ const ASSETS_TO_CACHE = [
     '/js/accessibility-preferences.js',
     '/js/optimize-animations.js',
     '/js/redirect.js',
-    '/js/script.js',
-    '/js/3dviewer.js',
+    '/js/config.js',
+    '/js/portfolio-images.js',
+    '/js/upload.js',
     '/images/favicon.ico',
     '/images/mimoo.webp',
     '/images/gallery/illustration1.webp',
@@ -32,6 +33,7 @@ const ASSETS_TO_CACHE = [
     '/images/gallery/character2.webp',
     '/images/gallery/character3.webp',
     '/images/gallery/character4.webp',
+    '/images/gallery/character5.webp',
 ];
 
 self.addEventListener('install', event => {
