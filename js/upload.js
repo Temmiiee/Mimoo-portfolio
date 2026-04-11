@@ -1,8 +1,7 @@
-// upload.js - Handle image uploads to getPronto (Admin only)
+// upload.js - Handle image uploads to getPronto (Admin page only)
 
 class ImageUploader {
     constructor() {
-        this.isAdmin = false;
         this.uploadForm = null;
         this.fileInput = null;
         this.uploadButton = null;
@@ -12,32 +11,12 @@ class ImageUploader {
     }
 
     init() {
-        // Check if we're on the admin page
-        if (window.location.pathname.includes('admin.html')) {
-            // On admin page, assume authenticated after login
-            this.isAdmin = true;
-            this.initializeUploader();
-        } else {
-            // On main site, check admin access
-            this.checkAdminAccess();
+        // This script should only run on admin.html
+        if (!window.location.pathname.includes('admin.html')) {
+            return; // Exit if not on admin page
         }
-    }
 
-    checkAdminAccess() {
-        // Simple admin authentication
-        const adminPassword = prompt('Mot de passe administrateur pour accéder à l\'upload:');
-        if (adminPassword === CONFIG.ADMIN_PASSWORD) {
-            this.isAdmin = true;
-            // Show upload section
-            const uploadSection = document.getElementById('upload');
-            if (uploadSection) {
-                uploadSection.style.display = 'block';
-            }
-            this.initializeUploader();
-        } else if (adminPassword !== null) { // Not cancelled
-            alert('Mot de passe incorrect. Accès refusé.');
-            // Keep upload section hidden
-        }
+        this.initializeUploader();
     }
 
     initializeUploader() {
@@ -91,11 +70,6 @@ class ImageUploader {
     }
 
     async uploadImage() {
-        if (!this.isAdmin) {
-            this.showStatus('Accès non autorisé', 'error');
-            return;
-        }
-
         const file = this.fileInput.files[0];
         if (!file) {
             this.showStatus('Veuillez sélectionner une image', 'error');
