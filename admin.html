@@ -173,7 +173,19 @@
             const password = document.getElementById('admin-password').value;
 
             try {
-                const backendUrl = (window.CONFIG && window.CONFIG.BACKEND_UPLOAD_URL) || 'http://localhost:3001';
+                // Détection automatique : si on est sur localhost, on utilise le backend local par défaut
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const productionUrl = (window.CONFIG && window.CONFIG.BACKEND_UPLOAD_URL);
+                const localUrl = (window.CONFIG && window.CONFIG.LOCAL_BACKEND_URL) || 'http://localhost:3001';
+                
+                const backendUrl = isLocal ? localUrl : productionUrl;
+
+                if (!backendUrl) {
+                    showStatus('Configuration manquante : URL du backend non définie.', 'error');
+                    return;
+                }
+
+                console.log(`🌐 Tentative de connexion à : ${backendUrl}`);
                 const response = await fetch(`${backendUrl}/api/auth`, {
                     method: 'POST',
                     headers: {

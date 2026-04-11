@@ -14,7 +14,26 @@ const validTokens = new Map();
 
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*', // More flexible for dev
+    origin: function (origin, callback) {
+        // En local ou par défaut, on autorise tout si FRONTEND_URL n'est pas strict
+        if (!origin || !process.env.FRONTEND_URL || process.env.FRONTEND_URL === '*') {
+            return callback(null, true);
+        }
+        
+        // Nettoyage de l'URL du frontend (on ne veut que le domaine pour CORS)
+        try {
+            const allowedOrigin = new URL(process.env.FRONTEND_URL).origin;
+            const currentOrigin = new URL(origin).origin;
+            
+            if (allowedOrigin === currentOrigin || origin.includes('github.io')) {
+                callback(null, true);
+            } else {
+                callback(new Error('CORS fail'));
+            }
+        } catch (e) {
+            callback(null, true); // Fallback safe
+        }
+    },
     credentials: true
 }));
 
