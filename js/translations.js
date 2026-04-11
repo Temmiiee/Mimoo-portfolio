@@ -17,67 +17,31 @@ window.translations = {
             techniques: {
                 digital: {
                     title: "Art Digital",
-                    description: "Création d'œuvres originales sur ordinateur et tablette"
+                    description: "Artworks originaux créés avec passion sur tablette graphique."
                 },
                 illustration: {
                     title: "Illustration",
-                    description: "Illustrations colorées et expressives"
+                    description: "Styles colorés et expressifs inspirés par le monde naturel."
                 },
                 character: {
                     title: "Character Design",
-                    description: "Création de personnages originaux et stylisés"
+                    description: "Conception de personnages originaux et d'univers uniques."
                 }
             }
         },
         gallery: {
-            title: "Galerie",
-            filters: {
-                all: "Tout",
-                illustration: "Illustration",
-                character: "Character Design",
-                "3d": "Modèles 3D"
-            },
+            title: "Mes Créations",
+            empty: "Aucune image à afficher pour le moment.",
             items: {
-                illustration1: {
-                    title: "Dragon arc-en-ciel",
-                    description: "Art digital"
-                },
-                illustration2: {
-                    title: "Dragon arc-en-ciel",
-                    description: "Art digital"
-                },
-                illustration3: {
-                    title: "Ange et dragon",
-                    description: "Art digital"
-                },
-                illustration4: {
-                    title: "Endroit mystérieux",
-                    description: "Art digital"
-                },
-                character1: {
-                    title: "Harley",
-                    description: "Character design"
-                },
-                character2: {
-                    title: "Chibi",
-                    description: "Character design"
-                },
-                character3: {
-                    title: "Dragon Céleste",
-                    description: "Character design"
-                },
-                character4: {
-                    title: "Personnage",
-                    description: "Character design"
-                },
-                character5: {
-                    title: "Spider Wolf",
-                    description: "Character design"
-                },
-                "3d1": {
-                    title: "Théière 3D",
-                    description: "Modèle 3D interactif d'une théière"
-                }
+                "Dragon_arc-en-ciel": { title: "Dragon arc-en-ciel" },
+                "Dragon_Celeste": { title: "Dragon céleste" },
+                "Harley": { title: "Harley" },
+                "Chibi": { title: "Chibi" },
+                "Ange_et_dragon": { title: "Ange et dragon" },
+                "Personnage": { title: "Personnage" },
+                "Spider_Wolf": { title: "Spider Wolf" },
+                "Dragon_yeux_et_arc-en-ciel": { title: "Dragon arc-en-ciel (yeux multiples)" },
+                "Endroit_Mysterieux": { title: "Endroit mystérieux" }
             }
         },
         contact: {
@@ -86,10 +50,10 @@ window.translations = {
                 name: "Nom",
                 email: "Email",
                 message: "Message",
-                send: "Envoyer"
+                send: "Envoyer le message"
             },
             social: {
-                title: "Retrouvez-moi sur"
+                title: "Suivez-moi sur"
             }
         },
         footer: {
@@ -106,75 +70,39 @@ window.translations = {
         hero: {
             title: "Art & Nature Portfolio",
             subtitle: "Welcome to my creative universe",
-            cta: "See my work"
+            cta: "Discover my work"
         },
         about: {
             title: "About me",
-            description: "I'm Mimoo, an artist passionate about nature, digital art, and creating fantastic characters. With a degree in 2D/3D animation, I combine different techniques to bring my universe to life.",
+            description: "I'm Mimoo, a digital artist passionate about nature and character design. With a degree in 2D/3D animation, I blend various techniques to bring concepts to life.",
             techniques: {
                 digital: {
                     title: "Digital Art",
-                    description: "Creating original works on computer and tablet"
+                    description: "Original artworks created with passion on drawing tablet."
                 },
                 illustration: {
                     title: "Illustration",
-                    description: "Colorful and expressive illustrations"
+                    description: "Colorful and expressive styles inspired by the natural world."
                 },
                 character: {
                     title: "Character Design",
-                    description: "Creating original and stylized characters"
+                    description: "Designing original characters and unique universes."
                 }
             }
         },
         gallery: {
-            title: "Gallery",
-            filters: {
-                all: "All",
-                illustration: "Illustration",
-                character: "Character Design",
-                "3d": "3D Models"
-            },
+            title: "My Work",
+            empty: "No images to display at the moment.",
             items: {
-                illustration1: {
-                    title: "Rainbow Dragon",
-                    description: "Digital art"
-                },
-                illustration2: {
-                    title: "Rainbow Dragon",
-                    description: "Digital art"
-                },
-                illustration3: {
-                    title: "Angel and Dragon",
-                    description: "Digital art"
-                },
-                illustration4: {
-                    title: "Mysterious Place",
-                    description: "Digital art"
-                },
-                character1: {
-                    title: "Harley",
-                    description: "Character design"
-                },
-                character2: {
-                    title: "Chibi",
-                    description: "Character design"
-                },
-                character3: {
-                    title: "Celestial Dragon",
-                    description: "Character design"
-                },
-                character4: {
-                    title: "Character",
-                    description: "Character design"
-                },
-                character5: {
-                    title: "Spider Wolf",
-                    description: "Character design"
-                },
-                "3d1": {
-                    title: "3D Teapot",
-                    description: "Interactive 3D teapot model"
-                }
+                "Dragon_arc-en-ciel": { title: "Rainbow Dragon" },
+                "Dragon_Celeste": { title: "Celestial Dragon" },
+                "Harley": { title: "Harley" },
+                "Chibi": { title: "Chibi" },
+                "Ange_et_dragon": { title: "Angel & Dragon" },
+                "Personnage": { title: "Character" },
+                "Spider_Wolf": { title: "Spider Wolf" },
+                "Dragon_yeux_et_arc-en-ciel": { title: "Rainbow Dragon (multiple eyes)" },
+                "Endroit_Mysterieux": { title: "Mysterious Place" }
             }
         },
         contact: {
@@ -183,7 +111,7 @@ window.translations = {
                 name: "Name",
                 email: "Email",
                 message: "Message",
-                send: "Send"
+                send: "Send Message"
             },
             social: {
                 title: "Find me on"

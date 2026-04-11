@@ -31,7 +31,7 @@ jobs:
           // config.js - Configuration (No secrets here!)
           // Backend URL - change this to your deployed backend URL
           const CONFIG = {
-              BACKEND_UPLOAD_URL: "https://your-backend-url.onrender.com"
+              BACKEND_UPLOAD_URL: "https://mimoo-portfolio.onrender.com"
           };
           EOF
 

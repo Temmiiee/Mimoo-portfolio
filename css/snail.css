@@ -2,124 +2,92 @@
  * Styles spécifiques pour l'animation de l'escargot
  */
 
-/* Conteneur de l'escargot - gère le positionnement */
+/* Conteneur principal */
 .snail-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100px;
-    height: 30px;
-    z-index: 5;
-    pointer-events: none; /* Pour que les clics passent à travers */
+    height: 40px;
     overflow: visible;
+    z-index: 5;
 }
 
-/* L'escargot lui-même - gère le déplacement et le saut */
+/* Élément de liste pour la navbar */
+.snail-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: var(--spacing-md);
+}
+
+/* Le chemin de l'escargot (gère le crawl horizontal) */
+.snail-path {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: crawlX 20s linear infinite;
+    will-change: left;
+}
+
+/* L'escargot lui-même (gère le saut) */
 .snail {
     position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 16px; /* Taille réduite */
     cursor: pointer;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-    filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.4));
-    pointer-events: auto; /* Pour que l'escargot soit cliquable */
-    z-index: 6;
-    color: var(--primary-color); /* Couleur adaptée à la barre de navigation */
-    will-change: transform; /* Optimisation pour animation fluide */
-    transform-origin: center;
-    /* Utiliser translateX pour le mouvement horizontal et scaleX pour la direction */
-    animation-name: crawlX;
-    animation-duration: 40s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-delay: 0s;
-    animation-fill-mode: both;
+    transition: filter var(--transition-base);
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+    width: 32px;
+    height: 32px;
+    will-change: transform;
+}
+
+.snail img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .snail:hover {
-    filter: drop-shadow(0 1px 4px rgba(255, 255, 255, 0.7));
+    filter: drop-shadow(0 4px 6px rgba(85, 113, 83, 0.4));
 }
 
-/* Animation de déplacement horizontal avec transform pour plus de fluidité */
+/* Animation de saut fluide */
+.snail.jumping {
+    animation: snailJump 0.6s cubic-bezier(0.36, 0, 0.66, -0.56) forwards !important;
+}
+
+@keyframes snailJump {
+    0%, 100% { transform: translateY(0) scale(1, 1); }
+    30% { transform: translateY(-30px) scale(0.8, 1.2) rotate(-5deg); }
+    45% { transform: translateY(-35px) scale(0.75, 1.25) rotate(5deg); }
+    100% { transform: translateY(0) scale(1, 1); }
+}
+
 @keyframes crawlX {
-    0% {
-        transform: translateX(-50px) scaleX(1);
-    }
-    49.9% {
-        transform: translateX(50px) scaleX(1);
-    }
-    50% {
-        transform: translateX(50px) scaleX(-1);
-    }
-    99.9% {
-        transform: translateX(-50px) scaleX(-1);
-    }
-    100% {
-        transform: translateX(-50px) scaleX(1);
-    }
+    0% { left: 0%; transform: scaleX(1); }
+    48% { transform: scaleX(1); }
+    50% { left: calc(100% - 32px); transform: scaleX(-1); }
+    98% { transform: scaleX(-1); }
+    100% { left: 0%; transform: scaleX(1); }
 }
 
-/* Animation de saut vertical déplacée dans le JavaScript */
-
-/* Adaptation pour les petits écrans */
+/* Adaptation responsive */
 @media (max-width: 768px) {
+    .snail-nav-item {
+        margin: var(--spacing-lg) 0 0 0;
+        width: 100%;
+        display: none; /* Caché par défaut comme le menu */
+    }
+
+    .nav-links.active .snail-nav-item {
+        display: flex; /* Affiché uniquement quand le menu burger est ouvert */
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(85, 113, 83, 0.1);
+    }
+
     .snail-container {
-        left: 45%;
-        width: 80px;
-    }
-
-    .snail {
-        font-size: 14px; /* Taille encore plus réduite sur mobile */
-        animation-duration: 30s; /* Plus rapide sur petit écran */
-    }
-
-    @keyframes crawlX {
-        0% {
-            transform: translateX(-40px) scaleX(1);
-        }
-        49.9% {
-            transform: translateX(40px) scaleX(1);
-        }
-        50% {
-            transform: translateX(40px) scaleX(-1);
-        }
-        99.9% {
-            transform: translateX(-40px) scaleX(-1);
-        }
-        100% {
-            transform: translateX(-40px) scaleX(1);
-        }
-    }
-}
-
-/* Adaptation pour les très grands écrans */
-@media (min-width: 1600px) {
-    .snail-container {
-        width: 120px;
-    }
-
-    .snail {
-        font-size: 18px; /* Taille légèrement plus grande sur grand écran */
-        animation-duration: 50s; /* Plus lent sur grand écran */
-    }
-
-    @keyframes crawlX {
-        0% {
-            transform: translateX(-60px) scaleX(1);
-        }
-        49.9% {
-            transform: translateX(60px) scaleX(1);
-        }
-        50% {
-            transform: translateX(60px) scaleX(-1);
-        }
-        99.9% {
-            transform: translateX(-60px) scaleX(-1);
-        }
-        100% {
-            transform: translateX(-60px) scaleX(1);
-        }
+        width: 120px; /* Un peu plus grand dans le menu mobile */
     }
 }

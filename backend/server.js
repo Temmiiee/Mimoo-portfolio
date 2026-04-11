@@ -3,26 +3,27 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const axios = require('axios');
+const crypto = require('crypto');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Simple in-memory session store for tokens
+const validTokens = new Map();
+
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || '*', // More flexible for dev
     credentials: true
 }));
 
 // Configure multer for file uploads
-const storage = multer.memoryStorage(); // Store in memory, don't save to disk
+const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
-    limits: {
-        fileSize: 10 * 1024 * 1024 // 10MB limit
-    },
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: (req, file, cb) => {
-        // Only allow image files
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
@@ -31,29 +32,63 @@ const upload = multer({
     }
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok' });
+// Auth endpoint
+app.post('/api/auth', express.json(), (req, res) => {
+    const { password } = req.body;
+
+    if (!password || !process.env.ADMIN_PASSWORD) {
+        return res.status(400).json({ error: 'Auth configuration error' });
+    }
+
+    if (password === process.env.ADMIN_PASSWORD) {
+        // Generate a real random token
+        const token = crypto.randomBytes(32).toString('hex');
+        const expires = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+        
+        validTokens.set(token, expires);
+        
+        // Cleanup old tokens occasionally
+        if (validTokens.size > 100) {
+            const now = Date.now();
+            for (const [t, exp] of validTokens) {
+                if (exp < now) validTokens.delete(t);
+            }
+        }
+
+        res.json({
+            success: true,
+            token: token,
+            message: 'Authentication successful'
+        });
+    } else {
+        res.status(401).json({ error: 'Invalid password' });
+    }
 });
 
+// Middleware to verify admin token
+function verifyAdminToken(req, res, next) {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token || !validTokens.has(token)) {
+        return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const expires = validTokens.get(token);
+    if (Date.now() > expires) {
+        validTokens.delete(token);
+        return res.status(401).json({ error: 'Session expired' });
+    }
+
+    next();
+}
+
 // Upload endpoint
-app.post('/api/upload', upload.single('file'), async (req, res) => {
+app.post('/api/upload', verifyAdminToken, upload.single('file'), async (req, res) => {
     try {
-        // Verify API key exists
-        if (!process.env.GETPRONTO_API_KEY) {
-            return res.status(500).json({
-                error: 'Server configuration error: GETPRONTO_API_KEY not set'
-            });
+        if (!process.env.GETPRONTO_API_KEY || !req.file) {
+            return res.status(400).json({ error: 'Invalid request or missing API key' });
         }
 
-        // Verify file exists
-        if (!req.file) {
-            return res.status(400).json({
-                error: 'No file provided'
-            });
-        }
-
-        // Create FormData for GetPronto
         const FormData = require('form-data');
         const formData = new FormData();
         formData.append('file', req.file.buffer, {
@@ -61,7 +96,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
             contentType: req.file.mimetype
         });
 
-        // Send to GetPronto API
         const response = await axios.post(
             'https://api.getpronto.io/v1/files/upload',
             formData,
@@ -74,79 +108,20 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
             }
         );
 
-        // Return success with image URL
         const imageUrl = response.data?.data?.url;
-        if (!imageUrl) {
-            return res.status(500).json({
-                error: 'GetPronto did not return image URL'
-            });
-        }
+        if (!imageUrl) throw new Error('Provider response error');
 
         res.json({
             success: true,
-            data: {
-                url: imageUrl,
-                filename: req.file.originalname
-            }
+            data: { url: imageUrl, filename: req.file.originalname }
         });
 
     } catch (error) {
-        console.error('Upload error:', error.message);
-
-        // Handle different error types
-        if (error.response?.status === 401) {
-            return res.status(401).json({
-                error: 'Authentication failed with GetPronto API'
-            });
-        }
-
-        if (error.message === 'File too large') {
-            return res.status(413).json({
-                error: 'File size exceeds 10MB limit'
-            });
-        }
-
-        res.status(500).json({
-            error: error.message || 'Upload failed'
-        });
+        console.error('Upload Error:', error.message);
+        res.status(500).json({ error: 'Upload failed: ' + error.message });
     }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Express error:', err);
-
-    if (err instanceof multer.MulterError) {
-        if (err.code === 'FILE_TOO_LARGE') {
-            return res.status(413).json({
-                error: 'File size exceeds 10MB limit'
-            });
-        }
-        return res.status(400).json({
-            error: err.message
-        });
-    }
-
-    if (err.message && err.message.includes('Only image files')) {
-        return res.status(400).json({
-            error: err.message
-        });
-    }
-
-    res.status(500).json({
-        error: 'Internal server error'
-    });
-});
-
-// 404 handler
-app.use((req, res) => {
-    res.status(404).json({
-        error: 'Endpoint not found'
-    });
 });
 
 app.listen(PORT, () => {
-    console.log(`✅ Backend server running on port ${PORT}`);
-    console.log(`📤 Upload endpoint: POST http://localhost:${PORT}/api/upload`);
-    console.log(`🔒 GETPRONTO_API_KEY: ${process.env.GETPRONTO_API_KEY ? 'Set' : 'NOT SET - uploads will fail'}`);
+    console.log(`✅ Backend running on port ${PORT}`);
 });

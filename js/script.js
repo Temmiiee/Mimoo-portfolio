@@ -1,399 +1,210 @@
+/**
+ * Mimoo Portfolio - Main Script
+ */
+
 (function() {
-    if (window.SITE_VERSION) return; // Éviter la redéclaration
+    'use strict';
 
-    window.SITE_VERSION = '1.0.0';
-})();
+    window.SITE_VERSION = '1.1.2';
 
-// Fonction simplifiée pour le chargement des ressources
-function refreshResources() {
-    // Cette fonction a été simplifiée pour éviter les problèmes de cache
-    // Les ressources sont maintenant chargées directement sans paramètres de version
-    return; // Ne rien faire
-}
-
-// Function to initialize all site features
-function initializeSite() {
-    // Initialize essential features immediately
-    initializeNavigation();
-    initializeGalleryFilters();
-    initializeLightbox();
-
-    // Initialize snail and floating creatures immediately
-    initializeSnail();
-    createFloatingCreatures();
-
-    // Set minimum height for hero-content-wrapper
-    const heroWrapper = document.querySelector('.hero-content-wrapper');
-    if (heroWrapper) {
-        // Set a fixed minimum height
-        heroWrapper.style.minHeight = '300px';
-        // Prevent abrupt size changes
-        heroWrapper.style.transition = 'height 0.3s ease-in-out';
-    }
-
-    // Observe content changes in hero-content-wrapper
-    const observer = new ResizeObserver(entries => {
-        for (let entry of entries) {
-            const height = entry.contentRect.height;
-            // If height is less than 300px, force it to 300px
-            if (height < 300) {
-                entry.target.style.height = '300px';
-            }
-        }
-    });
-
-    if (heroWrapper) {
-        observer.observe(heroWrapper);
-    }
-
-    // Initialize other decorative features with delay
-    setTimeout(() => {
-        initializeHoverEffects();
-
-        // Ajouter une classe au body pour indiquer que tout est chargé
-        document.body.classList.add('animations-loaded');
-    }, 300);
-}
-
-// Fonction pour initialiser la navigation
-function initializeNavigation() {
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-
-    // Vérifier si les éléments existent
-    if (!hamburger || !navLinks) {
-        console.error('Elements de navigation manquants');
-        return;
-    }
-
-    // Fonction simple pour ouvrir/fermer le menu mobile
-    function toggleMenu() {
-        hamburger.classList.toggle('active');
-        navLinks.classList.toggle('active');
-
-        // Mettre à jour l'état ARIA
-        const isExpanded = hamburger.classList.contains('active');
-        hamburger.setAttribute('aria-expanded', isExpanded);
-    }
-
-    // Gestionnaire d'événements pour le bouton hamburger
-    hamburger.addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleMenu();
-    });
-
-    // Fermer le menu quand on clique sur un lien
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (hamburger.classList.contains('active')) {
-                toggleMenu();
-            }
-        });
-    });
-
-    // Fermer le menu avec la touche Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && hamburger.classList.contains('active')) {
-            toggleMenu();
-        }
-    });
-
-    // Ajouter des attributs ARIA pour l'accessibilité
-    hamburger.setAttribute('aria-label', 'Menu principal');
-    hamburger.setAttribute('aria-expanded', 'false');
-    hamburger.setAttribute('aria-controls', 'nav-links');
-    navLinks.id = 'nav-links';
-}
-
-// Fonction pour initialiser les filtres de la galerie
-function initializeGalleryFilters() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Retirer la classe active de tous les boutons
-            filterButtons.forEach(b => b.classList.remove('active'));
-            // Ajouter la classe active au bouton cliqué
-            btn.classList.add('active');
-
-            const filter = btn.getAttribute('data-filter');
-
-            galleryItems.forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
+    /**
+     * Helper to initialize scroll animations
+     */
+    window.initScrollAnimations = function() {
+        if (!('IntersectionObserver' in window)) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
                 }
             });
-        });
-    });
+        }, { threshold: 0.1 });
 
-    // Activer le filtre "all" par défaut
-    const defaultFilter = document.querySelector('.filter-btn[data-filter="all"]');
-    if (defaultFilter) {
-        defaultFilter.click();
-    }
-}
+        document.querySelectorAll('.animate:not(.in-view)').forEach(el => observer.observe(el));
+    };
 
-// Fonction pour initialiser la lightbox
-function initializeLightbox() {
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const lightbox = document.querySelector('.lightbox');
-    const lightboxImg = document.querySelector('.lightbox-image');
-    const lightboxClose = document.querySelector('.lightbox-close');
-    const lightboxTitle = document.querySelector('.lightbox-title');
-    const lightboxPrev = document.querySelector('.lightbox-prev');
-    const lightboxNext = document.querySelector('.lightbox-next');
-    let currentIndex = 0;
-
-    function showImage(index) {
-        const item = galleryItems[index];
-        const img = item.querySelector('img');
-        const title = item.querySelector('.overlay h3').textContent;
+    /**
+     * Main Initialization
+     */
+    function initializeSite() {
+        console.log('🚀 Mimoo Portfolio: Initializing system...');
         
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightboxTitle.textContent = title;
-        currentIndex = index;
+        setupNavigation();
+        setupLanguage();
+        setupSnail();
+        setupLightbox();
+        setupDecorations();
+
+        // Reveal site
+        setTimeout(() => {
+            document.body.classList.add('animations-loaded');
+            window.initScrollAnimations();
+        }, 300);
     }
 
-    galleryItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            showImage(index);
+    /**
+     * Navigation & Hamburger
+     */
+    function setupNavigation() {
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const overlay = document.querySelector('.nav-overlay');
+
+        if (!hamburger || !navLinks) return;
+
+        const toggleMenu = () => {
+            const isActive = hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isActive);
+            document.body.style.overflow = isActive ? 'hidden' : '';
+        };
+
+        hamburger.addEventListener('click', e => {
+            e.preventDefault();
+            toggleMenu();
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (hamburger.classList.contains('active')) toggleMenu();
+            });
+        });
+
+        if (overlay) overlay.addEventListener('click', toggleMenu);
+    }
+
+    /**
+     * Language Manager Bridge
+     */
+    function setupLanguage() {
+        if (window.LanguageManager) {
+            window.LanguageManager.start();
+        }
+    }
+
+    /**
+     * Snail Jump Logic
+     */
+    function setupSnail() {
+        const snail = document.querySelector('.snail');
+        if (!snail) return;
+
+        snail.addEventListener('click', () => {
+            if (snail.classList.contains('jumping')) return;
+            snail.classList.add('jumping');
+            setTimeout(() => {
+                snail.classList.remove('jumping');
+            }, 600);
+        });
+    }
+
+    /**
+     * Lightbox for Images
+     */
+    function setupLightbox() {
+        const lightbox = document.querySelector('.lightbox');
+        const galleryGrid = document.querySelector('.gallery-grid');
+        if (!lightbox || !galleryGrid) return;
+
+        const img = lightbox.querySelector('.lightbox-image');
+        const title = lightbox.querySelector('.lightbox-title');
+        let currentIndex = 0;
+        let activeItems = [];
+
+        const updateLightbox = (idx) => {
+            activeItems = Array.from(document.querySelectorAll('.gallery-item'));
+            if (idx < 0) idx = activeItems.length - 1;
+            if (idx >= activeItems.length) idx = 0;
+            currentIndex = idx;
+
+            const item = activeItems[currentIndex];
+            img.src = item.querySelector('img').src;
+            title.textContent = item.querySelector('h3').textContent;
+        };
+
+        galleryGrid.addEventListener('click', e => {
+            const item = e.target.closest('.gallery-item');
+            if (!item) return;
+
+            activeItems = Array.from(document.querySelectorAll('.gallery-item'));
+            updateLightbox(activeItems.indexOf(item));
             lightbox.classList.add('active');
+            lightbox.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
-    });
 
-    lightboxClose.addEventListener('click', () => {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-
-    lightboxPrev.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            showImage(currentIndex - 1);
-        }
-    });
-
-    lightboxNext.addEventListener('click', () => {
-        if (currentIndex < galleryItems.length - 1) {
-            showImage(currentIndex + 1);
-        }
-    });
-
-    // Fermer avec la touche Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
             lightbox.classList.remove('active');
+            lightbox.style.display = 'none';
             document.body.style.overflow = '';
-        }
-    });
-
-    // Fermer en cliquant en dehors de l'image
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            lightbox.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-}
-
-// Fonction pour initialiser les effets de survol
-function initializeHoverEffects() {
-    // Ajouter des effets de survol pour les éléments de la galerie
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
-    galleryItems.forEach(item => {
-        const overlay = item.querySelector('.overlay');
-
-        if (!overlay) return;
-
-        item.addEventListener('mouseenter', () => {
-            overlay.style.opacity = '1';
         });
 
-        item.addEventListener('mouseleave', () => {
-            overlay.style.opacity = '0';
-        });
-    });
-
-    // Ajouter des effets de survol pour les liens sociaux
-    const socialLinks = document.querySelectorAll('.social-link');
-
-    socialLinks.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            link.style.transform = 'translateY(-3px)';
-        });
-
-        link.addEventListener('mouseleave', () => {
-            link.style.transform = '';
-        });
-    });
-}
-
-// Fonction pour initialiser l'escargot
-function initializeSnail() {
-    const snailContainer = document.querySelector('.snail-container');
-    const snail = document.querySelector('.snail');
-    if (!snail || !snailContainer) return;
-
-    // Adapter la vitesse de l'escargot en fonction de la taille de l'écran
-    function updateSnailSpeed() {
-        const windowWidth = window.innerWidth;
-        let duration;
-
-        // Définir la durée de l'animation en fonction de la largeur de l'écran
-        if (windowWidth < 768) {
-            duration = '30s'; // Plus rapide sur petit écran
-        } else if (windowWidth > 1600) {
-            duration = '50s'; // Plus lent sur grand écran
-        } else {
-            // Interpolation linéaire entre 30s et 50s
-            const factor = (windowWidth - 768) / (1600 - 768);
-            const seconds = Math.round(30 + factor * 20);
-            duration = `${seconds}s`;
-        }
-
-        // Appliquer la durée à l'animation
-        snail.style.animationDuration = duration;
-    }
-
-    // Mettre à jour la vitesse initiale
-    updateSnailSpeed();
-
-    // Mettre à jour la vitesse lors du redimensionnement
-    window.addEventListener('resize', updateSnailSpeed);
-}
-
-// Fonction pour créer des créatures flottantes
-function createFloatingCreatures() {
-    const container = document.querySelector('.hero');
-    if (!container) return;
-
-    const creatures = ['🦋', '🌸', '🍃', '🌿', '🍂'];
-    let activeCreatures = 0;
-    const maxCreatures = 8;
-
-    function createCreature() {
-        if (activeCreatures >= maxCreatures) return;
-
-        const creature = document.createElement('div');
-        creature.className = 'floating-creature';
+        lightbox.querySelector('.lightbox-prev').addEventListener('click', e => { e.stopPropagation(); updateLightbox(currentIndex - 1); });
+        lightbox.querySelector('.lightbox-next').addEventListener('click', e => { e.stopPropagation(); updateLightbox(currentIndex + 1); });
         
-        // Choisir un emoji aléatoire
-        const emoji = creatures[Math.floor(Math.random() * creatures.length)];
-        creature.textContent = emoji;
+        lightbox.addEventListener('click', e => {
+            if (e.target === lightbox) lightbox.querySelector('.lightbox-close').click();
+        });
 
-        // Position initiale (à gauche de l'écran)
-        const startY = Math.random() * (container.offsetHeight - 30);
+        // SUPPORT CLAVIER
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'ArrowLeft') updateLightbox(currentIndex - 1);
+            if (e.key === 'ArrowRight') updateLightbox(currentIndex + 1);
+            if (e.key === 'Escape') lightbox.querySelector('.lightbox-close').click();
+        });
+
+        // SUPPORT SWIPE (TOUCH)
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        lightbox.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        lightbox.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const threshold = 50;
+            if (touchEndX < touchStartX - threshold) updateLightbox(currentIndex + 1); // Swipe gauche -> Suivant
+            if (touchEndX > touchStartX + threshold) updateLightbox(currentIndex - 1); // Swipe droite -> Précédent
+        }, { passive: true });
+    }
+
+    /**
+     * Decorative floating elements
+     */
+    function setupDecorations() {
+        const container = document.body;
+        const emojis = ['🦋', '🐝', '🐞', '🍃', '🌸'];
         
-        // Styles initiaux
-        Object.assign(creature.style, {
-            position: 'absolute',
-            left: '-30px',
-            top: `${startY}px`,
-            opacity: '0.6',
-            fontSize: `${Math.random() * 8 + 12}px`, // Taille entre 12px et 20px
-            pointerEvents: 'none',
-            zIndex: '1'
-        });
-
-        container.appendChild(creature);
-        activeCreatures++;
-
-        // Animation de déplacement
-        const duration = Math.random() * 8000 + 12000; // Entre 12 et 20 secondes
-        const startTime = performance.now();
-        const endX = container.offsetWidth + 50; // Dépasse légèrement à droite
-
-        function animate(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = elapsed / duration;
-
-            if (progress < 1) {
-                // Mouvement horizontal
-                const currentX = (-30) + (endX * progress);
-                
-                // Mouvement vertical ondulant
-                const wave = Math.sin(progress * Math.PI * 4) * 20;
-                const currentY = startY + wave;
-
-                // Rotation douce
-                const rotation = Math.sin(progress * Math.PI * 2) * 10;
-
-                creature.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
-                requestAnimationFrame(animate);
-            } else {
-                container.removeChild(creature);
-                activeCreatures--;
-                // Créer une nouvelle créature
-                setTimeout(createCreature, Math.random() * 1000);
-            }
+        for (let i = 0; i < 4; i++) {
+            const el = document.createElement('div');
+            el.className = 'floating-creature';
+            el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 90 + 'vw';
+            el.style.top = Math.random() * 90 + 'vh';
+            container.appendChild(el);
+            
+            el.animate([
+                { transform: 'translate(0, 0)', opacity: 0 },
+                { opacity: 0.5, offset: 0.2 },
+                { transform: `translate(${Math.random() * 40 - 20}px, ${Math.random() * 40 - 20}px)`, opacity: 0.5, offset: 0.5 },
+                { transform: 'translate(0, 0)', opacity: 0 }
+            ], {
+                duration: 12000 + Math.random() * 10000,
+                iterations: Infinity,
+                easing: 'ease-in-out'
+            });
         }
-
-        requestAnimationFrame(animate);
     }
 
-    // Création initiale des créatures
-    for (let i = 0; i < maxCreatures; i++) {
-        setTimeout(createCreature, i * 800);
-    }
-}
-
-// Fonction pour gérer les animations au scroll
-function initScrollAnimations() {
-    const animatedElements = document.querySelectorAll('.animate');
-    
-    // Vérifier si l'utilisateur préfère réduire les animations
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (prefersReducedMotion) {
-        // Désactiver toutes les animations
-        animatedElements.forEach(element => {
-            element.classList.remove('animate');
-            element.style.opacity = '1';
-            element.style.visibility = 'visible';
-        });
-        return;
+    // Init
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeSite);
+    } else {
+        initializeSite();
     }
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                // Optionnel : arrêter d'observer l'élément une fois animé
-                // observer.unobserve(entry.target);
-            } else {
-                // Réinitialiser l'animation quand l'élément sort du viewport
-                entry.target.classList.remove('in-view');
-            }
-        });
-    }, {
-        threshold: 0.15, // Déclencher quand 15% de l'élément est visible
-        rootMargin: '50px' // Marge de déclenchement
-    });
-
-    animatedElements.forEach(element => {
-        observer.observe(element);
-    });
-}
-
-// Initialiser les animations au chargement du DOM
-document.addEventListener('DOMContentLoaded', initScrollAnimations);
-
-// Fonction pour gérer les redirections
-function handleRedirects() {
-    // Obtenir le chemin actuel
-    const path = window.location.pathname;
-    const basePath = window.basePath || '/';
-
-    // Si nous sommes sur une page qui n'existe pas, rediriger vers la page d'accueil
-    if (path !== basePath && path !== basePath + 'index.html' && !document.querySelector('main')) {
-        window.location.href = basePath;
-    }
-}
-
-// Exécuter la fonction de redirection
-handleRedirects();
+})();

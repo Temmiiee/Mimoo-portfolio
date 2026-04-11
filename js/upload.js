@@ -103,8 +103,11 @@ class ImageUploader {
 
             const response = await fetch(uploadUrl, {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${window.authToken || localStorage.getItem('adminToken')}`
+                },
                 body: formData
-                // No Authorization header - backend handles authentication!
+                // Backend handles GetPronto API authentication securely
             });
 
             if (!response.ok) {

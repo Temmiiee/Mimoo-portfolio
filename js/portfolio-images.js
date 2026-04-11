@@ -1,119 +1,153 @@
-// portfolio-images.js
-// Script to load portfolio images dynamically from JSON and localStorage
+/**
+ * portfolio-images.js
+ * Manages the loading and display of gallery images
+ */
 
 class PortfolioImageManager {
     constructor() {
-        this.images = [];
-        this.currentIndex = 0;
-        this.jsonUrl = 'images/portfolio-images.json'; // JSON file with image URLs
+        this.jsonUrl = 'images/portfolio-images.json';
+        this.staticImages = [];
         this.uploadedImages = [];
+        this.galleryGrid = document.querySelector('.gallery-grid');
     }
 
-    async loadImages() {
+    async init() {
+        if (!this.galleryGrid) return;
+        console.log('🖼️ Gallery: Initialization...');
+        
+        await this.loadStaticImages();
+        this.loadUploadedImages();
+        this.renderGallery();
+    }
+
+    async loadStaticImages() {
         try {
-            // Load from JSON
             const response = await fetch(this.jsonUrl);
-            const data = await response.json();
-            this.images = data.images || [];
-
-            // Load uploaded images from localStorage
-            this.loadUploadedImages();
-
-            // Only call displayImages if we have uploaded images to show
-            // Otherwise, let the static HTML gallery remain visible
-            if (this.uploadedImages.length > 0) {
-                this.displayImages();
+            if (response.ok) {
+                const data = await response.json();
+                this.staticImages = data.images || [];
+                console.log(`🖼️ Gallery: Loaded ${this.staticImages.length} images from JSON`);
+            } else {
+                console.error('🖼️ Gallery: Failed to load portfolio-images.json');
             }
         } catch (error) {
-            console.error('Error loading images:', error);
-            // Don't call loadLocalImages() - let static HTML gallery remain visible
-            // The static gallery in index.html will be shown by default
+            console.error('🖼️ Gallery: Fetch error:', error);
         }
     }
 
     loadUploadedImages() {
         try {
-            const uploaded = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
-            this.uploadedImages = uploaded.map(img => img.url);
+            const data = localStorage.getItem('uploadedImages');
+            this.uploadedImages = data ? JSON.parse(data) : [];
         } catch (error) {
-            console.error('Error loading uploaded images:', error);
             this.uploadedImages = [];
         }
     }
 
-    displayImages() {
-        const galleryContainer = document.querySelector('.gallery-grid');
-        if (!galleryContainer) return;
+    sanitizeFilename(url) {
+        if (!url) return '';
+        const filename = url.split('/').pop().split('.')[0];
+        const sanitized = filename
+            .replace(/[_-]/g, ' ')             
+            .replace(/\(\d+\)/g, '')           
+            .replace(/\s+/g, ' ')              
+            .trim();
+        
+        return sanitized.charAt(0).toUpperCase() + sanitized.slice(1);
+    }
 
-        // Priority: Show uploaded images if they exist, otherwise show default images
-        const allImages = this.uploadedImages.length > 0
-            ? this.uploadedImages
-            : this.images;
+    renderGallery() {
+        if (!this.galleryGrid) return;
+        
+        const allItems = [
+            ...this.staticImages,
+            ...this.uploadedImages
+        ].map(img => (typeof img === 'string' ? { url: img } : img));
 
-        // Remove only the gallery items, keep filters and structure
-        const existingItems = galleryContainer.querySelectorAll('.gallery-item');
-        existingItems.forEach(item => item.remove());
-
-        // If no uploaded images, show the static HTML gallery items
-        if (this.uploadedImages.length === 0) {
-            // Re-show the static gallery items that were hidden
-            const staticItems = galleryContainer.querySelectorAll('.gallery-item[style*="display: none"]');
-            staticItems.forEach(item => item.style.display = '');
-            return; // Don't add dynamic items if showing static ones
+        console.log(`🖼️ Gallery: Rendering ${allItems.length} items`);
+        
+        // Don't empty if we have nothing to show yet (wait for init)
+        if (allItems.length === 0 && this.staticImages.length === 0) {
+            // Check if we are still initializing
+            return;
         }
 
-        // Add uploaded images dynamically
-        allImages.forEach((imageUrl, index) => {
-            const imgElement = document.createElement('img');
-            imgElement.src = imageUrl;
-            imgElement.alt = `Portfolio image ${index + 1}`;
-            imgElement.loading = 'lazy';
-            imgElement.width = 400;
-            imgElement.height = 400;
+        this.galleryGrid.innerHTML = '';
 
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'gallery-item animate fade-up';
-            itemDiv.style.animationDelay = `${(index % 3) * 0.1}s`; // Stagger animations
-            itemDiv.setAttribute('data-category', 'uploaded'); // Mark as uploaded
+        if (allItems.length === 0) {
+            const emptyMsg = document.createElement('p');
+            emptyMsg.className = 'empty-msg';
+            emptyMsg.style.cssText = 'grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-color);';
+            emptyMsg.dataset.translate = 'gallery.empty';
+            emptyMsg.textContent = 'Aucune image à afficher pour le moment.';
+            this.galleryGrid.appendChild(emptyMsg);
+        } else {
+            allItems.forEach((item, index) => {
+                const itemEl = this.createGalleryItem(item, index);
+                this.galleryGrid.appendChild(itemEl);
+            });
+        }
 
-            // Add overlay for uploaded images
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
-            overlay.innerHTML = `
-                <h3>Image Uploadée</h3>
-                <p>Contenu utilisateur</p>
-            `;
-            itemDiv.appendChild(overlay);
-            itemDiv.appendChild(imgElement);
+        // Apply translations
+        if (window.LanguageManager) {
+            window.LanguageManager.translatePage();
+        }
 
-            galleryContainer.appendChild(itemDiv);
-        });
+        // Init animations
+        setTimeout(() => {
+            if (typeof window.initScrollAnimations === 'function') {
+                window.initScrollAnimations();
+            }
+        }, 100);
     }
 
-    refreshGallery() {
+    getTranslationKey(url) {
+        if (!url) return null;
+        const filename = url.split('/').pop().split('.')[0];
+        
+        const knownKeys = ['Harley', 'Dragon_arc-en-ciel', 'Dragon_Celeste', 'Chibi', 'Ange_et_dragon', 'Personnage', 'Spider_Wolf', 'Dragon_yeux_et_arc-en-ciel', 'Endroit_Mysterieux'];
+        
+        if (knownKeys.includes(filename)) return `gallery.items.${filename}.title`;
+        return null;
+    }
+
+    createGalleryItem(item, index) {
+        const div = document.createElement('div');
+        div.className = `gallery-item animate fade-up`;
+        div.style.animationDelay = `${(index % 3) * 0.1}s`;
+
+        const img = document.createElement('img');
+        img.src = item.url;
+        img.alt = 'Portfolio Image';
+        img.loading = 'lazy';
+
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        
+        const h3 = document.createElement('h3');
+        const translateKey = this.getTranslationKey(item.url);
+        if (translateKey) {
+            h3.dataset.translate = translateKey;
+        }
+        h3.textContent = this.sanitizeFilename(item.url);
+        
+        overlay.appendChild(h3);
+        div.appendChild(img);
+        div.appendChild(overlay);
+
+        return div;
+    }
+
+    refresh() {
         this.loadUploadedImages();
-        // Always call displayImages to update the gallery
-        this.displayImages();
-    }
-
-    // Method to rotate images periodically
-    startRotation(intervalMinutes = 60) {
-        setInterval(() => {
-            this.currentIndex = (this.currentIndex + 1) % this.images.length;
-            this.displayImages();
-        }, intervalMinutes * 60 * 1000);
+        this.renderGallery();
     }
 }
 
-// Make it globally accessible
-window.PortfolioImageManager = null;
+window.portfolioManager = new PortfolioImageManager();
 
-// Usage
 document.addEventListener('DOMContentLoaded', () => {
-    const portfolioManager = new PortfolioImageManager();
-    window.PortfolioImageManager = portfolioManager;
-    portfolioManager.loadImages();
-
-    // Optional: rotate images every hour
-    // portfolioManager.startRotation(60);
+    setTimeout(() => {
+        if (window.portfolioManager) window.portfolioManager.init();
+    }, 50);
 });

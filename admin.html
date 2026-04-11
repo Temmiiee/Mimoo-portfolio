@@ -156,17 +156,49 @@
     <script>
         // Admin authentication
         let isAuthenticated = false;
+        let authToken = null;
 
-        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+        // Check if already authenticated on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedToken = localStorage.getItem('adminToken');
+            if (savedToken) {
+                authToken = savedToken;
+                isAuthenticated = true;
+                showUploadSection();
+            }
+        });
+
+        document.getElementById('admin-login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const password = document.getElementById('admin-password').value;
 
-            if (password === CONFIG.ADMIN_PASSWORD) {
-                isAuthenticated = true;
-                showUploadSection();
-                showStatus('Connexion réussie !', 'success');
-            } else {
-                showStatus('Mot de passe incorrect', 'error');
+            try {
+                const backendUrl = CONFIG.BACKEND_UPLOAD_URL || 'http://localhost:3001';
+                const response = await fetch(`${backendUrl}/api/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    isAuthenticated = true;
+                    authToken = result.token;
+                    // Store token for session persistence
+                    localStorage.setItem('adminToken', authToken);
+                    // Make token available globally for upload.js
+                    window.authToken = authToken;
+                    showUploadSection();
+                    showStatus('Connexion réussie !', 'success');
+                } else {
+                    showStatus(result.error || 'Erreur d\'authentification', 'error');
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                showStatus('Erreur de connexion au serveur', 'error');
             }
         });
 

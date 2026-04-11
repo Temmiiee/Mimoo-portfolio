@@ -23,3 +23,6 @@
 
 /* Utilitaires (à charger en dernier pour pouvoir surcharger les autres styles) */
 @import 'utilities.css';
+
+/* Styles personnalisés */
+@import 'custom.css';

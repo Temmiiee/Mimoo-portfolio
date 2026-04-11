@@ -1,141 +1,88 @@
 /**
  * Service Worker pour Mimoo Portfolio
- * Gère le cache et assure que les utilisateurs ont toujours la dernière version du site
+ * Version propre et fonctionnelle
  */
 
-// Version du cache - à incrémenter à chaque mise à jour majeure
-const CACHE_VERSION = '1.0.1';
+const CACHE_VERSION = '1.1.0';
 const CACHE_NAME = `mimoo-portfolio-${CACHE_VERSION}`;
 
-// Liste des fichiers à mettre en cache immédiatement
 const ASSETS_TO_CACHE = [
-    '/',
-    '/admin.html',
-    '/css/unified-styles.css',
-    '/css/fixes.css',
-    '/css/accessibility-menu.css',
-    '/js/translations.js',
-    '/js/language.js',
-    '/js/accessibility-manager.js',
-    '/js/accessibility-preferences.js',
-    '/js/optimize-animations.js',
-    '/js/redirect.js',
-    '/js/config.js',
-    '/js/portfolio-images.js',
-    '/js/upload.js',
-    '/images/favicon.ico',
-    '/images/mimoo.webp',
-    '/images/gallery/illustration1.webp',
-    '/images/gallery/illustration2.webp',
-    '/images/gallery/illustration3.webp',
-    '/images/gallery/illustration4.webp',
-    '/images/gallery/character1.webp',
-    '/images/gallery/character2.webp',
-    '/images/gallery/character3.webp',
-    '/images/gallery/character4.webp',
-    '/images/gallery/character5.webp',
+    './',
+    './index.html',
+    './admin.html',
+    './css/main.css',
+    './css/variables.css',
+    './css/base.css',
+    './css/components.css',
+    './css/layout.css',
+    './css/animations.css',
+    './css/snail.css',
+    './css/utilities.css',
+    './css/custom.css',
+    './js/translations.js',
+    './js/language.js',
+    './js/portfolio-images.js',
+    './js/config.js',
+    './js/script.js',
+    './js/upload.js',
+    './images/favicon.ico',
+    './images/mimoo.webp',
+    './images/background.webp',
+    './images/snail.png'
 ];
 
+// Install Event
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(ASSETS_TO_CACHE);
-            })
-            .then(() => {
-                // Force l'activation immédiate sans attendre la fermeture des onglets
-                return self.skipWaiting();
-            })
+            .then(cache => cache.addAll(ASSETS_TO_CACHE))
+            .then(() => self.skipWaiting())
     );
 });
 
+// Activate Event
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
-                    // Supprimer les anciens caches
                     if (cacheName !== CACHE_NAME) {
                         return caches.delete(cacheName);
                     }
                 })
             );
-        }).then(() => {
-            // Prendre le contrôle de tous les clients sans recharger
-            return self.clients.claim();
-        })
+        }).then(() => self.clients.claim())
     );
 });
 
+// Fetch Event
 self.addEventListener('fetch', event => {
-    // Ignorer les requêtes non GET
     if (event.request.method !== 'GET') return;
 
-    // Ignorer les requêtes vers d'autres domaines
     const url = new URL(event.request.url);
-    if (url.origin !== self.location.origin) return;
-
-    // Stratégie pour les fichiers HTML et CSS : toujours depuis le réseau d'abord
-    if (event.request.url.includes('.html') ||
-        event.request.url.includes('.css') ||
-        event.request.url.includes('.js') ||
-        event.request.url.endsWith('/')) {
+    
+    // External resources (CDN) - Network first, then cache
+    if (url.origin !== self.location.origin) {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
-                    // Mettre en cache une copie de la réponse
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, responseClone);
-                    });
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
                     return response;
                 })
-                .catch(() => {
-                    // En cas d'échec, essayer de servir depuis le cache
-                    return caches.match(event.request);
-                })
+                .catch(() => caches.match(event.request))
         );
         return;
     }
 
-    // Stratégie pour les autres fichiers : cache d'abord, puis réseau
+    // Local resources - Stale While Revalidate
     event.respondWith(
-        caches.match(event.request).then(response => {
-            // Retourner la réponse du cache si elle existe
-            if (response) {
-                return response;
-            }
-
-            // Sinon, faire une requête réseau
-            return fetch(event.request).then(fetchResponse => {
-                if (fetchResponse.status === 404) {
-                    return new Response('Page not found', { status: 404 });
-                }
-
-                // Mettre en cache la nouvelle réponse
-                const responseClone = fetchResponse.clone();
-                caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, responseClone);
-                });
-
-                return fetchResponse;
-            }).catch(error => {
-                console.error('Fetch failed:', error);
-                return new Response('Network error', { status: 500 });
+        caches.match(event.request).then(cachedResponse => {
+            const fetchPromise = fetch(event.request).then(networkResponse => {
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, networkResponse.clone()));
+                return networkResponse;
             });
+            return cachedResponse || fetchPromise;
         })
     );
-});
-
-// Gestion des messages
-self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        self.skipWaiting();
-    }
-
-    if (event.data && event.data.type === 'CLEAR_CACHE') {
-        event.waitUntil(
-            caches.delete(CACHE_NAME)
-        );
-    }
 });
