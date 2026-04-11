@@ -19,11 +19,15 @@ class PortfolioImageManager {
             // Load uploaded images from localStorage
             this.loadUploadedImages();
 
-            this.displayImages();
+            // Only call displayImages if we have uploaded images to show
+            // Otherwise, let the static HTML gallery remain visible
+            if (this.uploadedImages.length > 0) {
+                this.displayImages();
+            }
         } catch (error) {
             console.error('Error loading images:', error);
-            // Fallback to local images
-            this.loadLocalImages();
+            // Don't call loadLocalImages() - let static HTML gallery remain visible
+            // The static gallery in index.html will be shown by default
         }
     }
 
@@ -37,68 +41,58 @@ class PortfolioImageManager {
         }
     }
 
-    loadLocalImages() {
-        // Fallback to local images if JSON fails
-        this.images = [
-            'images/gallery/illustration1.webp',
-            'images/gallery/illustration2.webp',
-            'images/gallery/character1.webp',
-            'images/gallery/character2.webp',
-            'images/gallery/illustration3.webp',
-            'images/gallery/character3.webp',
-            'images/gallery/illustration4.webp',
-            'images/gallery/character4.webp',
-            'images/gallery/character5.webp',
-            'images/previews/theiere-preview.jpg'
-        ];
-        this.displayImages();
-    }
-
     displayImages() {
         const galleryContainer = document.querySelector('.gallery-grid');
         if (!galleryContainer) return;
 
         // Priority: Show uploaded images if they exist, otherwise show default images
-        const allImages = this.uploadedImages.length > 0 
-            ? this.uploadedImages 
+        const allImages = this.uploadedImages.length > 0
+            ? this.uploadedImages
             : this.images;
 
-        // Clear existing content except filters
-        const filters = galleryContainer.querySelector('.gallery-filters');
-        galleryContainer.innerHTML = '';
-        if (filters) {
-            galleryContainer.appendChild(filters);
+        // Remove only the gallery items, keep filters and structure
+        const existingItems = galleryContainer.querySelectorAll('.gallery-item');
+        existingItems.forEach(item => item.remove());
+
+        // If no uploaded images, show the static HTML gallery items
+        if (this.uploadedImages.length === 0) {
+            // Re-show the static gallery items that were hidden
+            const staticItems = galleryContainer.querySelectorAll('.gallery-item[style*="display: none"]');
+            staticItems.forEach(item => item.style.display = '');
+            return; // Don't add dynamic items if showing static ones
         }
 
+        // Add uploaded images dynamically
         allImages.forEach((imageUrl, index) => {
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
             imgElement.alt = `Portfolio image ${index + 1}`;
             imgElement.loading = 'lazy';
-            imgElement.className = 'gallery-item';
+            imgElement.width = 400;
+            imgElement.height = 400;
 
             const itemDiv = document.createElement('div');
             itemDiv.className = 'gallery-item animate fade-up';
             itemDiv.style.animationDelay = `${(index % 3) * 0.1}s`; // Stagger animations
+            itemDiv.setAttribute('data-category', 'uploaded'); // Mark as uploaded
 
             // Add overlay for uploaded images
-            if (this.uploadedImages.includes(imageUrl)) {
-                const overlay = document.createElement('div');
-                overlay.className = 'overlay';
-                overlay.innerHTML = `
-                    <h3>Image Uploadée</h3>
-                    <p>Contenu utilisateur</p>
-                `;
-                itemDiv.appendChild(overlay);
-            }
-
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.innerHTML = `
+                <h3>Image Uploadée</h3>
+                <p>Contenu utilisateur</p>
+            `;
+            itemDiv.appendChild(overlay);
             itemDiv.appendChild(imgElement);
+
             galleryContainer.appendChild(itemDiv);
         });
     }
 
     refreshGallery() {
         this.loadUploadedImages();
+        // Always call displayImages to update the gallery
         this.displayImages();
     }
 
